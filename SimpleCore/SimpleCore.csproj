@@ -11,7 +11,7 @@
     </ItemGroup>
     <PropertyGroup>
         <PackageId>SimpleCore</PackageId>
-        <Version>1.0.3</Version>
+        <Version>1.0.9</Version>
         <Authors>Read Stanton (Decimation)</Authors>
         <PackageTags>Utilities common</PackageTags>
         <RepositoryUrl>https://github.com/Decimation/SimpleCore</RepositoryUrl>
@@ -19,6 +19,12 @@
         <Description>.NET Core C# common library</Description>
         <!--<PackageIconUrl>https://raw.githubusercontent.com/Decimation/Memkit/master/icon64.png</PackageIconUrl>-->
     </PropertyGroup>
+    
+    <!-- 
+        // dotnet pack -c Release -o %cd%
+	    // dotnet nuget push "*.nupkg"
+	    // del *.nupkg & dotnet pack -c Release -o %cd% & dotnet nuget push "*.nupkg"
+    -->
 
     <ItemGroup>
         <None Include="..\icon64.png">
