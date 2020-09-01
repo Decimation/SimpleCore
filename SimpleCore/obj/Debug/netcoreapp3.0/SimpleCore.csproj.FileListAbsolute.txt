@@ -1,9 +1,0 @@
-C:\Users\Deci\RiderProjects\SimpleCore\SimpleCore\bin\Debug\netcoreapp3.0\SimpleCore.deps.json
-C:\Users\Deci\RiderProjects\SimpleCore\SimpleCore\bin\Debug\netcoreapp3.0\SimpleCore.dll
-C:\Users\Deci\RiderProjects\SimpleCore\SimpleCore\bin\Debug\netcoreapp3.0\SimpleCore.pdb
-C:\Users\Deci\RiderProjects\SimpleCore\SimpleCore\obj\Debug\netcoreapp3.0\SimpleCore.csprojAssemblyReference.cache
-C:\Users\Deci\RiderProjects\SimpleCore\SimpleCore\obj\Debug\netcoreapp3.0\SimpleCore.AssemblyInfoInputs.cache
-C:\Users\Deci\RiderProjects\SimpleCore\SimpleCore\obj\Debug\netcoreapp3.0\SimpleCore.AssemblyInfo.cs
-C:\Users\Deci\RiderProjects\SimpleCore\SimpleCore\obj\Debug\netcoreapp3.0\SimpleCore.csproj.CoreCompileInputs.cache
-C:\Users\Deci\RiderProjects\SimpleCore\SimpleCore\obj\Debug\netcoreapp3.0\SimpleCore.dll
-C:\Users\Deci\RiderProjects\SimpleCore\SimpleCore\obj\Debug\netcoreapp3.0\SimpleCore.pdb
