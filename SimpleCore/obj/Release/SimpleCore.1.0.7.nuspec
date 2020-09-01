@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>SimpleCore</id>
+    <version>1.0.7</version>
+    <authors>Read Stanton (Decimation)</authors>
+    <owners>Read Stanton (Decimation)</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <icon>icon64.png</icon>
+    <description>.NET Core C# common library</description>
+    <tags>Utilities common</tags>
+    <repository url="https://github.com/Decimation/SimpleCore" />
+    <dependencies>
+      <group targetFramework=".NETCoreApp3.0">
+        <dependency id="JetBrains.Annotations" version="2019.1.3" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\Deci\RiderProjects\SimpleCore\SimpleCore\bin\Release\netcoreapp3.0\SimpleCore.dll" target="lib\netcoreapp3.0\SimpleCore.dll" />
+    <file src="C:\Users\Deci\RiderProjects\SimpleCore\icon64.png" target="icon64.png" />
+  </files>
+</package>

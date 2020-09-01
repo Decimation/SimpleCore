@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "mgJzvXwx/XYzETtQR8m6pK2QUxjVJIvALKOGGj/pGAxcC6p83iQzUrYHn3PRIDztUjrLdRDlNUr2dpZLr8QcHQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Deci\\RiderProjects\\SimpleCore\\SimpleCore\\SimpleCore.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Deci\\.nuget\\packages\\jetbrains.annotations\\2019.1.3\\jetbrains.annotations.2019.1.3.nupkg.sha512",
+    "C:\\Users\\Deci\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.0.1\\microsoft.aspnetcore.app.ref.3.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

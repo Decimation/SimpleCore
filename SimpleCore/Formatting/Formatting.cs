@@ -16,7 +16,7 @@ namespace SimpleCore.Formatting
 	/// <summary>
 	/// Contains utilities for formatting.
 	/// </summary>
-	public static class Format
+	public static class Formatting
 	{
 		public const char SPACE = ' ';
 

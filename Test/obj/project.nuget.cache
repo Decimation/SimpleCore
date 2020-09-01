@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "S5K6dkDtyPkJ+YYrEm/eH946vDvbyRjTtS6u7Z60UGtDZbgaD2rN2tP4mkMnMVRsvxpoka21dvYuO+SavEom7Q==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Deci\\RiderProjects\\SimpleCore\\Test\\Test.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Deci\\.nuget\\packages\\jetbrains.annotations\\2019.1.3\\jetbrains.annotations.2019.1.3.nupkg.sha512"
+  ],
+  "logs": []
+}

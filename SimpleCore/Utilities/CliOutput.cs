@@ -20,6 +20,10 @@ namespace SimpleCore.Utilities
 
 		private const string DEBUG_COND = "DEBUG";
 
+		const string ELLIPSES = "...";
+
+		static int lim = Console.BufferWidth - (10 + ELLIPSES.Length);
+
 		static CliOutput()
 		{
 			Name = "<unknown>";
@@ -33,7 +37,30 @@ namespace SimpleCore.Utilities
 			var srg = s.Split('\n');
 
 			for (int i = 0; i < srg.Length; i++) {
-				srg[i] = c + " " + srg[i];
+				var y = " " + srg[i];
+
+				string x;
+
+				
+
+				if (string.IsNullOrWhiteSpace(y)) {
+					x = string.Empty;
+				}
+				else {
+					x = c + y;
+				}
+
+				var x2 = x.Truncate(lim);
+
+				if (x2.Length < x.Length) {
+					x2 += ELLIPSES;
+				}
+
+
+				srg[i] = x2;
+
+				
+
 			}
 
 			var s2 = string.Join('\n', srg);
