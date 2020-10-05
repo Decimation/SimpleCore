@@ -1,35 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <DefineConstants>JETBRAINS_ANNOTATIONS</DefineConstants>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
-    </ItemGroup>
-    <PropertyGroup>
-        <PackageId>SimpleCore</PackageId>
-        <Version>1.1.0</Version>
-        <Authors>Read Stanton (Decimation)</Authors>
-        <PackageTags>Utilities common</PackageTags>
-        <RepositoryUrl>https://github.com/Decimation/SimpleCore</RepositoryUrl>
-        <PackageIcon>icon64.png</PackageIcon>
-        <Description>.NET Core C# common library</Description>
-        <!--<PackageIconUrl>https://raw.githubusercontent.com/Decimation/Memkit/master/icon64.png</PackageIconUrl>-->
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>JETBRAINS_ANNOTATIONS</DefineConstants>
+    <LangVersion>latest</LangVersion>
     
-    <!-- 
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
+    <PackageReference Include="Pastel" Version="1.3.2" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PackageId>SimpleCore</PackageId>
+    <Version>1.1.9</Version>
+    <Authors>Read Stanton (Decimation)</Authors>
+    <PackageTags>Utilities common</PackageTags>
+    <RepositoryUrl>https://github.com/Decimation/SimpleCore</RepositoryUrl>
+    <PackageIcon>icon64.png</PackageIcon>
+    <Description>.NET Core C# common library</Description>
+    <!--<PackageIconUrl>https://raw.githubusercontent.com/Decimation/Memkit/master/icon64.png</PackageIconUrl>-->
+  </PropertyGroup>
+
+  <!-- 
         // dotnet pack -c Release -o %cd%
 	    // dotnet nuget push "*.nupkg"
 	    // del *.nupkg & dotnet pack -c Release -o %cd% & dotnet nuget push "*.nupkg"
     -->
 
-    <ItemGroup>
-        <None Include="..\icon64.png">
-            <Pack>True</Pack>
-            <PackagePath></PackagePath>
-        </None>
-    </ItemGroup>
+  <ItemGroup>
+    <None Include="..\icon64.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 </Project>
