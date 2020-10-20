@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using SimpleCore.Utilities;
+using SimpleCore.Win32;
 
 // ReSharper disable UnusedMember.Global
 
@@ -20,7 +21,7 @@ namespace SimpleCore.CommandLine.Shell
 
 		}
 
-		public BatchFileCommand(string[] commands) : this(commands, Strings.CreateRandomName() + ".bat") { }
+		public BatchFileCommand(string[] commands) : this(commands, FileOperations.CreateRandomName() + ".bat") { }
 
 		public string[] Commands { get; }
 

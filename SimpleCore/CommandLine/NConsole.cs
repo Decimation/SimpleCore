@@ -4,11 +4,14 @@ using System.Drawing;
 using System.Text;
 using JetBrains.Annotations;
 using Pastel;
-using SimpleCore.Internal;
 using SimpleCore.Utilities;
+using static SimpleCore.Internal.Common;
 
+// ReSharper disable UnusedMember.Local
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
+
+#pragma warning disable HAA0501, HAA0502, HAA0601
 
 namespace SimpleCore.CommandLine
 {
@@ -16,7 +19,7 @@ namespace SimpleCore.CommandLine
 
 
 	/// <summary>
-	/// Extended console
+	/// Extended console.
 	/// </summary>
 	public static partial class NConsole
 	{
@@ -51,7 +54,7 @@ namespace SimpleCore.CommandLine
 		public static int BufferLimit { get; set; } = Console.BufferWidth - 10;
 
 
-		[StringFormatMethod(Common.STRING_FORMAT_ARG)]
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static string FormatString(char c, string s)
 		{
 			var srg = s.Split(NewLine);
@@ -82,17 +85,17 @@ namespace SimpleCore.CommandLine
 			return s2;
 		}
 
-		[StringFormatMethod(Common.STRING_FORMAT_ARG)]
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void Write(string msg, params object[] args) => Write(Level.None, null, null, true, msg, args);
 
-		[StringFormatMethod(Common.STRING_FORMAT_ARG)]
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void Write(Level lvl, string msg, params object[] args) => Write(lvl, null, null, true, msg, args);
 
 
 		/// <summary>
 		///     Root write method.
 		/// </summary>
-		[StringFormatMethod(Common.STRING_FORMAT_ARG)]
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void Write(Level lvl, Color? fg, Color? bg, bool newLine, string msg, params object[] args)
 		{
 			char sym = lvl switch
@@ -140,15 +143,14 @@ namespace SimpleCore.CommandLine
 			}
 		}
 
-		[Conditional(Common.DEBUG_COND)]
-		[StringFormatMethod(Common.STRING_FORMAT_ARG)]
+		[Conditional(DEBUG_COND)]
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteDebug(string msg, params object[] args) => Write(Level.Debug, msg, args);
 
-		[Conditional(Common.DEBUG_COND)]
-		[StringFormatMethod(Common.STRING_FORMAT_ARG)]
+		[Conditional(DEBUG_COND)]
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteDebug(object obj) => WriteDebug(obj.ToString());
 
-		// Single line
 
 		public static void Init()
 		{
@@ -156,26 +158,26 @@ namespace SimpleCore.CommandLine
 		}
 
 
-		[StringFormatMethod(Common.STRING_FORMAT_ARG)]
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteError(string msg, params object[] args) => Write(Level.Error, msg, args);
 
-		[StringFormatMethod(Common.STRING_FORMAT_ARG)]
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteError(object obj) => WriteError(obj.ToString());
 
-		[StringFormatMethod(Common.STRING_FORMAT_ARG)]
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteInfo(string msg, params object[] args) => Write(Level.Info, msg, args);
 
-		[StringFormatMethod(Common.STRING_FORMAT_ARG)]
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteInfo(object obj) => WriteInfo(obj.ToString());
 
 
-		[StringFormatMethod(Common.STRING_FORMAT_ARG)]
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteSuccess(object obj) => WriteSuccess(obj.ToString());
 
-		[StringFormatMethod(Common.STRING_FORMAT_ARG)]
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteSuccess(string msg, params object[] args) => Write(Level.Success, msg, args);
 
-		[StringFormatMethod(Common.STRING_FORMAT_ARG)]
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteOnCurrentLine(Color color, string msg, params object[] args)
 		{
 			msg = String.Format(msg, args);
@@ -207,7 +209,7 @@ namespace SimpleCore.CommandLine
 			s = s.PastelBg(c);
 		}
 
-		[StringFormatMethod(Common.STRING_FORMAT_ARG)]
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteColor(Color fgColor, bool newLine, string msg, params object[] args)
 		{
 			if (newLine) {

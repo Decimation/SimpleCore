@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+
 // ReSharper disable UnusedMember.Global
+#nullable enable
+#pragma warning disable HAA0601, HAA0502, HAA0505
 
 namespace SimpleCore.CommandLine.Shell
 {
@@ -17,13 +20,12 @@ namespace SimpleCore.CommandLine.Shell
 		///     Creates a <see cref="Process" /> to execute <paramref name="cmd" /> with the command prompt.
 		/// </summary>
 		/// <param name="cmd">Command to run</param>
-		/// <returns><c>cmd.exe</c> process</returns>
+		/// <returns>Created command prompt process</returns>
 		public static Process Shell(string cmd)
 		{
 			var startInfo = new ProcessStartInfo
 			{
 				FileName = "cmd.exe",
-				//Arguments = String.Format("/C {0}", cmd),
 				Arguments = $"/C {cmd}",
 				RedirectStandardOutput = true,
 				RedirectStandardError = true,

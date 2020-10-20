@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+#pragma warning disable HAA0601, HAA0303
+
 namespace SimpleCore.Model
 {
+	
 	public abstract class Enumeration : IComparable
 	{
 		public string Name { get; private set; }
@@ -13,11 +16,11 @@ namespace SimpleCore.Model
 
 		protected Enumeration(int id, string name)
 		{
-			Id   = id;
+			Id = id;
 			Name = name;
 		}
 
-		public override string ToString() => Name;
+		public override string ToString() => string.Format("{0} ({1})", Name, Id);
 
 		public static IEnumerable<T> GetAll<T>() where T : Enumeration
 		{
@@ -35,13 +38,14 @@ namespace SimpleCore.Model
 			if (otherValue == null)
 				return false;
 
-			var typeMatches  = GetType().Equals(obj.GetType());
+			var typeMatches = GetType().Equals(obj.GetType());
 			var valueMatches = Id.Equals(otherValue.Id);
 
 			return typeMatches && valueMatches;
 		}
 
-		public int CompareTo(object other) => Id.CompareTo(((Enumeration)other).Id);
+
+		public int CompareTo(object other) => Id.CompareTo(((Enumeration) other).Id);
 
 		// Other utility methods ...
 	}

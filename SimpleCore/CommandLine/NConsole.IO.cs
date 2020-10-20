@@ -4,14 +4,16 @@ using System.Drawing;
 using System.Text;
 using System.Threading;
 using JetBrains.Annotations;
-using SimpleCore.Internal;
 using SimpleCore.Utilities;
+using static SimpleCore.Internal.Common;
 
+// ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
-
 // ReSharper disable UseStringInterpolation
-
 // ReSharper disable ParameterTypeCanBeEnumerable.Global
+
+#pragma warning disable HAA0601, HAA0502
+
 namespace SimpleCore.CommandLine
 {
 	public static partial class NConsole
@@ -26,8 +28,8 @@ namespace SimpleCore.CommandLine
 			public const string ALT_DENOTE = "[Alt]";
 
 			private const int MAX_OPTION_N = 10;
+
 			private const char OPTION_LETTER_START = 'A';
-			private const int INVALID = -1;
 
 
 			/// <summary>
@@ -217,6 +219,8 @@ namespace SimpleCore.CommandLine
 						// Block until input is entered.
 
 						//
+
+						// todo: hacky
 						if (Interlocked.Exchange(ref Status, STATUS_OK) == STATUS_REFRESH) {
 							Console.Clear();
 							DisplayInterface();
@@ -270,7 +274,7 @@ namespace SimpleCore.CommandLine
 				return selectedOptions;
 			}
 
-			[StringFormatMethod(Common.STRING_FORMAT_ARG)]
+			[StringFormatMethod(STRING_FORMAT_ARG)]
 			public static bool ReadConfirm(string msg, params object[] args)
 			{
 				Console.Clear();
