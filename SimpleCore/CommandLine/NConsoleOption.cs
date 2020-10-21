@@ -34,7 +34,8 @@ namespace SimpleCore.CommandLine
 
 				return null;
 			},
-			AltFunction = () => null
+			AltFunction = () => null,
+			CtrlFunction = () => null
 		};
 
 
@@ -49,9 +50,15 @@ namespace SimpleCore.CommandLine
 		public virtual Func<object?> Function { get; set; }
 
 		/// <summary>
-		/// Function to execute when selected with modifiers (<see cref="NConsole.IO.ALT_EXTRA"/>)
+		/// Function to execute when selected with modifiers (<see cref="NConsole.IO.ALT_FUNC_MODIFIER"/>)
 		/// </summary>
 		public virtual Func<object?>? AltFunction { get; set; }
+
+
+		/// <summary>
+		/// Function to execute when selected with modifiers (<see cref="NConsole.IO.CTRL_FUNC_MODIFIER"/>)
+		/// </summary>
+		public virtual Func<object?>? CtrlFunction { get; set; }
 
 		/// <summary>
 		/// Information about this <see cref="NConsoleOption"/>

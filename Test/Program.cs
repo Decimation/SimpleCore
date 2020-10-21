@@ -27,12 +27,43 @@ namespace Test
 	{
 		public static void Main(string[] args)
 		{
-			QString s = "foo bar";
-			Console.WriteLine(s);
-			s.Remove(0, 3);
-			Console.WriteLine(s);
-			s.Replace("bar", "baz");
-			Console.WriteLine(s);
+			/*ConsoleKeyInfo cki;
+
+			do
+			{
+				while (!Console.KeyAvailable)
+				{
+					// Do something
+				}
+
+				cki = Console.ReadKey(true);
+				Console.WriteLine("{0} {1} {2} {3}",cki.Key,(int) cki.KeyChar, cki.Modifiers, (char) (int)cki.Key);
+			} while (cki.Key != ConsoleKey.Escape);*/
+
+			var op = new NConsoleOption()
+			{
+				Name = "test",
+				Function = () =>
+				{
+					Console.WriteLine("-");
+					NConsole.IO.WaitForSecond();
+					return null;
+				},
+				AltFunction = () =>
+				{
+					Console.WriteLine("alt");
+					NConsole.IO.WaitForSecond();
+					return null;
+				},
+				CtrlFunction = () =>
+				{
+					Console.WriteLine("ctrl");
+					NConsole.IO.WaitForSecond();
+					return null;
+				},
+			};
+
+			NConsole.IO.HandleOptions(new[] {op});
 		}
 	}
 }

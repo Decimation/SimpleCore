@@ -38,9 +38,14 @@ namespace SimpleCore.CommandLine
 			private const ConsoleKey ESC_EXIT = ConsoleKey.Escape;
 
 			/// <summary>
-			///     Alt modifier -> View extra info
+			///     Alt modifier -> <see cref="NConsoleOption.AltFunction"/>
 			/// </summary>
-			private const ConsoleModifiers ALT_EXTRA = ConsoleModifiers.Alt;
+			private const ConsoleModifiers ALT_FUNC_MODIFIER = ConsoleModifiers.Alt;
+
+			/// <summary>
+			///     Ctrl modifier -> <see cref="NConsoleOption.CtrlFunction"/>
+			/// </summary>
+			private const ConsoleModifiers CTRL_FUNC_MODIFIER = ConsoleModifiers.Control;
 
 
 			// todo
@@ -108,6 +113,12 @@ namespace SimpleCore.CommandLine
 				}
 
 				return INVALID;
+			}
+
+
+			private static char Parse(ConsoleKey key)
+			{
+				return (char) (int) key;
 			}
 
 			private static string FormatOption(NConsoleOption option, int i)
@@ -193,7 +204,7 @@ namespace SimpleCore.CommandLine
 					// @formatter:off � disable formatter after this line
 
 					string prompt = String.Format("Enter the option number to open or {0} to exit.\n", ESC_EXIT) +
-									String.Format("Hold down {0} while entering the option number to show more info.\n", ALT_EXTRA) +
+									String.Format("Hold down {0} while entering the option number to show more info.\n", ALT_FUNC_MODIFIER) +
 									String.Format("Options with expanded information are denoted with {0}.", ALT_DENOTE);
 
 					WriteSuccess(prompt);
@@ -230,10 +241,15 @@ namespace SimpleCore.CommandLine
 
 					// Key was read
 
+					// todo: use cki.Key?
+
 					cki = Console.ReadKey(true);
-					char keyChar = cki.KeyChar;
+					//char keyChar = cki.KeyChar;
+					char keyChar = Parse(cki.Key);
 					var modifiers = cki.Modifiers;
-					bool altModifier = (modifiers & ALT_EXTRA) != 0;
+
+					bool altModifier = (modifiers & ALT_FUNC_MODIFIER) != 0;
+					bool ctrlModifier = (modifiers & CTRL_FUNC_MODIFIER) != 0;
 
 					// Handle option
 
@@ -244,10 +260,17 @@ namespace SimpleCore.CommandLine
 						var option = io[idx];
 
 						bool useAltFunc = altModifier && option.AltFunction != null;
+						bool useCtrlFunc = ctrlModifier && option.CtrlFunction != null;
 
 						if (useAltFunc) {
 
 							var altFunc = option.AltFunction()!;
+
+
+							//
+						}
+						else if (useCtrlFunc) {
+							var ctrlFunc = option.CtrlFunction()!;
 
 							//
 						}
