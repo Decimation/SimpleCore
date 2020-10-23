@@ -119,5 +119,18 @@ namespace SimpleCore.Win32
 		{
 			return Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
 		}
+
+		public static bool ExploreFile(string filePath)
+		{
+			// https://stackoverflow.com/questions/13680415/how-to-open-explorer-with-a-specific-file-selected
+			if (!System.IO.File.Exists(filePath))
+			{
+				return false;
+			}
+			//Clean up file path so it can be navigated OK
+			filePath = System.IO.Path.GetFullPath(filePath);
+			System.Diagnostics.Process.Start("explorer.exe", string.Format("/select,\"{0}\"", filePath));
+			return true;
+		}
 	}
 }

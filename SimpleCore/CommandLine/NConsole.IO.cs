@@ -23,10 +23,6 @@ namespace SimpleCore.CommandLine
 		/// </summary>
 		public static class IO
 		{
-			public const char CLI_CHAR = '*';
-
-			public const string ALT_DENOTE = "[Alt]";
-
 			private const int MAX_OPTION_N = 10;
 
 			private const char OPTION_LETTER_START = 'A';
@@ -35,17 +31,17 @@ namespace SimpleCore.CommandLine
 			/// <summary>
 			///     Escape -> quit
 			/// </summary>
-			private const ConsoleKey ESC_EXIT = ConsoleKey.Escape;
+			public const ConsoleKey ESC_EXIT = ConsoleKey.Escape;
 
 			/// <summary>
 			///     Alt modifier -> <see cref="NConsoleOption.AltFunction"/>
 			/// </summary>
-			private const ConsoleModifiers ALT_FUNC_MODIFIER = ConsoleModifiers.Alt;
+			public const ConsoleModifiers ALT_FUNC_MODIFIER = ConsoleModifiers.Alt;
 
 			/// <summary>
 			///     Ctrl modifier -> <see cref="NConsoleOption.CtrlFunction"/>
 			/// </summary>
-			private const ConsoleModifiers CTRL_FUNC_MODIFIER = ConsoleModifiers.Control;
+			public const ConsoleModifiers CTRL_FUNC_MODIFIER = ConsoleModifiers.Control;
 
 
 			// todo
@@ -158,7 +154,7 @@ namespace SimpleCore.CommandLine
 			public static HashSet<object> HandleOptions<T>(IEnumerable<T> options,
 				bool selectMultiple = false) where T : NConsoleOption
 			{
-				var i = new NConsoleUI(options, null, selectMultiple);
+				var i = new NConsoleUI(options, null, null, selectMultiple);
 
 				return HandleOptions(i);
 			}
@@ -201,15 +197,22 @@ namespace SimpleCore.CommandLine
 
 					// Handle key reading
 
+
 					// @formatter:off disable formatter after this line
 
-					string prompt = String.Format("Enter the option number to open or {0} to exit.\n", ESC_EXIT) +
-									String.Format("Hold down {0} while entering the option number to show more info.\n", ALT_FUNC_MODIFIER) +
-									String.Format("Options with expanded information are denoted with {0}.", ALT_DENOTE);
+					// string prompt = String.Format("Enter the option number to open or {0} to exit.\n", ESC_EXIT) +
+					// 				String.Format("Hold down {0} while entering the option number to show more info.\n", ALT_FUNC_MODIFIER) +
+					// 				String.Format("Options with expanded information are denoted with {0}.", ALT_DENOTE);
+					//
+					// WriteSuccess(prompt);
 
-					WriteSuccess(prompt);
+					if (io.Prompt != null)
+					{
+						WriteSuccess(io.Prompt);
+					}
 
 					// @formatter:on enable formatter after this line
+
 				}
 
 
@@ -297,24 +300,25 @@ namespace SimpleCore.CommandLine
 				return selectedOptions;
 			}
 
+			public const char OPTION_Y = 'Y';
+			public const char OPTION_N = 'N';
+
 			[StringFormatMethod(STRING_FORMAT_ARG)]
 			public static bool ReadConfirm(string msg, params object[] args)
 			{
-				Console.Clear();
-				WriteInfo("{0} (y/n)", String.Format(msg, args));
+				WriteInfo("{0} ({1}/{2})", String.Format(msg, args),OPTION_Y, OPTION_N);
 
 				Console.WriteLine();
 
-
-				char key = Char.ToLower(Console.ReadKey().KeyChar);
+				char key = Char.ToUpper(Console.ReadKey().KeyChar);
 
 				Console.WriteLine();
 
-				if (key == 'n') {
+				if (key == OPTION_N) {
 					return false;
 				}
 
-				if (key == 'y') {
+				if (key == OPTION_Y) {
 					return true;
 				}
 

@@ -59,11 +59,16 @@ namespace Test
 				{
 					Console.WriteLine("ctrl");
 					NConsole.IO.WaitForSecond();
+
+					var ok = NConsole.IO.ReadConfirm("hi");
+
 					return null;
 				},
 			};
 
 			NConsole.IO.HandleOptions(new[] {op});
+
+			
 		}
 	}
 }

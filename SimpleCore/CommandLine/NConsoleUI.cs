@@ -11,11 +11,12 @@ namespace SimpleCore.CommandLine
 	{
 		public static string DefaultName { get; set; } = Console.Title;
 
-		public NConsoleUI(IEnumerable<NConsoleOption> options, string? name = null, bool selectMultiple = false)
+		public NConsoleUI(IEnumerable<NConsoleOption> options, string? name = null, string? prompt = null, bool selectMultiple = false)
 		{
 			Options = options;
 			SelectMultiple = selectMultiple;
 			Name = name ?? DefaultName;
+			Prompt = prompt;
 		}
 
 		public IEnumerable<NConsoleOption> Options { get; }
@@ -23,6 +24,8 @@ namespace SimpleCore.CommandLine
 		public bool SelectMultiple { get; }
 
 		public string? Name { get; }
+
+		public string? Prompt { get; }
 
 		public NConsoleOption this[int i]
 		{

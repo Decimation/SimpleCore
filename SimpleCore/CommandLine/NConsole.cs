@@ -32,22 +32,40 @@ namespace SimpleCore.CommandLine
 			Success
 		}
 
-		private const char HEAVY_BALLOT_X = '\u2718';
+		public const char BALLOT_X = '\u2717';
 
-		private const char HEAVY_CHECK_MARK = '\u2714';
+		public const char HEAVY_BALLOT_X = '\u2718';
+
+		public const char HEAVY_CHECK_MARK = '\u2714';
+
+		public const char CHECK_MARK = '\u2713';
 
 		public const char MUL_SIGN = '\u00D7';
 
 		public const char RAD_SIGN = '\u221A';
 
-		private const char ASTERISK = '*';
+		public const char ASTERISK = '*';
 
-		private const string ELLIPSES = "...";
+		public const string ELLIPSES = "...";
 
-		private const char NULL_CHAR = '\0';
+		public const char NULL_CHAR = '\0';
 
-		private const char EXCLAMATION = '!';
+		public const char EXCLAMATION = '!';
 
+		public const char RELOAD = '\u21bb';
+
+		public const char LOZENGE = '\u25ca';
+
+		public const char SUN = '\u263c';
+
+		public const char ARROW_LEFT = '\u2190';
+		public const char ARROW_UP = '\u2191';
+		public const char ARROW_RIGHT = '\u2192';
+		public const char ARROW_DOWN = '\u2193';
+		public const char ARROW_LEFT_RIGHT= '\u2194';
+		public const char ARROW_UP_DOWN = '\u2195';
+
+		public const char CLI_CHAR = '*';
 
 		private static readonly string NewLine = '\n'.ToString();
 
@@ -104,7 +122,7 @@ namespace SimpleCore.CommandLine
 				Level.Info => ASTERISK,
 				Level.Error => EXCLAMATION,
 				Level.Debug => MUL_SIGN,
-				Level.Success => RAD_SIGN,
+				Level.Success => CHECK_MARK,
 				_ => throw new ArgumentOutOfRangeException(nameof(lvl), lvl, null)
 			};
 
@@ -114,8 +132,6 @@ namespace SimpleCore.CommandLine
 
 			if (fg.HasValue) {
 				AddColor(ref s, fg.Value);
-
-
 			}
 			else {
 				var autoFgColor = lvl switch
@@ -224,5 +240,6 @@ namespace SimpleCore.CommandLine
 		{
 			s = s.Pastel(c);
 		}
+
 	}
 }
