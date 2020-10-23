@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using SimpleCore.Internal;
@@ -51,6 +52,24 @@ namespace SimpleCore.Utilities
 			var i = RandomInstance.Next(0, list.Count);
 
 			return list[i];
+		}
+
+		private const string DICT_DELIM = "=";
+
+		public static void WriteDictionary(IDictionary<string, string> d, string filename)
+		{
+			string[] lines = d.Select(kvp => kvp.Key + DICT_DELIM + kvp.Value).ToArray();
+			File.WriteAllLines(filename, lines);
+		}
+
+		public static IDictionary<string, string> ReadDictionary(string filename)
+		{
+			string[] lines = File.ReadAllLines(filename);
+
+			var dict = lines.Select(l => l.Split(DICT_DELIM))
+				.ToDictionary(a => a[0], a => a[1]);
+
+			return dict;
 		}
 
 		public static TValue GetValueOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dic,

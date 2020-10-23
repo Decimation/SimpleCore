@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using static SimpleCore.CommandLine.NConsoleOption;
+// ReSharper disable UnusedMember.Global
 
 namespace SimpleCore.CommandLine
 {
@@ -71,9 +73,9 @@ namespace SimpleCore.CommandLine
 		public virtual Color Color { get; set; } = DefaultOptionColor;
 
 
-		public static void EnsureOption(ref NConsoleOption option)
+		public static void EnsureOption(ref NConsoleOption? option)
 		{
-			option ??= NConsoleOption.Wait;
+			option ??= Wait;
 		}
 
 		public static NConsoleOption[] CreateOptionsFromEnum<TEnum>() where TEnum : Enum

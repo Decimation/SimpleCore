@@ -155,8 +155,8 @@ namespace SimpleCore.CommandLine
 			/// </summary>
 			/// <param name="options">Array of <see cref="NConsoleOption" /></param>
 			/// <param name="selectMultiple">Whether to return selected options as a <see cref="HashSet{T}" /></param>
-			public static HashSet<object> HandleOptions(IEnumerable<NConsoleOption> options,
-				bool selectMultiple = false)
+			public static HashSet<object> HandleOptions<T>(IEnumerable<T> options,
+				bool selectMultiple = false) where T : NConsoleOption
 			{
 				var i = new NConsoleUI(options, null, selectMultiple);
 
@@ -201,7 +201,7 @@ namespace SimpleCore.CommandLine
 
 					// Handle key reading
 
-					// @formatter:off � disable formatter after this line
+					// @formatter:off disable formatter after this line
 
 					string prompt = String.Format("Enter the option number to open or {0} to exit.\n", ESC_EXIT) +
 									String.Format("Hold down {0} while entering the option number to show more info.\n", ALT_FUNC_MODIFIER) +
@@ -209,7 +209,7 @@ namespace SimpleCore.CommandLine
 
 					WriteSuccess(prompt);
 
-					// @formatter:on � enable formatter after this line
+					// @formatter:on enable formatter after this line
 				}
 
 
