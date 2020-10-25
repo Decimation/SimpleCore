@@ -43,6 +43,8 @@ namespace SimpleCore.CommandLine
 			/// </summary>
 			public const ConsoleModifiers CTRL_FUNC_MODIFIER = ConsoleModifiers.Control;
 
+			public const ConsoleKey REFRESH = ConsoleKey.F5;
+
 
 			// todo
 
@@ -154,7 +156,7 @@ namespace SimpleCore.CommandLine
 			public static HashSet<object> HandleOptions<T>(IEnumerable<T> options,
 				bool selectMultiple = false) where T : NConsoleOption
 			{
-				var i = new NConsoleUI(options, null, null, selectMultiple);
+				var i = new NConsoleUI(options, null, null, selectMultiple, null);
 
 				return HandleOptions(i);
 			}
@@ -213,6 +215,12 @@ namespace SimpleCore.CommandLine
 
 					// @formatter:on enable formatter after this line
 
+					
+					if (io.Status!=null) {
+						WriteInfo(io.Status);
+						
+					}
+
 				}
 
 
@@ -247,7 +255,11 @@ namespace SimpleCore.CommandLine
 					// todo: use cki.Key?
 
 					cki = Console.ReadKey(true);
-					//char keyChar = cki.KeyChar;
+
+					if (cki.Key == REFRESH) {
+						Refresh();
+					}
+					
 					char keyChar = Parse(cki.Key);
 					var modifiers = cki.Modifiers;
 

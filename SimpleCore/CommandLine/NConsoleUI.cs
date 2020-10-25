@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 // ReSharper disable InconsistentNaming
 
 namespace SimpleCore.CommandLine
@@ -11,21 +12,33 @@ namespace SimpleCore.CommandLine
 	{
 		public static string DefaultName { get; set; } = Console.Title;
 
-		public NConsoleUI(IEnumerable<NConsoleOption> options, string? name = null, string? prompt = null, bool selectMultiple = false)
+		public NConsoleUI(IEnumerable<NConsoleOption> options,
+			string? name,
+			string? prompt,
+			bool selectMultiple,
+			string? status)
 		{
 			Options = options;
 			SelectMultiple = selectMultiple;
 			Name = name ?? DefaultName;
 			Prompt = prompt;
+			Status = status;
 		}
 
-		public IEnumerable<NConsoleOption> Options { get; }
+		public NConsoleUI(IEnumerable<NConsoleOption> options) : this(options, null, null, false, null)
+		{
 
-		public bool SelectMultiple { get; }
+		}
 
-		public string? Name { get; }
+		public IEnumerable<NConsoleOption> Options { get; set; }
 
-		public string? Prompt { get; }
+		public bool SelectMultiple { get; set; }
+
+		public string? Name { get; set; }
+
+		public string? Prompt { get; set; }
+
+		public string? Status { get; set; }
 
 		public NConsoleOption this[int i]
 		{

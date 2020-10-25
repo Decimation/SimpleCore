@@ -37,7 +37,7 @@ namespace SimpleCore.Win32
 		///     The best <see cref="FileFormat" /> match; <see cref="FileFormat.Unknown" /> if the type could not be
 		///     determined.
 		/// </returns>
-		public static FileFormat ResolveFileType(string file)
+		public static FileFormatType ResolveFileType(string file)
 		{
 			return ResolveFileType(File.ReadAllBytes(file));
 		}
@@ -51,7 +51,7 @@ namespace SimpleCore.Win32
 		///     The best <see cref="FileFormat" /> match; <see cref="FileFormat.Unknown" /> if the type could not be
 		///     determined.
 		/// </returns>
-		public static FileFormat ResolveFileType(byte[] fileBytes)
+		public static FileFormatType ResolveFileType(byte[] fileBytes)
 		{
 			// todo: FileIdentity, FileSequence, etc
 
@@ -64,7 +64,7 @@ namespace SimpleCore.Win32
 			var jpegEnd = new byte[] {0xFF, 0xD9};
 
 			if (fileBytes.StartsWith(jpegStart) && fileBytes.EndsWith(jpegEnd)) {
-				return FileFormat.JPEG_RAW;
+				return FileFormatType.JPEG_RAW;
 			}
 
 			/*
@@ -74,7 +74,7 @@ namespace SimpleCore.Win32
 			var jpegJfif = new byte[] {0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01};
 
 			if (fileBytes.StartsWith(jpegJfif)) {
-				return FileFormat.JPEG_JFIF;
+				return FileFormatType.JPEG_JFIF;
 			}
 
 			/*
@@ -84,7 +84,7 @@ namespace SimpleCore.Win32
 			var png = new byte[] {0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A};
 
 			if (fileBytes.StartsWith(png)) {
-				return FileFormat.PNG;
+				return FileFormatType.PNG;
 			}
 
 			/*
@@ -94,7 +94,7 @@ namespace SimpleCore.Win32
 			var gif = new byte[] {0x47, 0x49, 0x46, 0x38};
 
 			if (fileBytes.StartsWith(gif)) {
-				return FileFormat.GIF;
+				return FileFormatType.GIF;
 			}
 
 
@@ -105,14 +105,14 @@ namespace SimpleCore.Win32
 			var bmp = new byte[] {0x42, 0x4D};
 
 			if (fileBytes.StartsWith(bmp)) {
-				return FileFormat.BMP;
+				return FileFormatType.BMP;
 			}
 
 			/*
 			 * Unknown
 			 */
 
-			return FileFormat.Unknown;
+			return FileFormatType.Unknown;
 		}
 
 		public static string CreateRandomName()

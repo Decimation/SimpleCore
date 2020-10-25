@@ -27,48 +27,11 @@ namespace Test
 	{
 		public static void Main(string[] args)
 		{
-			/*ConsoleKeyInfo cki;
+			foreach (var f in FileFormatType.GetAll<FileFormatType>()) {
+				Console.WriteLine(f);
+			}
 
-			do
-			{
-				while (!Console.KeyAvailable)
-				{
-					// Do something
-				}
-
-				cki = Console.ReadKey(true);
-				Console.WriteLine("{0} {1} {2} {3}",cki.Key,(int) cki.KeyChar, cki.Modifiers, (char) (int)cki.Key);
-			} while (cki.Key != ConsoleKey.Escape);*/
-
-			var op = new NConsoleOption()
-			{
-				Name = "test",
-				Function = () =>
-				{
-					Console.WriteLine("-");
-					NConsole.IO.WaitForSecond();
-					return null;
-				},
-				AltFunction = () =>
-				{
-					Console.WriteLine("alt");
-					NConsole.IO.WaitForSecond();
-					return null;
-				},
-				CtrlFunction = () =>
-				{
-					Console.WriteLine("ctrl");
-					NConsole.IO.WaitForSecond();
-
-					var ok = NConsole.IO.ReadConfirm("hi");
-
-					return null;
-				},
-			};
-
-			NConsole.IO.HandleOptions(new[] {op});
-
-			
+			Console.WriteLine(Images.GetImageDimensions(@"C:\Users\Deci\Desktop\fucking_epic.jpg"));
 		}
 	}
 }
