@@ -9,7 +9,6 @@ using static SimpleCore.Internal.Common;
 
 // ReSharper disable UnusedMember.Global
 
-
 namespace SimpleCore.Utilities
 {
 	/// <summary>

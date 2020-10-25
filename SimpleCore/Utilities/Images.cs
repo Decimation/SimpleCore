@@ -20,6 +20,5 @@ namespace SimpleCore.Utilities
 
 			return (bmp.Width, bmp.Height);
 		}
-		
 	}
 }

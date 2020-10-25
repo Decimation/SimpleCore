@@ -39,7 +39,6 @@ namespace SimpleCore.CommandLine.Shell
 				EnableRaisingEvents = true
 			};
 
-
 			return process;
 		}
 
@@ -56,7 +55,6 @@ namespace SimpleCore.CommandLine.Shell
 			}
 
 			return list.ToArray();
-
 		}
 	}
 }

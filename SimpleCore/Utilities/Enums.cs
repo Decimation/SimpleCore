@@ -32,7 +32,6 @@ namespace SimpleCore.Utilities
 			var t = typeof(TEnum);
 
 			if (t.GetCustomAttribute<FlagsAttribute>() != null) {
-
 				var sz = Formatting.QuickJoin(set);
 				Enum.TryParse(typeof(TEnum), (string) sz, out var e);
 				return (TEnum) e;

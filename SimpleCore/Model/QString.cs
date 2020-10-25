@@ -56,7 +56,7 @@ namespace SimpleCore.Model
 
 		public void Replace(QString oldValue, QString newValue)
 		{
-			m_value.Replace(oldValue, newValue);
+			m_value.Replace((string) oldValue, (string)newValue);
 		}
 
 		public void Remove(int startIndex, int length)
@@ -80,7 +80,7 @@ namespace SimpleCore.Model
 			return a;
 		}
 
-		public static implicit operator string(QString value) => value.Value;
+		public static /*implicit*/ explicit operator string(QString value) => value.Value;
 
 		public static implicit operator QString(string value) => new QString(value);
 

@@ -13,7 +13,6 @@ namespace SimpleCore.CommandLine.Shell
 
 		protected BaseCommand()
 		{
-			
 		}
 
 		public virtual void Dispose()

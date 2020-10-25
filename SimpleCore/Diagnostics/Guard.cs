@@ -21,7 +21,6 @@ namespace SimpleCore.Diagnostics
 
 		private const string UNCONDITIONAL_HALT = "=> halt";
 
-
 		[AssertionMethod]
 		[ContractAnnotation(UNCONDITIONAL_HALT)]
 		[DebuggerHidden]
@@ -35,7 +34,6 @@ namespace SimpleCore.Diagnostics
 				var s = string.Format(msg, args);
 
 				exception = (TException) Activator.CreateInstance(typeof(TException), s)!;
-
 			}
 			else {
 				exception = new TException();
@@ -49,7 +47,6 @@ namespace SimpleCore.Diagnostics
 		[DebuggerHidden]
 		public static void Assert(bool condition, string? msg = null, params object[] args) =>
 			Assert<Exception>(condition, msg, args);
-
 
 		/// <summary>
 		/// Root assertion function
@@ -65,7 +62,6 @@ namespace SimpleCore.Diagnostics
 				Fail<TException>(msg, args);
 			}
 		}
-
 
 		[AssertionMethod]
 		[ContractAnnotation(VALUE_NULL_HALT)]

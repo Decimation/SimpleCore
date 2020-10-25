@@ -25,14 +25,14 @@ namespace SimpleCore.Utilities
 			}
 
 			return r;
-
 		}
+
+		
 
 		public static string CreateSeparator(string s)
 		{
 			string sx = new string('-', 10);
 			return sx + s + sx;
-
 		}
 
 		public static string CleanString(string s)
@@ -41,7 +41,6 @@ namespace SimpleCore.Utilities
 
 			return s;
 		}
-
 
 		public static string Truncate(this string value, int maxLength)
 		{
@@ -117,7 +116,6 @@ namespace SimpleCore.Utilities
 			if (posA == Common.INVALID || posB == Common.INVALID) {
 				return String.Empty;
 			}
-
 
 			int adjustedPosA = posA + a.Length;
 			return adjustedPosA >= posB ? String.Empty : value.Substring(adjustedPosA, posB - adjustedPosA);

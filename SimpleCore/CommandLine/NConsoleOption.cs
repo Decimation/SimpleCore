@@ -1,30 +1,44 @@
 ﻿#nullable enable
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using static SimpleCore.CommandLine.NConsoleOption;
+
 // ReSharper disable UnusedMember.Global
 
 namespace SimpleCore.CommandLine
 {
+	public struct NConsoleKeyIO
+	{
+		public ConsoleKey Key { get; }
+		public NConsoleFunction Function { get; }
+	}
+
 	/// <summary>
-	/// Represents an interactive console/shell option
+	///     Represents an interactive console/shell option
 	/// </summary>
 	public class NConsoleOption
 	{
-		/// <summary>
-		/// Default <see cref="Color"/>
-		/// </summary>
-		public static readonly Color DefaultOptionColor = System.Drawing.Color.White;
-
-
-		public NConsoleOption() { }
+		public delegate object? NConsoleFunction();
 
 		/// <summary>
-		/// Represents a <see cref="NConsoleOption"/> which is not yet available or in progress
+		///     <see cref="NConsoleOption.AltFunction" />
 		/// </summary>
-		public static readonly NConsoleOption Wait = new NConsoleOption()
+		public const ConsoleModifiers NC_ALT_FUNC_MODIFIER = ConsoleModifiers.Alt;
+
+		/// <summary>
+		///     <see cref="NConsoleOption.CtrlFunction" />
+		/// </summary>
+		public const ConsoleModifiers NC_CTRL_FUNC_MODIFIER = ConsoleModifiers.Control;
+
+		/// <summary>
+		///     Default <see cref="Color" />
+		/// </summary>
+		public static readonly Color DefaultOptionColor = Color.White;
+
+		/// <summary>
+		///     Represents a <see cref="NConsoleOption" /> which is not yet available or in progress
+		/// </summary>
+		public static readonly NConsoleOption Wait = new NConsoleOption
 		{
 			Name = "Wait",
 
@@ -40,38 +54,35 @@ namespace SimpleCore.CommandLine
 			CtrlFunction = () => null
 		};
 
-
 		/// <summary>
-		/// Display name
+		///     Display name
 		/// </summary>
 		public virtual string Name { get; set; }
 
 		/// <summary>
-		/// Function to execute when selected
+		///     Function to execute when selected
 		/// </summary>
-		public virtual Func<object?> Function { get; set; }
+		public virtual NConsoleFunction Function { get; set; }
 
 		/// <summary>
-		/// Function to execute when selected with modifiers (<see cref="NConsole.IO.ALT_FUNC_MODIFIER"/>)
+		///     Function to execute when selected with modifiers (<see cref="NC_ALT_FUNC_MODIFIER" />)
 		/// </summary>
-		public virtual Func<object?>? AltFunction { get; set; }
-
+		public virtual NConsoleFunction? AltFunction { get; set; }
 
 		/// <summary>
-		/// Function to execute when selected with modifiers (<see cref="NConsole.IO.CTRL_FUNC_MODIFIER"/>)
+		///     Function to execute when selected with modifiers (<see cref="NC_CTRL_FUNC_MODIFIER" />)
 		/// </summary>
-		public virtual Func<object?>? CtrlFunction { get; set; }
+		public virtual NConsoleFunction? CtrlFunction { get; set; }
 
 		/// <summary>
-		/// Information about this <see cref="NConsoleOption"/>
+		///     Information about this <see cref="NConsoleOption" />
 		/// </summary>
 		public virtual string? Data { get; set; }
 
 		/// <summary>
-		/// Display color
+		///     Display color
 		/// </summary>
 		public virtual Color Color { get; set; } = DefaultOptionColor;
-
 
 		public static void EnsureOption(ref NConsoleOption? option)
 		{
@@ -87,16 +98,14 @@ namespace SimpleCore.CommandLine
 				var option = options[i];
 				string name = Enum.GetName(typeof(TEnum), option)!;
 
-				rg[i] = new NConsoleOption()
+				rg[i] = new NConsoleOption
 				{
 					Name = name,
 					Function = () => option
 				};
 			}
 
-
 			return rg;
-
 
 		}
 	}

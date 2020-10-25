@@ -8,6 +8,9 @@ using System.Text;
 
 namespace SimpleCore.CommandLine
 {
+	/// <summary>
+	/// Describes a console interface for use with <see cref="NConsole"/>
+	/// </summary>
 	public class NConsoleUI
 	{
 		public static string DefaultName { get; set; } = Console.Title;
@@ -18,17 +21,14 @@ namespace SimpleCore.CommandLine
 			bool selectMultiple,
 			string? status)
 		{
-			Options = options;
+			Options        = options;
 			SelectMultiple = selectMultiple;
-			Name = name ?? DefaultName;
-			Prompt = prompt;
-			Status = status;
+			Name           = name ?? DefaultName;
+			Prompt         = prompt;
+			Status         = status;
 		}
 
-		public NConsoleUI(IEnumerable<NConsoleOption> options) : this(options, null, null, false, null)
-		{
-
-		}
+		public NConsoleUI(IEnumerable<NConsoleOption> options) : this(options, null, null, false, null) { }
 
 		public IEnumerable<NConsoleOption> Options { get; set; }
 

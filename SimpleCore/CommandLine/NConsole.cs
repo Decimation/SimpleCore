@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Text;
 using JetBrains.Annotations;
 using Pastel;
 using SimpleCore.Utilities;
+using SimpleCore.Win32;
 using static SimpleCore.Internal.Common;
 
 // ReSharper disable UnusedMember.Local
@@ -17,11 +19,32 @@ namespace SimpleCore.CommandLine
 {
 	// todo
 
-
 	/// <summary>
-	/// Extended console.
+	///     Extended console.
 	/// </summary>
-	public static partial class NConsole
+	/// <list type="bullet">
+	///     <item>
+	///         <description>
+	///             <see cref="NConsole" />
+	///         </description>
+	///     </item>
+	///     <item>
+	///         <description>
+	///             <see cref="NConsole.IO" />
+	///         </description>
+	///     </item>
+	///     <item>
+	///         <description>
+	///             <see cref="NConsoleOption" />
+	///         </description>
+	///     </item>
+	///     <item>
+	///         <description>
+	///             <see cref="NConsoleUI" />
+	///         </description>
+	///     </item>
+	/// </list>
+	public static class NConsole
 	{
 		public enum Level
 		{
@@ -59,18 +82,28 @@ namespace SimpleCore.CommandLine
 		public const char SUN = '\u263c';
 
 		public const char ARROW_LEFT = '\u2190';
+
 		public const char ARROW_UP = '\u2191';
+
 		public const char ARROW_RIGHT = '\u2192';
+
 		public const char ARROW_DOWN = '\u2193';
-		public const char ARROW_LEFT_RIGHT= '\u2194';
+
+		public const char ARROW_LEFT_RIGHT = '\u2194';
+
 		public const char ARROW_UP_DOWN = '\u2195';
 
 		public const char CLI_CHAR = '*';
 
+		public const int STD_INPUT_HANDLE = -10;
+
+		public const int STD_OUTPUT_HANDLE = -11;
+
+		public const int STD_ERROR_HANDLE = -12;
+
 		private static readonly string NewLine = '\n'.ToString();
 
 		public static int BufferLimit { get; set; } = Console.BufferWidth - 10;
-
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static string FormatString(char c, string s)
@@ -104,11 +137,16 @@ namespace SimpleCore.CommandLine
 		}
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void Write(string msg, params object[] args) => Write(Level.None, null, null, true, msg, args);
+		public static void Write(string msg, params object[] args)
+		{
+			Write(Level.None, null, null, true, msg, args);
+		}
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void Write(Level lvl, string msg, params object[] args) => Write(lvl, null, null, true, msg, args);
-
+		public static void Write(Level lvl, string msg, params object[] args)
+		{
+			Write(lvl, null, null, true, msg, args);
+		}
 
 		/// <summary>
 		///     Root write method.
@@ -150,7 +188,6 @@ namespace SimpleCore.CommandLine
 				AddColorBG(ref s, bg.Value);
 			}
 
-
 			if (newLine) {
 				Console.WriteLine(s);
 			}
@@ -161,37 +198,58 @@ namespace SimpleCore.CommandLine
 
 		[Conditional(DEBUG_COND)]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void WriteDebug(string msg, params object[] args) => Write(Level.Debug, msg, args);
+		public static void WriteDebug(string msg, params object[] args)
+		{
+			Write(Level.Debug, msg, args);
+		}
 
 		[Conditional(DEBUG_COND)]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void WriteDebug(object obj) => WriteDebug(obj.ToString());
-
+		public static void WriteDebug(object obj)
+		{
+			WriteDebug(obj.ToString());
+		}
 
 		public static void Init()
 		{
 			Console.OutputEncoding = Encoding.Unicode;
 		}
 
+		[StringFormatMethod(STRING_FORMAT_ARG)]
+		public static void WriteError(string msg, params object[] args)
+		{
+			Write(Level.Error, msg, args);
+		}
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void WriteError(string msg, params object[] args) => Write(Level.Error, msg, args);
+		public static void WriteError(object obj)
+		{
+			WriteError(obj.ToString());
+		}
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void WriteError(object obj) => WriteError(obj.ToString());
+		public static void WriteInfo(string msg, params object[] args)
+		{
+			Write(Level.Info, msg, args);
+		}
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void WriteInfo(string msg, params object[] args) => Write(Level.Info, msg, args);
+		public static void WriteInfo(object obj)
+		{
+			WriteInfo(obj.ToString());
+		}
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void WriteInfo(object obj) => WriteInfo(obj.ToString());
-
+		public static void WriteSuccess(object obj)
+		{
+			WriteSuccess(obj.ToString());
+		}
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void WriteSuccess(object obj) => WriteSuccess(obj.ToString());
-
-		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void WriteSuccess(string msg, params object[] args) => Write(Level.Success, msg, args);
+		public static void WriteSuccess(string msg, params object[] args)
+		{
+			Write(Level.Success, msg, args);
+		}
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteOnCurrentLine(Color color, string msg, params object[] args)
@@ -204,7 +262,10 @@ namespace SimpleCore.CommandLine
 			WriteColor(color, false, msg);
 		}
 
-		public static void RunWithColor(ConsoleColor fgColor, Action func) => RunWithColor(fgColor, Console.BackgroundColor, func);
+		public static void RunWithColor(ConsoleColor fgColor, Action func)
+		{
+			RunWithColor(fgColor, Console.BackgroundColor, func);
+		}
 
 		public static void RunWithColor(ConsoleColor fgColor, ConsoleColor bgColor, Action func)
 		{
@@ -226,6 +287,12 @@ namespace SimpleCore.CommandLine
 		}
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
+		public static void WriteColor(Color fgColor, string msg, params object[] args)
+		{
+			WriteColor(fgColor, true, msg, args);
+		}
+
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteColor(Color fgColor, bool newLine, string msg, params object[] args)
 		{
 			if (newLine) {
@@ -241,5 +308,12 @@ namespace SimpleCore.CommandLine
 			s = s.Pastel(c);
 		}
 
+		/// <param name="nStdHandle">
+		///     <see cref="STD_INPUT_HANDLE" />,
+		///     <see cref="STD_OUTPUT_HANDLE" />,
+		///     <see cref="STD_ERROR_HANDLE" />
+		/// </param>
+		[DllImport(Native.KERNEL32_DLL, SetLastError = true)]
+		public static extern IntPtr GetStdHandle(int nStdHandle);
 	}
 }

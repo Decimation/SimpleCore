@@ -7,7 +7,6 @@ using System.Reflection;
 
 namespace SimpleCore.Model
 {
-	
 	public abstract class Enumeration : IComparable
 	{
 		public string Name { get; private set; }
@@ -43,7 +42,6 @@ namespace SimpleCore.Model
 
 			return typeMatches && valueMatches;
 		}
-
 
 		public int CompareTo(object other) => Id.CompareTo(((Enumeration) other).Id);
 

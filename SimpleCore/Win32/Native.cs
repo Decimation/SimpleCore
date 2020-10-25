@@ -1,9 +1,9 @@
 #nullable enable
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
+using System.Globalization;
 using System.Linq;
-using SimpleCore.Utilities;
 
 // ReSharper disable UnusedMember.Global
 
@@ -26,6 +26,7 @@ namespace SimpleCore.Win32
 		/// </summary>
 		public const char PATH_DELIM = ';';
 
+		public const string KERNEL32_DLL = "kernel32.dll";
 
 		/// <summary>
 		///     Environment variable target
@@ -55,7 +56,6 @@ namespace SimpleCore.Win32
 			set => Environment.SetEnvironmentVariable(PATH_ENV, value, Target);
 		}
 
-
 		/// <summary>
 		///     Removes <paramref name="location" /> from <see cref="PathDirectories" />
 		/// </summary>
@@ -63,28 +63,43 @@ namespace SimpleCore.Win32
 		{
 			string oldValue = EnvironmentPath;
 
-			string newValue = oldValue.Replace(PATH_DELIM + location, String.Empty);
-
-			EnvironmentPath = newValue;
+			EnvironmentPath = oldValue.Replace(PATH_DELIM + location, String.Empty);
 		}
-
 
 		/// <summary>
 		///     Determines whether <paramref name="location" /> is in <see cref="PathDirectories" />
 		/// </summary>
 		public static bool IsFolderInPath(string location)
 		{
-			string dir = PathDirectories.FirstOrDefault(s => s == location);
+			string? dir = Array.Find(PathDirectories, s => s == location);
 
 			return !String.IsNullOrWhiteSpace(dir);
 		}
 
+		/// <summary>
+		/// Reads a <see cref="byte"/> array as a <see cref="string"/> delimited by spaces in
+		/// hex number format
+		/// </summary>
+		public static byte[] ReadBinaryString(string s)
+		{
+			var rg = new List<byte>();
+
+			var bytes = s.Split(' ');
+
+			foreach (string b in bytes) {
+				var n = byte.Parse(b, NumberStyles.HexNumber);
+
+				rg.Add(n);
+			}
+
+			return rg.ToArray();
+		}
 
 		/// <summary>
-		/// Forcefully kills a <see cref="Process"/> and ensures the process has exited.
+		///     Forcefully kills a <see cref="Process" /> and ensures the process has exited.
 		/// </summary>
-		/// <param name="p"><see cref="Process"/> to forcefully kill.</param>
-		/// <returns><c>true</c> if <paramref name="p"/> was killed; <c>false</c> otherwise</returns>
+		/// <param name="p"><see cref="Process" /> to forcefully kill.</param>
+		/// <returns><c>true</c> if <paramref name="p" /> was killed; <c>false</c> otherwise</returns>
 		public static bool ForceKill(this Process p)
 		{
 			p.WaitForExit();
@@ -98,7 +113,6 @@ namespace SimpleCore.Win32
 				return true;
 			}
 			catch (Exception) {
-
 
 				return false;
 			}

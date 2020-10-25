@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCore", "SimpleCore\Si
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{B98E7C26-7DA0-4DA2-B2E0-76E0B14320BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCore.Net", "SimpleCore.Net\SimpleCore.Net.csproj", "{B397667E-0277-4129-8CF3-578C846CFFC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCore.Net", "SimpleCore.Net\SimpleCore.Net.csproj", "{B397667E-0277-4129-8CF3-578C846CFFC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

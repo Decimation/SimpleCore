@@ -32,7 +32,6 @@ namespace SimpleCore.Utilities
 		/// </summary>
 		public const string JOIN_SCOPE = "::";
 
-
 		/// <summary>
 		/// Concatenates the strings returned by <paramref name="toString"/>
 		/// using the specified separator between each element or member.
@@ -89,7 +88,6 @@ namespace SimpleCore.Utilities
 				throw new NotImplementedException();
 			}
 
-
 			if (options.HasFlagFast(HexOptions.Lowercase)) {
 				hexStr = hexStr.ToLower();
 			}
@@ -103,7 +101,6 @@ namespace SimpleCore.Utilities
 
 		public static unsafe string ToHexString(IntPtr value, HexOptions options = HexOptions.Default) => ToHexString((long) value, options);
 	}
-
 
 	[Flags]
 	public enum HexOptions

@@ -12,13 +12,11 @@ namespace SimpleCore.CommandLine.Shell
 	/// </summary>
 	public class BatchFileCommand : BaseCommand
 	{
-		
 		public BatchFileCommand(string[] commands, string fileName)
 		{
 			Commands = commands;
 			FileName = CreateBatchFile(fileName);
 			CommandProcess = CreateProcess(FileName);
-
 		}
 
 		public BatchFileCommand(string[] commands) : this(commands, FileOperations.CreateRandomName() + ".bat") { }
@@ -26,7 +24,6 @@ namespace SimpleCore.CommandLine.Shell
 		public string[] Commands { get; }
 
 		public string FileName { get; }
-
 
 		public override void Dispose()
 		{
@@ -57,7 +54,6 @@ namespace SimpleCore.CommandLine.Shell
 
 		private static Process CreateProcess(string fileName)
 		{
-
 			var startInfo = new ProcessStartInfo
 			{
 				WindowStyle = ProcessWindowStyle.Hidden,
@@ -73,9 +69,7 @@ namespace SimpleCore.CommandLine.Shell
 				EnableRaisingEvents = true
 			};
 
-
 			return process;
-
 		}
 	}
 }

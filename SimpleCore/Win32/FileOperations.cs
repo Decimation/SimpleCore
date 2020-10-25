@@ -55,7 +55,6 @@ namespace SimpleCore.Win32
 		{
 			// todo: FileIdentity, FileSequence, etc
 
-
 			/*
 			 * JPEG RAW
 			 */
@@ -71,10 +70,15 @@ namespace SimpleCore.Win32
 			 * JPEG JFIF
 			 */
 
-			var jpegJfif = new byte[] {0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01};
+			//var jpegJfif = new byte[] {0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01};
+			var jpegJfifExif = new byte[] {0xFF, 0xD8, 0xFF, 0xDB};
+			var jpegJfifExif2 = new byte[] {0xFF, 0xD8, 0xFF, 0xE1};
+			var jpegJfifExif3 = new byte[] {0xFF, 0xD8, 0xFF, 0xE0};
 
-			if (fileBytes.StartsWith(jpegJfif)) {
-				return FileFormatType.JPEG_JFIF;
+			if (fileBytes.StartsWith(jpegJfifExif) ||
+			    fileBytes.StartsWith(jpegJfifExif2) ||
+			    fileBytes.StartsWith(jpegJfifExif3)) {
+				return FileFormatType.JPEG_JFIF_EXIF;
 			}
 
 			/*
@@ -96,7 +100,6 @@ namespace SimpleCore.Win32
 			if (fileBytes.StartsWith(gif)) {
 				return FileFormatType.GIF;
 			}
-
 
 			/*
 			 * BMP
@@ -123,10 +126,10 @@ namespace SimpleCore.Win32
 		public static bool ExploreFile(string filePath)
 		{
 			// https://stackoverflow.com/questions/13680415/how-to-open-explorer-with-a-specific-file-selected
-			if (!System.IO.File.Exists(filePath))
-			{
+			if (!System.IO.File.Exists(filePath)) {
 				return false;
 			}
+
 			//Clean up file path so it can be navigated OK
 			filePath = System.IO.Path.GetFullPath(filePath);
 			System.Diagnostics.Process.Start("explorer.exe", string.Format("/select,\"{0}\"", filePath));

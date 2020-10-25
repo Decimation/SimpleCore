@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using BenchmarkDotNet.Attributes;
@@ -25,13 +26,11 @@ namespace Test
 
 	public static class Program
 	{
+		
 		public static void Main(string[] args)
 		{
-			foreach (var f in FileFormatType.GetAll<FileFormatType>()) {
-				Console.WriteLine(f);
-			}
+			NConsole.Init();
 
-			Console.WriteLine(Images.GetImageDimensions(@"C:\Users\Deci\Desktop\fucking_epic.jpg"));
 		}
 	}
 }
