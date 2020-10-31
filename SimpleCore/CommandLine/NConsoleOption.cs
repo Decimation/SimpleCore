@@ -5,14 +5,25 @@ using static SimpleCore.CommandLine.NConsoleOption;
 
 // ReSharper disable UnusedMember.Global
 
+
+#pragma warning disable HAA0601 // Value type to reference type conversion causing boxing allocation
+#pragma warning disable HAA0602 // Delegate on struct instance caused a boxing allocation
+#pragma warning disable HAA0603 // Delegate allocation from a method group
+#pragma warning disable HAA0604 // Delegate allocation from a method group
+
+#pragma warning disable HAA0501 // Explicit new array type allocation
+#pragma warning disable HAA0502 // Explicit new reference type allocation
+#pragma warning disable HAA0503 // Explicit new reference type allocation
+#pragma warning disable HAA0504 // Implicit new array creation allocation
+#pragma warning disable HAA0505 // Initializer reference type allocation
+#pragma warning disable HAA0506 // Let clause induced allocation
+
+#pragma warning disable HAA0301 // Closure Allocation Source
+#pragma warning disable HAA0302 // Display class allocation to capture closure
+#pragma warning disable HAA0303 // Lambda or anonymous method in a generic method allocates a delegate instance
+
 namespace SimpleCore.CommandLine
 {
-	public struct NConsoleKeyIO
-	{
-		public ConsoleKey Key { get; }
-		public NConsoleFunction Function { get; }
-	}
-
 	/// <summary>
 	///     Represents an interactive console/shell option
 	/// </summary>
@@ -44,13 +55,8 @@ namespace SimpleCore.CommandLine
 
 			Color = Color.Yellow,
 
-			Function = () =>
-			{
-				//SystemSounds.Exclamation.Play();
-
-				return null;
-			},
-			AltFunction = () => null,
+			Function     = () => null,
+			AltFunction  = () => null,
 			CtrlFunction = () => null
 		};
 
@@ -89,23 +95,46 @@ namespace SimpleCore.CommandLine
 			option ??= Wait;
 		}
 
-		public static NConsoleOption[] CreateOptionsFromEnum<TEnum>() where TEnum : Enum
+		public static NConsoleOption[] CreateOptions<T>(T[] values, Func<T, string> getName)
 		{
-			var options = (TEnum[]) Enum.GetValues(typeof(TEnum));
-			var rg = new NConsoleOption[options.Length];
+
+			var rg = new NConsoleOption[values.Length];
 
 			for (int i = 0; i < rg.Length; i++) {
-				var option = options[i];
-				string name = Enum.GetName(typeof(TEnum), option)!;
+				var option = values[i];
+
+				var name = getName(option);
 
 				rg[i] = new NConsoleOption
 				{
-					Name = name,
+					Name     = name,
 					Function = () => option
 				};
 			}
 
 			return rg;
+
+		}
+
+		public static NConsoleOption[] CreateOptionsFromEnum<TEnum>() where TEnum : Enum
+		{
+			/*var options = (TEnum[]) Enum.GetValues(typeof(TEnum));
+			var rg      = new NConsoleOption[options.Length];
+
+			for (int i = 0; i < rg.Length; i++) {
+				var    option = options[i];
+				string name   = Enum.GetName(typeof(TEnum), option)!;
+
+				rg[i] = new NConsoleOption
+				{
+					Name     = name,
+					Function = () => option
+				};
+			}
+
+			return rg;*/
+			var options = (TEnum[]) Enum.GetValues(typeof(TEnum));
+			return CreateOptions(options, e => Enum.GetName(typeof(TEnum), e) ?? throw new InvalidOperationException());
 
 		}
 	}

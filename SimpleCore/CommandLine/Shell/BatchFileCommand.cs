@@ -14,8 +14,8 @@ namespace SimpleCore.CommandLine.Shell
 	{
 		public BatchFileCommand(string[] commands, string fileName)
 		{
-			Commands = commands;
-			FileName = CreateBatchFile(fileName);
+			Commands       = commands;
+			FileName       = CreateBatchFile(fileName);
 			CommandProcess = CreateProcess(FileName);
 		}
 
@@ -31,7 +31,6 @@ namespace SimpleCore.CommandLine.Shell
 			File.Delete(FileName);
 		}
 
-		
 
 		public static void CreateAndRun(string[] commands, bool dispose)
 		{
@@ -56,16 +55,16 @@ namespace SimpleCore.CommandLine.Shell
 		{
 			var startInfo = new ProcessStartInfo
 			{
-				WindowStyle = ProcessWindowStyle.Hidden,
-				FileName = "cmd.exe",
-				Arguments = "/C \"" + fileName + "\"",
-				Verb = "runas",
+				WindowStyle     = ProcessWindowStyle.Hidden,
+				FileName        = "cmd.exe",
+				Arguments       = "/C \"" + fileName + "\"",
+				Verb            = "runas",
 				UseShellExecute = true
 			};
 
 			var process = new Process
 			{
-				StartInfo = startInfo,
+				StartInfo           = startInfo,
 				EnableRaisingEvents = true
 			};
 

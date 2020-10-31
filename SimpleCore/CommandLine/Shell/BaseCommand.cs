@@ -11,9 +11,7 @@ namespace SimpleCore.CommandLine.Shell
 	{
 		public Process CommandProcess { get; protected set; }
 
-		protected BaseCommand()
-		{
-		}
+		protected BaseCommand() { }
 
 		public virtual void Dispose()
 		{

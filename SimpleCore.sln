@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCore.Net", "SimpleCore.Net\SimpleCore.Net.csproj", "{B397667E-0277-4129-8CF3-578C846CFFC2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{279F4354-97DB-4E97-BFFC-F9C09E39F36E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCore.Image", "SimpleCore.Image\SimpleCore.Image.csproj", "{27E938C7-2673-45A9-A5E0-40D4F0B21275}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,10 @@ Global
 		{B397667E-0277-4129-8CF3-578C846CFFC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B397667E-0277-4129-8CF3-578C846CFFC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B397667E-0277-4129-8CF3-578C846CFFC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27E938C7-2673-45A9-A5E0-40D4F0B21275}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27E938C7-2673-45A9-A5E0-40D4F0B21275}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27E938C7-2673-45A9-A5E0-40D4F0B21275}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27E938C7-2673-45A9-A5E0-40D4F0B21275}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

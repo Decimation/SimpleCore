@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
+// ReSharper disable UnusedMember.Global
 
 namespace SimpleCore.CommandLine
 {

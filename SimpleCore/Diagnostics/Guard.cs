@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using JetBrains.Annotations;
 using static SimpleCore.Internal.Common;
-using BindingFlags = System.Reflection.BindingFlags;
 
+// ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedMember.Global
-#pragma warning disable HAA0502, HAA0101
+
+#pragma warning disable HAA0502, HAA0101, IDE0051
 #nullable enable
+
 namespace SimpleCore.Diagnostics
 {
 	public static class Guard
@@ -21,9 +21,9 @@ namespace SimpleCore.Diagnostics
 
 		private const string UNCONDITIONAL_HALT = "=> halt";
 
+		[DebuggerHidden]
 		[AssertionMethod]
 		[ContractAnnotation(UNCONDITIONAL_HALT)]
-		[DebuggerHidden]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void Fail<TException>(string? msg = null, params object[] args)
 			where TException : Exception, new()
@@ -42,18 +42,18 @@ namespace SimpleCore.Diagnostics
 			throw exception;
 		}
 
+		[DebuggerHidden]
 		[AssertionMethod]
 		[ContractAnnotation(COND_FALSE_HALT)]
-		[DebuggerHidden]
 		public static void Assert(bool condition, string? msg = null, params object[] args) =>
 			Assert<Exception>(condition, msg, args);
 
 		/// <summary>
 		/// Root assertion function
 		/// </summary>
+		[DebuggerHidden]
 		[AssertionMethod]
 		[ContractAnnotation(COND_FALSE_HALT)]
-		[DebuggerHidden]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void Assert<TException>(bool condition, string? msg = null, params object[] args)
 			where TException : Exception, new()
@@ -63,15 +63,15 @@ namespace SimpleCore.Diagnostics
 			}
 		}
 
+		[DebuggerHidden]
 		[AssertionMethod]
 		[ContractAnnotation(VALUE_NULL_HALT)]
-		[DebuggerHidden]
 		public static void AssertArgumentNotNull(object? value, string? name = null) =>
 			Assert<ArgumentNullException>(value != null, name);
 
+		[DebuggerHidden]
 		[AssertionMethod]
 		[ContractAnnotation(VALUE_NULL_HALT)]
-		[DebuggerHidden]
 		public static void AssertNotNull(object? value, string? name = null) =>
 			Assert<NullReferenceException>(value != null, name);
 	}

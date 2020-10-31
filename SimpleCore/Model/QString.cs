@@ -56,7 +56,7 @@ namespace SimpleCore.Model
 
 		public void Replace(QString oldValue, QString newValue)
 		{
-			m_value.Replace((string) oldValue, (string)newValue);
+			m_value.Replace((string) oldValue, (string) newValue);
 		}
 
 		public void Remove(int startIndex, int length)

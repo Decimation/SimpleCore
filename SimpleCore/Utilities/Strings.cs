@@ -1,9 +1,15 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using SimpleCore.Internal;
+using static SimpleCore.Internal.Common;
 
 // ReSharper disable UnusedMember.Global
+
+
+#pragma warning disable HAA0501 //
+#pragma warning disable HAA0502 //
+#pragma warning disable HAA0301 //
+#pragma warning disable HAA0302 //
 
 namespace SimpleCore.Utilities
 {
@@ -27,7 +33,6 @@ namespace SimpleCore.Utilities
 			return r;
 		}
 
-		
 
 		public static string CreateSeparator(string s)
 		{
@@ -61,25 +66,19 @@ namespace SimpleCore.Utilities
 		public static string CreateRandom(int length)
 		{
 			return new string(Enumerable.Repeat(Alphanumeric, length)
-				.Select(s => s[Common.RandomInstance.Next(s.Length)])
+				.Select(s => s[RandomInstance.Next(s.Length)])
 				.ToArray());
 		}
 
 		/// <summary>
 		///     Simulates Java substring function
 		/// </summary>
-		public static string JSubstring(this string s, int beginIndex)
-		{
-			return s.Substring(beginIndex, s.Length);
-		}
+		public static string JSubstring(this string s, int beginIndex) => s.Substring(beginIndex, s.Length);
 
 		/// <summary>
 		///     Simulates Java substring function
 		/// </summary>
-		public static string JSubstring(this string s, int beginIndex, int endIndex)
-		{
-			return s.Substring(beginIndex, endIndex - beginIndex);
-		}
+		public static string JSubstring(this string s, int beginIndex, int endIndex) => s.Substring(beginIndex, endIndex - beginIndex);
 
 		/// <summary>
 		///     <returns>String value after [last] <paramref name="a" /></returns>
@@ -88,7 +87,7 @@ namespace SimpleCore.Utilities
 		{
 			int posA = value.LastIndexOf(a, StringComparison.Ordinal);
 
-			if (posA == Common.INVALID) {
+			if (posA == INVALID) {
 				return String.Empty;
 			}
 
@@ -102,7 +101,7 @@ namespace SimpleCore.Utilities
 		public static string SubstringBefore(this string value, string a)
 		{
 			int posA = value.IndexOf(a, StringComparison.Ordinal);
-			return posA == Common.INVALID ? String.Empty : value.Substring(0, posA);
+			return posA == INVALID ? String.Empty : value.Substring(0, posA);
 		}
 
 		/// <summary>
@@ -113,12 +112,48 @@ namespace SimpleCore.Utilities
 			int posA = value.IndexOf(a, StringComparison.Ordinal);
 			int posB = value.LastIndexOf(b, StringComparison.Ordinal);
 
-			if (posA == Common.INVALID || posB == Common.INVALID) {
+			if (posA == INVALID || posB == INVALID) {
 				return String.Empty;
 			}
 
 			int adjustedPosA = posA + a.Length;
 			return adjustedPosA >= posB ? String.Empty : value.Substring(adjustedPosA, posB - adjustedPosA);
+		}
+
+		/// <summary>
+		///     Compute the Levenshtein distance (approximate string matching) between <paramref name="s"/> and <paramref name="t"/>
+		/// </summary>
+		/// 
+		public static int Compute(string s, string t)
+		{
+			int n = s.Length;
+			int m = t.Length;
+			var d = new int[n + 1, m + 1];
+
+			// Step 1
+			if (n == 0)
+				return m;
+
+			if (m == 0)
+				return n;
+
+			// Step 2
+			for (int i = 0; i <= n; d[i, 0] = i++) { }
+
+			for (int j = 0; j <= m; d[0, j] = j++) { }
+
+			// Step 3
+			for (int i = 1; i <= n; i++) //Step 4
+			for (int j = 1; j <= m; j++) {
+				// Step 5
+				int cost = t[j - 1] == s[i - 1] ? 0 : 1;
+
+				// Step 6
+				d[i, j] = Math.Min(Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1), d[i - 1, j - 1] + cost);
+			}
+
+			// Step 7
+			return d[n, m];
 		}
 	}
 }

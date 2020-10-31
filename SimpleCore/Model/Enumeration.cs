@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+// ReSharper disable UnusedMember.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
+
 #pragma warning disable HAA0601, HAA0303
 
 namespace SimpleCore.Model
@@ -15,11 +18,11 @@ namespace SimpleCore.Model
 
 		protected Enumeration(int id, string name)
 		{
-			Id = id;
+			Id   = id;
 			Name = name;
 		}
 
-		public override string ToString() => string.Format("{0} ({1})", Name, Id);
+		public override string ToString() => String.Format("{0} ({1})", Name, Id);
 
 		public static IEnumerable<T> GetAll<T>() where T : Enumeration
 		{
@@ -37,7 +40,7 @@ namespace SimpleCore.Model
 			if (otherValue == null)
 				return false;
 
-			var typeMatches = GetType().Equals(obj.GetType());
+			var typeMatches  = GetType().Equals(obj.GetType());
 			var valueMatches = Id.Equals(otherValue.Id);
 
 			return typeMatches && valueMatches;

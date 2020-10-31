@@ -23,10 +23,7 @@ namespace SimpleCore.Utilities
 		/// <param name="list">Larger <see cref="List{T}"/></param>
 		/// <param name="sequence">Smaller <see cref="List{T}"/></param>
 		/// <returns><c>true</c> if <paramref name="list"/> ends with <paramref name="sequence"/>; <c>false</c> otherwise</returns>
-		public static bool EndsWith<T>(this IList<T> list, IList<T> sequence)
-		{
-			return list.TakeLast(sequence.Count).SequenceEqual(sequence);
-		}
+		public static bool EndsWith<T>(this IList<T> list, IList<T> sequence) => list.TakeLast(sequence.Count).SequenceEqual(sequence);
 
 		/// <summary>
 		/// Determines whether <paramref name="list"/> starts with <paramref name="sequence"/>.
@@ -35,10 +32,7 @@ namespace SimpleCore.Utilities
 		/// <param name="list">Larger <see cref="List{T}"/></param>
 		/// <param name="sequence">Smaller <see cref="List{T}"/></param>
 		/// <returns><c>true</c> if <paramref name="list"/> starts with <paramref name="sequence"/>; <c>false</c> otherwise</returns>
-		public static bool StartsWith<T>(this IList<T> list, IList<T> sequence)
-		{
-			return list.Take(sequence.Count).SequenceEqual(sequence);
-		}
+		public static bool StartsWith<T>(this IList<T> list, IList<T> sequence) => list.Take(sequence.Count).SequenceEqual(sequence);
 
 		/// <summary>
 		/// Retrieves a random element from <paramref name="list"/>.
@@ -55,6 +49,14 @@ namespace SimpleCore.Utilities
 
 		private const string DICT_DELIM = "=";
 
+		public static bool IndexOutOfBounds<T>(this IList<T> rg, int idx)
+		{
+			//idx < io.Length && idx >= 0
+			//(idx < rg.Count && idx >= 0)
+			//!(idx > rg.Count || idx < 0)
+
+			return idx < rg.Count && idx >= 0;
+		}
 		public static void WriteDictionary(IDictionary<string, string> d, string filename)
 		{
 			string[] lines = d.Select(kvp => kvp.Key + DICT_DELIM + kvp.Value).ToArray();

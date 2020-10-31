@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# RS1001: Missing diagnostic analyzer attribute.
+dotnet_diagnostic.RS1001.severity = none
