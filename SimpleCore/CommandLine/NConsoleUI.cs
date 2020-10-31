@@ -43,7 +43,7 @@ namespace SimpleCore.CommandLine
 			{
 				var o = Options.ElementAt(i);
 
-				NConsoleOption.EnsureOption(ref o);
+				
 
 				return o!;
 			}

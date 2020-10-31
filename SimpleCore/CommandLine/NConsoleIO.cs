@@ -8,13 +8,16 @@ using SimpleCore.Utilities;
 using static SimpleCore.Internal.Common;
 using static SimpleCore.CommandLine.NConsole;
 
+// ReSharper disable ParameterTypeCanBeEnumerable.Local
+// ReSharper disable UnusedVariable
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
 // ReSharper disable UseStringInterpolation
 // ReSharper disable ParameterTypeCanBeEnumerable.Global
 
-#pragma warning disable HAA0601, HAA0502, HAA0101
+#pragma warning disable HAA0601, HAA0502, HAA0101, IDE0059
 #nullable enable
+
 namespace SimpleCore.CommandLine
 {
 	/// <summary>
@@ -58,7 +61,7 @@ namespace SimpleCore.CommandLine
 		private static int Status;
 
 
-		public static string? GetInput(string prompt)
+		public static string? ReadInput(string prompt)
 		{
 			Console.Write("{0}: ", prompt);
 			string? i = Console.ReadLine();
@@ -103,11 +106,11 @@ namespace SimpleCore.CommandLine
 			do {
 				Console.Clear();
 
-
 				DisplayInterface(io, selectedOptions);
 
+				// Block until input is entered.
 				while (!Console.KeyAvailable) {
-					// Block until input is entered.
+					
 
 					// HACK: hacky
 
@@ -143,20 +146,20 @@ namespace SimpleCore.CommandLine
 					bool useAltFunc  = altModifier  && option.AltFunction  != null;
 					bool useCtrlFunc = ctrlModifier && option.CtrlFunction != null;
 
-					if (useAltFunc) {
+					if (useAltFunc && option.AltFunction != null) {
 
-						var altFunc = option.AltFunction()!;
+						var altFunc = option.AltFunction();
 
 
 						//
 					}
-					else if (useCtrlFunc) {
-						var ctrlFunc = option.CtrlFunction()!;
+					else if (useCtrlFunc && option.CtrlFunction != null) {
+						var ctrlFunc = option.CtrlFunction();
 
 						//
 					}
 					else {
-						var funcResult = option.Function()!;
+						var funcResult = option.Function();
 
 						if (funcResult != null) {
 							//
@@ -179,7 +182,7 @@ namespace SimpleCore.CommandLine
 		}
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static bool ReadConfirm(string msg, params object[] args)
+		public static bool ReadConfirmation(string msg, params object[] args)
 		{
 			WriteColor(Color.DeepSkyBlue, false, $"{String.Format(msg, args)} ({OPTION_Y}/{OPTION_N}): ");
 
@@ -191,7 +194,7 @@ namespace SimpleCore.CommandLine
 			{
 				OPTION_N => false,
 				OPTION_Y => true,
-				_        => ReadConfirm(msg, args)
+				_        => ReadConfirmation(msg, args)
 			};
 
 		}
@@ -215,7 +218,6 @@ namespace SimpleCore.CommandLine
 
 		private static void DisplayInterface(NConsoleUI io, HashSet<object> selectedOptions)
 		{
-			//NConsole.Extended.WriteColor(Color.Red, true, RuntimeInfo.NAME_BANNER);
 			WriteColor(Color.Red, true, io.Name);
 
 			for (int i = 0; i < io.Length; i++) {
@@ -261,11 +263,11 @@ namespace SimpleCore.CommandLine
 				sb.Append(option.Data);
 			}
 
-			if (!sb.ToString().EndsWith("\n")) {
+			if (!sb.ToString().EndsWith(NewLine)) {
 				sb.AppendLine();
 			}
 
-			return FormatString(ASTERISK, sb.ToString());
+			return FormatString(Formatting.ASTERISK, sb.ToString());
 		}
 
 		private static char GetDisplayOptionFromIndex(int i)

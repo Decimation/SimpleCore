@@ -20,19 +20,20 @@ namespace SimpleCore.Utilities
 	{
 		public const string Alphanumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-		public static string SelectOnlyDigits(this string s)
+		public static string SelectOnlyDigits(this string s) => s.SelectOnly(char.IsDigit);
+
+		public static string SelectOnly(this string s, Func<char, bool> fn)
 		{
 			string r = String.Empty;
 
 			for (int i = 0; i < s.Length; i++) {
-				if (Char.IsDigit(s[i])) {
+				if (fn(s[i])) {
 					r += s[i];
 				}
 			}
 
 			return r;
 		}
-
 
 		public static string CreateSeparator(string s)
 		{
@@ -73,12 +74,39 @@ namespace SimpleCore.Utilities
 		/// <summary>
 		///     Simulates Java substring function
 		/// </summary>
-		public static string JSubstring(this string s, int beginIndex) => s.Substring(beginIndex, s.Length);
+		public static string JSubstring(this string s, int beginIndex)
+		{
+			//
+			return s.Substring(beginIndex, s.Length - beginIndex);
+		}
 
 		/// <summary>
 		///     Simulates Java substring function
 		/// </summary>
-		public static string JSubstring(this string s, int beginIndex, int endIndex) => s.Substring(beginIndex, endIndex - beginIndex);
+		public static string JSubstring(this string s, int beginIndex, int endIndex)
+		{
+			//
+			return s.Substring(beginIndex, (endIndex - beginIndex) + 1);
+		}
+
+		/// <summary>
+		///     Simulates Java substring function
+		/// </summary>
+		public static string JSubstring(this string s, Range r)
+		{
+			//
+			return s.JSubstring(r.Start.Value, r.End.Value);
+		}
+
+		/// <summary>
+		///     Simulates Java substring function
+		/// </summary>
+		public static string JSubstring(this string s, Index i)
+		{
+			//
+			return s.JSubstring(i.Value);
+		}
+
 
 		/// <summary>
 		///     <returns>String value after [last] <paramref name="a" /></returns>

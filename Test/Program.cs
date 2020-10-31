@@ -8,7 +8,6 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using Pastel;
 using SimpleCore.CommandLine;
-using SimpleCore.CommandLine.Shell;
 using SimpleCore.Diagnostics;
 using SimpleCore.Model;
 using SimpleCore.Utilities;
@@ -27,12 +26,18 @@ namespace Test
 
 	public static class Program
 	{
-		
 		public static void Main(string[] args)
 		{
 			NConsole.Init();
+			var s = "foo bar";
 
-			
+			Console.WriteLine(s.JSubstring(1..(s.Length - 1)));
+			Console.WriteLine(s.JSubstring(^(s.Length   - 1)));
+
+			var s2 = "bar123";
+			Console.WriteLine(s2.SelectOnlyDigits());
+
+			Console.WriteLine(s2.SelectOnly(char.IsLetter));
 		}
 	}
 }

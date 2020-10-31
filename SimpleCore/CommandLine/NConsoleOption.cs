@@ -22,6 +22,9 @@ using static SimpleCore.CommandLine.NConsoleOption;
 #pragma warning disable HAA0302 // Display class allocation to capture closure
 #pragma warning disable HAA0303 // Lambda or anonymous method in a generic method allocates a delegate instance
 
+
+#pragma warning disable CS8618
+
 namespace SimpleCore.CommandLine
 {
 	/// <summary>
@@ -46,20 +49,7 @@ namespace SimpleCore.CommandLine
 		/// </summary>
 		public static readonly Color DefaultOptionColor = Color.White;
 
-		/// <summary>
-		///     Represents a <see cref="NConsoleOption" /> which is not yet available or in progress
-		/// </summary>
-		public static readonly NConsoleOption Wait = new NConsoleOption
-		{
-			Name = "Wait",
-
-			Color = Color.Yellow,
-
-			Function     = () => null,
-			AltFunction  = () => null,
-			CtrlFunction = () => null
-		};
-
+		
 		/// <summary>
 		///     Display name
 		/// </summary>
@@ -90,10 +80,7 @@ namespace SimpleCore.CommandLine
 		/// </summary>
 		public virtual Color Color { get; set; } = DefaultOptionColor;
 
-		public static void EnsureOption(ref NConsoleOption? option)
-		{
-			option ??= Wait;
-		}
+		
 
 		public static NConsoleOption[] CreateOptions<T>(T[] values, Func<T, string> getName)
 		{

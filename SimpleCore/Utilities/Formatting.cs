@@ -5,11 +5,10 @@ using System.Text;
 
 #nullable enable
 // ReSharper disable UnusedMember.Global
-
 // ReSharper disable ParameterTypeCanBeEnumerable.Global
-
 // ReSharper disable StringCompareToIsCultureSpecific
 #pragma warning disable HAA0302, HAA0303, HAA0301, HAA0502
+
 namespace SimpleCore.Utilities
 {
 	// https://github.com/khalidabuhakmeh/ConsoleTables
@@ -40,13 +39,36 @@ namespace SimpleCore.Utilities
 
 		public const string JOIN_SPACE = " ";
 
-		public const char PERIOD = '.';
-
-		public const char SPACE = ' ';
 
 		private const string HEX_FORMAT_SPECIFIER = "X";
 
 		private const string HEX_PREFIX = "0x";
+
+		public const char   PERIOD      = '.';
+		public const char   ASTERISK    = '*';
+		public const char   EXCLAMATION = '!';
+		public const char   SPACE       = ' ';
+		public const string ELLIPSES    = "...";
+
+
+		public const char ARROW_DOWN       = '\u2193';
+		public const char ARROW_LEFT       = '\u2190';
+		public const char ARROW_LEFT_RIGHT = '\u2194';
+		public const char ARROW_RIGHT      = '\u2192';
+		public const char ARROW_UP         = '\u2191';
+		public const char ARROW_UP_DOWN    = '\u2195';
+
+
+		public const char BALLOT_X         = '\u2717';
+		public const char HEAVY_BALLOT_X   = '\u2718';
+		public const char CHECK_MARK       = '\u2713';
+		public const char HEAVY_CHECK_MARK = '\u2714';
+		public const char LOZENGE          = '\u25ca';
+		public const char MUL_SIGN         = '\u00D7';
+		public const char NULL_CHAR        = '\0';
+		public const char RAD_SIGN         = '\u221A';
+		public const char RELOAD           = '\u21bb';
+		public const char SUN              = '\u263c';
 
 		public static string FormatJoin<T>(this IEnumerable<T> values,
 			string format, IFormatProvider? provider = null, string delim = JOIN_COMMA) where T : IFormattable =>
@@ -80,7 +102,7 @@ namespace SimpleCore.Utilities
 				sb.Append(HEX_PREFIX);
 			}
 
-			string? hexStr = null;
+			string? hexStr;
 
 			if (value is IFormattable fmt) {
 				hexStr = fmt.ToString(HEX_FORMAT_SPECIFIER, null);

@@ -9,11 +9,12 @@ using SimpleCore.Utilities;
 using SimpleCore.Win32;
 using static SimpleCore.Internal.Common;
 
+// ReSharper disable InvocationIsSkipped
 // ReSharper disable UnusedMember.Local
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
 
-
+#pragma warning disable HAA0601 //
 #pragma warning disable HAA0501 //
 #pragma warning disable HAA0502 //
 #pragma warning disable HAA0301 //
@@ -51,33 +52,12 @@ namespace SimpleCore.CommandLine
 	/// </list>
 	public static class NConsole
 	{
-		public const char   ARROW_DOWN       = '\u2193';
-		public const char   ARROW_LEFT       = '\u2190';
-		public const char   ARROW_LEFT_RIGHT = '\u2194';
-		public const char   ARROW_RIGHT      = '\u2192';
-		public const char   ARROW_UP         = '\u2191';
-		public const char   ARROW_UP_DOWN    = '\u2195';
-		public const char   ASTERISK         = '*';
-		public const char   BALLOT_X         = '\u2717';
-		public const char   CHECK_MARK       = '\u2713';
-		
-		public const string ELLIPSES         = "...";
-		public const char   EXCLAMATION      = '!';
-		public const char   HEAVY_BALLOT_X   = '\u2718';
-		public const char   HEAVY_CHECK_MARK = '\u2714';
-		public const char   LOZENGE          = '\u25ca';
-		public const char   MUL_SIGN         = '\u00D7';
-		public const char   NULL_CHAR        = '\0';
-		public const char   RAD_SIGN         = '\u221A';
-		public const char   RELOAD           = '\u21bb';
-		public const char   SUN              = '\u263c';
-
 		public const int STD_ERROR_HANDLE  = -12;
 		public const int STD_INPUT_HANDLE  = -10;
 		public const int STD_OUTPUT_HANDLE = -11;
 
 
-		private static readonly string NewLine = '\n'.ToString();
+		internal static readonly string NewLine = '\n'.ToString();
 
 		public static int BufferLimit { get; set; } = Console.BufferWidth - 10;
 
@@ -120,7 +100,7 @@ namespace SimpleCore.CommandLine
 				string x2 = x.Truncate(BufferLimit);
 
 				if (x2.Length < x.Length) {
-					x2 += ELLIPSES;
+					x2 += Formatting.ELLIPSES;
 				}
 
 				srg[i] = x2;
@@ -176,16 +156,14 @@ namespace SimpleCore.CommandLine
 		{
 			char sym = lvl switch
 			{
-				Level.None    => NULL_CHAR,
-				Level.Info    => ASTERISK,
-				Level.Error   => EXCLAMATION,
-				Level.Debug   => MUL_SIGN,
-				Level.Success => CHECK_MARK,
+				Level.None    => Formatting.NULL_CHAR,
+				Level.Info    => Formatting.ASTERISK,
+				Level.Error   => Formatting.EXCLAMATION,
+				Level.Debug   => Formatting.MUL_SIGN,
+				Level.Success => Formatting.CHECK_MARK,
 				_             => throw new ArgumentOutOfRangeException(nameof(lvl), lvl, null)
 			};
 
-			//var oldFg = Console.ForegroundColor;
-			//var oldBg = Console.BackgroundColor;
 			string s = FormatString(sym, String.Format(msg, args));
 
 			if (fg.HasValue) {
