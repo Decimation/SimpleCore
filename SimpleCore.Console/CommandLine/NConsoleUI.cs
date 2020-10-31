@@ -1,19 +1,17 @@
 ﻿#nullable enable
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 // ReSharper disable InconsistentNaming
 
-namespace SimpleCore.CommandLine
+namespace SimpleCore.Console.CommandLine
 {
 	/// <summary>
 	/// Describes a console interface for use with <see cref="NConsole"/>
 	/// </summary>
 	public class NConsoleUI
 	{
-		public static string DefaultName { get; set; } = Console.Title;
+		public static string DefaultName { get; set; } = System.Console.Title;
 
 		public NConsoleUI(IEnumerable<NConsoleOption> options,
 			string? name, string? prompt, bool selectMultiple, string? status)

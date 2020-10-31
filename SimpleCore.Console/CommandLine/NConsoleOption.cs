@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System;
 using System.Drawing;
-using static SimpleCore.CommandLine.NConsoleOption;
 
 // ReSharper disable UnusedMember.Global
 
@@ -25,7 +24,7 @@ using static SimpleCore.CommandLine.NConsoleOption;
 
 #pragma warning disable CS8618
 
-namespace SimpleCore.CommandLine
+namespace SimpleCore.Console.CommandLine
 {
 	/// <summary>
 	///     Represents an interactive console/shell option
@@ -49,7 +48,7 @@ namespace SimpleCore.CommandLine
 		/// </summary>
 		public static readonly Color DefaultOptionColor = Color.White;
 
-		
+
 		/// <summary>
 		///     Display name
 		/// </summary>
@@ -80,11 +79,9 @@ namespace SimpleCore.CommandLine
 		/// </summary>
 		public virtual Color Color { get; set; } = DefaultOptionColor;
 
-		
 
-		public static NConsoleOption[] CreateOptions<T>(T[] values, Func<T, string> getName)
+		public static NConsoleOption[] FromArray<T>(T[] values, Func<T, string> getName)
 		{
-
 			var rg = new NConsoleOption[values.Length];
 
 			for (int i = 0; i < rg.Length; i++) {
@@ -100,29 +97,12 @@ namespace SimpleCore.CommandLine
 			}
 
 			return rg;
-
 		}
 
-		public static NConsoleOption[] CreateOptionsFromEnum<TEnum>() where TEnum : Enum
+		public static NConsoleOption[] FromEnum<TEnum>() where TEnum : Enum
 		{
-			/*var options = (TEnum[]) Enum.GetValues(typeof(TEnum));
-			var rg      = new NConsoleOption[options.Length];
-
-			for (int i = 0; i < rg.Length; i++) {
-				var    option = options[i];
-				string name   = Enum.GetName(typeof(TEnum), option)!;
-
-				rg[i] = new NConsoleOption
-				{
-					Name     = name,
-					Function = () => option
-				};
-			}
-
-			return rg;*/
 			var options = (TEnum[]) Enum.GetValues(typeof(TEnum));
-			return CreateOptions(options, e => Enum.GetName(typeof(TEnum), e) ?? throw new InvalidOperationException());
-
+			return FromArray(options, e => Enum.GetName(typeof(TEnum), e) ?? throw new InvalidOperationException());
 		}
 	}
 }

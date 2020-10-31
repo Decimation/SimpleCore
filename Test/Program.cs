@@ -6,12 +6,10 @@ using System.Text;
 using System.Threading;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
-using Pastel;
-using SimpleCore.CommandLine;
+using SimpleCore.Console.CommandLine;
 using SimpleCore.Diagnostics;
 using SimpleCore.Model;
 using SimpleCore.Utilities;
-using SimpleCore.Win32;
 
 
 namespace Test

@@ -23,7 +23,8 @@ namespace SimpleCore.Utilities
 		/// <param name="list">Larger <see cref="List{T}"/></param>
 		/// <param name="sequence">Smaller <see cref="List{T}"/></param>
 		/// <returns><c>true</c> if <paramref name="list"/> ends with <paramref name="sequence"/>; <c>false</c> otherwise</returns>
-		public static bool EndsWith<T>(this IList<T> list, IList<T> sequence) => list.TakeLast(sequence.Count).SequenceEqual(sequence);
+		public static bool EndsWith<T>(this IList<T> list, IList<T> sequence) =>
+			list.TakeLast(sequence.Count).SequenceEqual(sequence);
 
 		/// <summary>
 		/// Determines whether <paramref name="list"/> starts with <paramref name="sequence"/>.
@@ -32,7 +33,8 @@ namespace SimpleCore.Utilities
 		/// <param name="list">Larger <see cref="List{T}"/></param>
 		/// <param name="sequence">Smaller <see cref="List{T}"/></param>
 		/// <returns><c>true</c> if <paramref name="list"/> starts with <paramref name="sequence"/>; <c>false</c> otherwise</returns>
-		public static bool StartsWith<T>(this IList<T> list, IList<T> sequence) => list.Take(sequence.Count).SequenceEqual(sequence);
+		public static bool StartsWith<T>(this IList<T> list, IList<T> sequence) =>
+			list.Take(sequence.Count).SequenceEqual(sequence);
 
 		/// <summary>
 		/// Retrieves a random element from <paramref name="list"/>.
@@ -57,6 +59,7 @@ namespace SimpleCore.Utilities
 
 			return idx < rg.Count && idx >= 0;
 		}
+
 		public static void WriteDictionary(IDictionary<string, string> d, string filename)
 		{
 			string[] lines = d.Select(kvp => kvp.Key + DICT_DELIM + kvp.Value).ToArray();
@@ -71,6 +74,20 @@ namespace SimpleCore.Utilities
 				.ToDictionary(a => a[0], a => a[1]);
 
 			return dict;
+		}
+
+		public static float Distance(byte[] first, byte[] second)
+		{
+			int sum = 0;
+
+			// We'll use which ever array is shorter.
+			int length = first.Length > second.Length ? second.Length : first.Length;
+
+			for (int x = 0; x < length; x++) {
+				sum += (int) Math.Pow((first[x] - second[x]), 2);
+			}
+
+			return sum / (float) length;
 		}
 
 		public static TValue GetValueOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dic,

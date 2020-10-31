@@ -6,7 +6,7 @@ using System.Threading;
 using JetBrains.Annotations;
 using SimpleCore.Utilities;
 using static SimpleCore.Internal.Common;
-using static SimpleCore.CommandLine.NConsole;
+using static SimpleCore.Console.CommandLine.NConsole;
 
 // ReSharper disable ParameterTypeCanBeEnumerable.Local
 // ReSharper disable UnusedVariable
@@ -18,7 +18,7 @@ using static SimpleCore.CommandLine.NConsole;
 #pragma warning disable HAA0601, HAA0502, HAA0101, IDE0059
 #nullable enable
 
-namespace SimpleCore.CommandLine
+namespace SimpleCore.Console.CommandLine
 {
 	/// <summary>
 	///     Program functionality, IO, console interaction, console UI
@@ -63,8 +63,8 @@ namespace SimpleCore.CommandLine
 
 		public static string? ReadInput(string prompt)
 		{
-			Console.Write("{0}: ", prompt);
-			string? i = Console.ReadLine();
+			System.Console.Write("{0}: ", prompt);
+			string? i = System.Console.ReadLine();
 
 			return String.IsNullOrWhiteSpace(i) ? null : i;
 		}
@@ -104,18 +104,18 @@ namespace SimpleCore.CommandLine
 			ConsoleKeyInfo cki;
 
 			do {
-				Console.Clear();
+				System.Console.Clear();
 
 				DisplayInterface(io, selectedOptions);
 
 				// Block until input is entered.
-				while (!Console.KeyAvailable) {
+				while (!System.Console.KeyAvailable) {
 					
 
 					// HACK: hacky
 
 					if (Interlocked.Exchange(ref Status, STATUS_OK) == STATUS_REFRESH) {
-						Console.Clear();
+						System.Console.Clear();
 						DisplayInterface(io, selectedOptions);
 					}
 				}
@@ -123,7 +123,7 @@ namespace SimpleCore.CommandLine
 
 				// Key was read
 
-				cki = Console.ReadKey(true);
+				cki = System.Console.ReadKey(true);
 
 				if (cki.Key == NC_GLOBAL_REFRESH_KEY) {
 					Refresh();
@@ -186,9 +186,9 @@ namespace SimpleCore.CommandLine
 		{
 			WriteColor(Color.DeepSkyBlue, false, $"{String.Format(msg, args)} ({OPTION_Y}/{OPTION_N}): ");
 
-			char key = Char.ToUpper(Console.ReadKey().KeyChar);
+			char key = Char.ToUpper(System.Console.ReadKey().KeyChar);
 
-			Console.WriteLine();
+			System.Console.WriteLine();
 
 			return key switch
 			{
@@ -206,9 +206,9 @@ namespace SimpleCore.CommandLine
 
 		public static void WaitForInput()
 		{
-			Console.WriteLine();
-			Console.WriteLine("Press any key to continue...");
-			Console.ReadLine();
+			System.Console.WriteLine();
+			System.Console.WriteLine("Press any key to continue...");
+			System.Console.ReadLine();
 		}
 
 		public static void WaitForSecond()
@@ -228,7 +228,7 @@ namespace SimpleCore.CommandLine
 				WriteColor(option.Color, false, s);
 			}
 
-			Console.WriteLine();
+			System.Console.WriteLine();
 
 			// Show options
 			if (io.SelectMultiple) {
@@ -263,7 +263,7 @@ namespace SimpleCore.CommandLine
 				sb.Append(option.Data);
 			}
 
-			if (!sb.ToString().EndsWith(NewLine)) {
+			if (!sb.ToString().EndsWith(NConsole.NewLine)) {
 				sb.AppendLine();
 			}
 

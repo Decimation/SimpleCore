@@ -27,7 +27,7 @@ namespace SimpleCore.Utilities
 			return (TEnum) e;
 		}
 
-		public static TEnum ReadEnumFromSet<TEnum>(ISet<object> set) where TEnum : Enum
+		public static TEnum ReadFromSet<TEnum>(ISet<object> set) where TEnum : Enum
 		{
 			var t = typeof(TEnum);
 

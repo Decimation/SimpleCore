@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Text;
 using JetBrains.Annotations;
 using Pastel;
 using SimpleCore.Utilities;
-using SimpleCore.Win32;
 using static SimpleCore.Internal.Common;
 
 // ReSharper disable InvocationIsSkipped
@@ -21,7 +19,7 @@ using static SimpleCore.Internal.Common;
 #pragma warning disable HAA0302 //
 
 
-namespace SimpleCore.CommandLine
+namespace SimpleCore.Console.CommandLine
 {
 	// todo
 
@@ -52,14 +50,11 @@ namespace SimpleCore.CommandLine
 	/// </list>
 	public static class NConsole
 	{
-		public const int STD_ERROR_HANDLE  = -12;
-		public const int STD_INPUT_HANDLE  = -10;
-		public const int STD_OUTPUT_HANDLE = -11;
-
+		
 
 		internal static readonly string NewLine = '\n'.ToString();
 
-		public static int BufferLimit { get; set; } = Console.BufferWidth - 10;
+		public static int BufferLimit { get; set; } = System.Console.BufferWidth - 10;
 
 		public enum Level
 		{
@@ -111,34 +106,28 @@ namespace SimpleCore.CommandLine
 			return s2;
 		}
 
-		/// <param name="nStdHandle">
-		///     <see cref="STD_INPUT_HANDLE" />,
-		///     <see cref="STD_OUTPUT_HANDLE" />,
-		///     <see cref="STD_ERROR_HANDLE" />
-		/// </param>
-		[DllImport(Native.OS.KERNEL32_DLL, SetLastError = true)]
-		public static extern IntPtr GetStdHandle(int nStdHandle);
+		
 
 		public static void Init()
 		{
-			Console.OutputEncoding = Encoding.Unicode;
+			System.Console.OutputEncoding = Encoding.Unicode;
 		}
 
 		public static void RunWithColor(ConsoleColor fgColor, Action func) =>
-			RunWithColor(fgColor, Console.BackgroundColor, func);
+			RunWithColor(fgColor, System.Console.BackgroundColor, func);
 
 		public static void RunWithColor(ConsoleColor fgColor, ConsoleColor bgColor, Action func)
 		{
-			var oldFgColor = Console.ForegroundColor;
-			var oldBgColor = Console.BackgroundColor;
+			var oldFgColor = System.Console.ForegroundColor;
+			var oldBgColor = System.Console.BackgroundColor;
 
-			Console.ForegroundColor = fgColor;
-			Console.BackgroundColor = bgColor;
+			System.Console.ForegroundColor = fgColor;
+			System.Console.BackgroundColor = bgColor;
 
 			func();
 
-			Console.ForegroundColor = oldFgColor;
-			Console.BackgroundColor = oldBgColor;
+			System.Console.ForegroundColor = oldFgColor;
+			System.Console.BackgroundColor = oldBgColor;
 		}
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
@@ -187,10 +176,10 @@ namespace SimpleCore.CommandLine
 			}
 
 			if (newLine) {
-				Console.WriteLine(s);
+				System.Console.WriteLine(s);
 			}
 			else {
-				Console.Write(s);
+				System.Console.Write(s);
 			}
 		}
 
@@ -202,10 +191,10 @@ namespace SimpleCore.CommandLine
 		public static void WriteColor(Color fgColor, bool newLine, string msg, params object[] args)
 		{
 			if (newLine) {
-				Console.WriteLine(msg.Pastel(fgColor), args);
+				System.Console.WriteLine(msg.Pastel(fgColor), args);
 			}
 			else {
-				Console.Write(msg.Pastel(fgColor), args);
+				System.Console.Write(msg.Pastel(fgColor), args);
 			}
 		}
 
@@ -235,7 +224,7 @@ namespace SimpleCore.CommandLine
 			msg = String.Format(msg, args);
 
 			string clear = new string('\b', msg.Length);
-			Console.Write(clear);
+			System.Console.Write(clear);
 			WriteColor(color, false, msg);
 		}
 

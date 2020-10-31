@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
+
 // ReSharper disable UnusedMember.Global
 
-namespace SimpleCore.CommandLine
+namespace SimpleCore.Console.CommandLine
 {
 	public sealed class KeyReadEventArgs : EventArgs
 	{
@@ -81,18 +82,18 @@ namespace SimpleCore.CommandLine
 				if (!Active) {
 					break;
 				}
-				Console.Clear();
+				System.Console.Clear();
 
 				Display?.Invoke();
 
 				Trace.WriteLine("watch...");
 
-				while (!Console.KeyAvailable) {
+				while (!System.Console.KeyAvailable) {
 					// Block until input is entered.
 				}
 
 				// Key was read
-				cki = Console.ReadKey(true);
+				cki = System.Console.ReadKey(true);
 				var args = new KeyReadEventArgs(cki);
 				OnKeyRead(args);
 

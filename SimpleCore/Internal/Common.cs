@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("SimpleCore.Console")]
 namespace SimpleCore.Internal
 {
 	/// <summary>

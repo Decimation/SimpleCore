@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SimpleCore.Image\SimpleCore.Image.csproj" />
+    <ProjectReference Include="..\SimpleCore.Console\SimpleCore.Console.csproj" />
     <ProjectReference Include="..\SimpleCore.Net\SimpleCore.Net.csproj" />
     <ProjectReference Include="..\SimpleCore\SimpleCore.csproj" />
   </ItemGroup>
