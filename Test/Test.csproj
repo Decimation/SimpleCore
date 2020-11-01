@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <DefineConstants>JETBRAINS_ANNOTATIONS;TRACE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

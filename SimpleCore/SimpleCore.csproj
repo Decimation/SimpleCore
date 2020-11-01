@@ -3,9 +3,14 @@
 	<PropertyGroup>
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<DefineConstants>JETBRAINS_ANNOTATIONS</DefineConstants>
+		<DefineConstants>JETBRAINS_ANNOTATIONS;TRACE</DefineConstants>
 		<LangVersion>latest</LangVersion>
-		
+
+	</PropertyGroup>
+
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
