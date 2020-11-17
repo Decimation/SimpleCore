@@ -21,7 +21,6 @@ namespace SimpleCore.Diagnostics
 
 		private const string UNCONDITIONAL_HALT = "=> halt";
 
-		[DebuggerHidden]
 		[AssertionMethod]
 		[ContractAnnotation(UNCONDITIONAL_HALT)]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
@@ -68,6 +67,16 @@ namespace SimpleCore.Diagnostics
 		[ContractAnnotation(VALUE_NULL_HALT)]
 		public static void AssertArgumentNotNull(object? value, string? name = null) =>
 			Assert<ArgumentNullException>(value != null, name);
+
+		[DebuggerHidden]
+		[AssertionMethod]
+		[ContractAnnotation(VALUE_NULL_HALT)]
+		public static void AssertNotNull<T>(T value, string? name = null)
+		{
+			var v = !object.Equals(value, default);
+
+			Assert(v, name);
+		}
 
 		[DebuggerHidden]
 		[AssertionMethod]
