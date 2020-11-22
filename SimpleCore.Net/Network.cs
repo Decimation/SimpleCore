@@ -8,6 +8,26 @@ using RestSharp;
 
 // ReSharper disable UnusedMember.Global
 #nullable enable
+
+
+#pragma warning disable HAA0601 // Value type to reference type conversion causing boxing allocation
+#pragma warning disable HAA0602 // Delegate on struct instance caused a boxing allocation
+#pragma warning disable HAA0603 // Delegate allocation from a method group
+#pragma warning disable HAA0604 // Delegate allocation from a method group
+
+#pragma warning disable HAA0501 // Explicit new array type allocation
+#pragma warning disable HAA0502 // Explicit new reference type allocation
+#pragma warning disable HAA0503 // Explicit new reference type allocation
+#pragma warning disable HAA0504 // Implicit new array creation allocation
+#pragma warning disable HAA0505 // Initializer reference type allocation
+#pragma warning disable HAA0506 // Let clause induced allocation
+
+#pragma warning disable HAA0301 // Closure Allocation Source
+#pragma warning disable HAA0302 // Display class allocation to capture closure
+#pragma warning disable HAA0303 // Lambda or anonymous method in a generic method allocates a delegate instance
+
+
+
 namespace SimpleCore.Net
 {
 	public static class Network
@@ -16,8 +36,7 @@ namespace SimpleCore.Net
 		{
 			// todo
 
-			if (!response.IsSuccessful)
-			{
+			if (!response.IsSuccessful) {
 				var sb = new StringBuilder();
 				sb.AppendFormat("Uri: {0}\n", response.ResponseUri);
 				sb.AppendFormat("Code: {0}\n", response.StatusCode);
@@ -34,19 +53,17 @@ namespace SimpleCore.Net
 		{
 			//var u =new Uri(url);
 
-			var req = new RestRequest(url, Method.HEAD);
-			RestClient client = new RestClient();
+			var        req    = new RestRequest(url, Method.HEAD);
+			RestClient client = new();
 
 			var res = client.Execute(req);
 
 
-			foreach (var h in res.Headers)
-			{
-				if (h.Name == "Content-Type")
-				{
+			foreach (var h in res.Headers) {
+				if (h.Name == "Content-Type") {
 					var t = h.Value;
 
-					return (string)t;
+					return (string?) t;
 				}
 			}
 
@@ -56,8 +73,8 @@ namespace SimpleCore.Net
 
 		public static string DownloadUrl(string url)
 		{
-			string fileName = Path.GetFileName(url);
-			using WebClient client = new WebClient();
+			string          fileName = Path.GetFileName(url);
+			using WebClient client   = new();
 			client.Headers.Add("User-Agent: Other");
 
 			var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
@@ -72,26 +89,22 @@ namespace SimpleCore.Net
 		{
 			// https://stackoverflow.com/questions/4580263/how-to-open-in-default-browser-in-c-sharp
 
-			try
-			{
+			try {
 				Process.Start(url);
 			}
-			catch
-			{
+			catch {
 				// hack because of this: https://github.com/dotnet/corefx/issues/10361
-				if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-				{
+				if (OperatingSystem.IsWindows()) {
 					url = url.Replace("&", "^&");
-					Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+					Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") {CreateNoWindow = true});
 				}
-				else
-				{
+				else {
 					throw;
 				}
 			}
 		}
 
-		private static readonly RestClient Client = new RestClient();
+		private static readonly RestClient Client = new();
 
 		public static IRestResponse GetSimpleResponse(string link)
 		{

@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Authors>Read Stanton (Decimation)</Authors>
     <DefineConstants>JETBRAINS_ANNOTATIONS;TRACE</DefineConstants>
 
     <TargetFramework>net5.0</TargetFramework>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -14,6 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
     <PackageReference Include="Pastel" Version="1.3.2" />
   </ItemGroup>
@@ -21,5 +22,5 @@
   <ItemGroup>
     <ProjectReference Include="..\SimpleCore\SimpleCore.csproj" />
   </ItemGroup>
-
+  
 </Project>

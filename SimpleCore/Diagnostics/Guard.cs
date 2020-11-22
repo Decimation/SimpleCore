@@ -24,6 +24,13 @@ namespace SimpleCore.Diagnostics
 		[AssertionMethod]
 		[ContractAnnotation(UNCONDITIONAL_HALT)]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
+		public static void Fail(string? msg = null, params object[] args)
+			=> Fail<Exception>(msg, args);
+
+
+		[AssertionMethod]
+		[ContractAnnotation(UNCONDITIONAL_HALT)]
+		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void Fail<TException>(string? msg = null, params object[] args)
 			where TException : Exception, new()
 		{
