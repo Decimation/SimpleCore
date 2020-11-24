@@ -12,12 +12,7 @@ using static SimpleCore.Internal.Common;
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
 
-#pragma warning disable HAA0601 //
-#pragma warning disable HAA0501 //
-#pragma warning disable HAA0502 //
-#pragma warning disable HAA0301 //
-#pragma warning disable HAA0302 //
-
+using Console= global::System.Console;
 
 namespace SimpleCore.Console.CommandLine
 {

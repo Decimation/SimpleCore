@@ -7,7 +7,6 @@ using System.Text;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ParameterTypeCanBeEnumerable.Global
 // ReSharper disable StringCompareToIsCultureSpecific
-#pragma warning disable HAA0302, HAA0303, HAA0301, HAA0502
 
 namespace SimpleCore.Utilities
 {

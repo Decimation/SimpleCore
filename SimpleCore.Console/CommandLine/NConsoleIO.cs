@@ -15,7 +15,6 @@ using static SimpleCore.Console.CommandLine.NConsole;
 // ReSharper disable UseStringInterpolation
 // ReSharper disable ParameterTypeCanBeEnumerable.Global
 
-#pragma warning disable HAA0601, HAA0502, HAA0101, IDE0059
 #nullable enable
 
 namespace SimpleCore.Console.CommandLine

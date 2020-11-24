@@ -6,7 +6,6 @@ using System.Reflection;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
 
-#pragma warning disable HAA0601, HAA0303
 
 namespace SimpleCore.Model
 {

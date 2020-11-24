@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text;
 
 // ReSharper disable UnusedMember.Global
-#pragma warning disable HAA0601, HAA0502
 
 namespace SimpleCore.Model
 {

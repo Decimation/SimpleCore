@@ -6,7 +6,7 @@ using static SimpleCore.Internal.Common;
 // ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedMember.Global
 
-#pragma warning disable HAA0502, HAA0101, IDE0051
+#pragma warning disable IDE0051
 #nullable enable
 
 namespace SimpleCore.Diagnostics
@@ -75,15 +75,12 @@ namespace SimpleCore.Diagnostics
 		public static void AssertArgumentNotNull(object? value, string? name = null) =>
 			Assert<ArgumentNullException>(value != null, name);
 
-		[DebuggerHidden]
-		[AssertionMethod]
-		[ContractAnnotation(VALUE_NULL_HALT)]
-		public static void AssertNotNull<T>(T value, string? name = null)
-		{
-			var v = !object.Equals(value, default);
+		// [DebuggerHidden]
+		// [AssertionMethod]
+		// [ContractAnnotation(VALUE_NULL_HALT)]
+		// public static void AssertNotNull<T>(T? value, string? name = null) where T : class
+		// 	=> Assert<NullReferenceException>(value != null, name);
 
-			Assert(v, name);
-		}
 
 		[DebuggerHidden]
 		[AssertionMethod]
