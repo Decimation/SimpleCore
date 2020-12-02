@@ -109,7 +109,7 @@ namespace SimpleCore.Console.CommandLine
 
 				// Block until input is entered.
 				while (!System.Console.KeyAvailable) {
-					
+
 
 					// HACK: hacky
 
@@ -128,8 +128,14 @@ namespace SimpleCore.Console.CommandLine
 					Refresh();
 				}
 
-				char keyChar   = GetChar(cki.Key);
-				var  modifiers = cki.Modifiers;
+
+				char keyChar = GetChar(cki.Key);
+
+				if (!Char.IsLetterOrDigit(keyChar)) {
+					continue;
+				}
+
+				var modifiers = cki.Modifiers;
 
 				bool altModifier  = modifiers.HasFlag(NConsoleOption.NC_ALT_FUNC_MODIFIER);
 				bool ctrlModifier = modifiers.HasFlag(NConsoleOption.NC_CTRL_FUNC_MODIFIER);

@@ -9,6 +9,7 @@
     <Authors>Read Stanton (Decimation)</Authors>
     <Company>Read Stanton (Decimation)</Company>
     <NoWarn>
+      HAA0601
       HAA0601,
       HAA0602,
       HAA0603,
@@ -23,7 +24,9 @@
       HAA0302,
       HAA0303,
       HAA0101,
+      CS1591,
     </NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>

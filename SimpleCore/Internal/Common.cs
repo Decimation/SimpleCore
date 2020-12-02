@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Novus")]
+[assembly: InternalsVisibleTo("SimpleCore.Net")]
 [assembly: InternalsVisibleTo("SimpleCore.Console")]
 namespace SimpleCore.Internal
 {
@@ -9,7 +11,7 @@ namespace SimpleCore.Internal
 	/// </summary>
 	internal static class Common
 	{
-		internal static readonly Random RandomInstance = new Random();
+		internal static readonly Random RandomInstance = new();
 
 		internal const string DEBUG_COND = "DEBUG";
 

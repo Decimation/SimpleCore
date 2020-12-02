@@ -128,7 +128,7 @@ namespace SimpleCore.Utilities
 		public static string ToString<T>(T[] rg)
 		{
 			if (typeof(T) == typeof(byte)) {
-				var byteArray = rg as byte[];
+				byte[]? byteArray = rg as byte[];
 				return FormatJoin(byteArray!, HEX_FORMAT_SPECIFIER);
 			}
 

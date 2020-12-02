@@ -44,7 +44,7 @@ namespace SimpleCore.Utilities
 		/// <returns>A random element</returns>
 		public static T GetRandomElement<T>(this IList<T> list)
 		{
-			var i = RandomInstance.Next(0, list.Count);
+			var i = RandomInstance.Next(list.Count);
 
 			return list[i];
 		}
@@ -60,12 +60,18 @@ namespace SimpleCore.Utilities
 			return idx < rg.Count && idx >= 0;
 		}
 
-		public static void WriteDictionary(IDictionary<string, string> d, string filename)
+		/// <summary>
+		/// Writes a <see cref="Dictionary{TKey,TValue}"/> to file <paramref name="filename"/>.
+		/// </summary>
+		public static void WriteDictionary(IDictionary<string, string> dictionary, string filename)
 		{
-			string[] lines = d.Select(kvp => kvp.Key + DICT_DELIM + kvp.Value).ToArray();
+			string[] lines = dictionary.Select(kvp => kvp.Key + DICT_DELIM + kvp.Value).ToArray();
 			File.WriteAllLines(filename, lines);
 		}
 
+		/// <summary>
+		/// Reads a <see cref="Dictionary{TKey,TValue}"/> written by <see cref="WriteDictionary"/> to <paramref name="filename"/>.
+		/// </summary>
 		public static IDictionary<string, string> ReadDictionary(string filename)
 		{
 			string[] lines = File.ReadAllLines(filename);
@@ -90,7 +96,7 @@ namespace SimpleCore.Utilities
 			return sum / (float) length;
 		}
 
-		public static TValue GetValueOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dic,
+		public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dic,
 			TKey k, TValue d = default)
 		{
 			if (!dic.ContainsKey(k)) {

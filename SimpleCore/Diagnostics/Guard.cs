@@ -21,13 +21,14 @@ namespace SimpleCore.Diagnostics
 
 		private const string UNCONDITIONAL_HALT = "=> halt";
 
+		[DebuggerHidden]
 		[AssertionMethod]
 		[ContractAnnotation(UNCONDITIONAL_HALT)]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void Fail(string? msg = null, params object[] args)
 			=> Fail<Exception>(msg, args);
 
-
+		[DebuggerHidden]
 		[AssertionMethod]
 		[ContractAnnotation(UNCONDITIONAL_HALT)]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
@@ -37,7 +38,7 @@ namespace SimpleCore.Diagnostics
 			TException exception;
 
 			if (msg != null) {
-				var s = string.Format(msg, args);
+				string? s = String.Format(msg, args);
 
 				exception = (TException) Activator.CreateInstance(typeof(TException), s)!;
 			}

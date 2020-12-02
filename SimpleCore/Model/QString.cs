@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -34,10 +35,15 @@ namespace SimpleCore.Model
 			set => m_value[i] = value;
 		}
 
-		public QString this[int startIndex, int length]
+		public QString this[int startIndex, int length] => Value.Substring(startIndex, length);
+
+		public char this[Index i]
 		{
-			get { return Value.Substring(startIndex, length); }
+			get => m_value[i];
+			set => m_value[i] = value;
 		}
+
+		public QString this[Range r] => Value[r];
 
 		public void Clear() => m_value.Clear();
 
@@ -81,9 +87,9 @@ namespace SimpleCore.Model
 
 		public static /*implicit*/ explicit operator string(QString value) => value.Value;
 
-		public static implicit operator QString(string value) => new QString(value);
+		public static implicit operator QString(string value) => new(value);
 
-		public QString Copy() => new QString(m_value);
+		public QString Copy() => new(m_value);
 
 		public override string ToString()
 		{

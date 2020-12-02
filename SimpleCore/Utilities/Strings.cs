@@ -6,8 +6,6 @@ using static SimpleCore.Internal.Common;
 // ReSharper disable UnusedMember.Global
 
 
-
-
 namespace SimpleCore.Utilities
 {
 	/// <summary>
@@ -21,20 +19,13 @@ namespace SimpleCore.Utilities
 
 		public static string SelectOnly(this string s, Func<char, bool> fn)
 		{
-			string r = String.Empty;
 
-			for (int i = 0; i < s.Length; i++) {
-				if (fn(s[i])) {
-					r += s[i];
-				}
-			}
-
-			return r;
+			return s.Where(fn).Aggregate(String.Empty, (current, t) => current + t);
 		}
 
 		public static string CreateSeparator(string s)
 		{
-			string sx = new string('-', 10);
+			string sx = new('-', 10);
 			return sx + s + sx;
 		}
 
@@ -63,7 +54,7 @@ namespace SimpleCore.Utilities
 
 		public static string CreateRandom(int length)
 		{
-			return new string(Enumerable.Repeat(Alphanumeric, length)
+			return new(Enumerable.Repeat(Alphanumeric, length)
 				.Select(s => s[RandomInstance.Next(s.Length)])
 				.ToArray());
 		}
@@ -74,7 +65,7 @@ namespace SimpleCore.Utilities
 		public static string JSubstring(this string s, int beginIndex)
 		{
 			//
-			return s.Substring(beginIndex, s.Length - beginIndex);
+			return s[beginIndex..];
 		}
 
 		/// <summary>
@@ -83,7 +74,7 @@ namespace SimpleCore.Utilities
 		public static string JSubstring(this string s, int beginIndex, int endIndex)
 		{
 			//
-			return s.Substring(beginIndex, (endIndex - beginIndex) + 1);
+			return s.Substring(beginIndex, endIndex - beginIndex + 1);
 		}
 
 		/// <summary>
@@ -117,7 +108,7 @@ namespace SimpleCore.Utilities
 			}
 
 			int adjustedPosA = posA + a.Length;
-			return adjustedPosA >= value.Length ? String.Empty : value.Substring(adjustedPosA);
+			return adjustedPosA >= value.Length ? String.Empty : value[adjustedPosA..];
 		}
 
 		/// <summary>
@@ -151,9 +142,9 @@ namespace SimpleCore.Utilities
 		/// 
 		public static int Compute(string s, string t)
 		{
-			int n = s.Length;
-			int m = t.Length;
-			var d = new int[n + 1, m + 1];
+			int    n = s.Length;
+			int    m = t.Length;
+			int[,] d = new int[n + 1, m + 1];
 
 			// Step 1
 			if (n == 0)

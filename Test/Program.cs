@@ -47,6 +47,10 @@ namespace Test
 			Console.WriteLine(s2.SelectOnlyDigits());
 
 			Console.WriteLine(s2.SelectOnly(char.IsLetter));
+
+			var rg = new NConsoleOption[] { new NConsoleOption() {Name = "foo"}, new NConsoleOption(){Name = "bar"}};
+
+			NConsoleIO.HandleOptions(rg);
 		}
 	}
 }
