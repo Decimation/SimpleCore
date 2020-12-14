@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using JetBrains.Annotations;
-using SimpleCore.Internal;
 using static SimpleCore.Internal.Common;
 
 // ReSharper disable UnusedMember.Global
