@@ -268,7 +268,7 @@ namespace SimpleCore.Console.CommandLine
 				sb.Append(option.Data);
 			}
 
-			if (!sb.ToString().EndsWith(NConsole.NewLine)) {
+			if (!sb.ToString().EndsWith(NConsole.NativeNewLine)) {
 				sb.AppendLine();
 			}
 

@@ -47,7 +47,9 @@ namespace SimpleCore.Console.CommandLine
 	{
 		
 
-		internal static readonly string NewLine = '\n'.ToString();
+		internal static readonly string NativeNewLine = '\n'.ToString();
+
+		public static void NewLine() => System.Console.WriteLine();
 
 		public static int BufferLimit { get; set; } = System.Console.BufferWidth - 10;
 
@@ -73,7 +75,7 @@ namespace SimpleCore.Console.CommandLine
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static string FormatString(char c, string s)
 		{
-			var srg = s.Split(NewLine);
+			var srg = s.Split(NativeNewLine);
 
 			for (int i = 0; i < srg.Length; i++) {
 				string y = Formatting.SPACE + srg[i];
@@ -96,7 +98,7 @@ namespace SimpleCore.Console.CommandLine
 				srg[i] = x2;
 			}
 
-			string s2 = String.Join(NewLine, srg);
+			string s2 = String.Join(NativeNewLine, srg);
 
 			return s2;
 		}
@@ -228,5 +230,8 @@ namespace SimpleCore.Console.CommandLine
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteSuccess(string msg, params object[] args) => Write(Level.Success, msg, args);
+
+
+		
 	}
 }

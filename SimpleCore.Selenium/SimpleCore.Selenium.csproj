@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>JETBRAINS_ANNOTATIONS;TRACE</DefineConstants>
+    <LangVersion>latest</LangVersion>
+    <Authors>Read Stanton (Decimation)</Authors>
+    <Company>Read Stanton (Decimation)</Company>
+    <NoWarn>
+      HAA0601
+      HAA0601,
+      HAA0602,
+      HAA0603,
+      HAA0604,
+      HAA0501,
+      HAA0502,
+      HAA0503,
+      HAA0504,
+      HAA0505,
+      HAA0506,
+      HAA0301,
+      HAA0302,
+      HAA0303,
+      HAA0101,
+      CS1591,
+    </NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
+    <PackageReference Include="Selenium.Support" Version="3.141.0" />
+  </ItemGroup>
+
+</Project>
