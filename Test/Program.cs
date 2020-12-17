@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -35,22 +36,17 @@ namespace Test
 
 	public static class Program
 	{
+		
 		public static void Main(string[] args)
 		{
-			NConsole.Init();
-			var s = "foo bar";
+		
 
-			Console.WriteLine(s.JSubstring(1..(s.Length - 1)));
-			Console.WriteLine(s.JSubstring(^(s.Length   - 1)));
+			Guard.AssertThrows<GuardException>(() =>
+			{
+				throw new Exception();
+			});
 
-			var s2 = "bar123";
-			Console.WriteLine(s2.SelectOnlyDigits());
-
-			Console.WriteLine(s2.SelectOnly(char.IsLetter));
-
-			var rg = new NConsoleOption[] { new NConsoleOption() {Name = "foo"}, new NConsoleOption(){Name = "bar"}};
-
-			NConsoleIO.HandleOptions(rg);
+			Console.WriteLine("Ok");
 		}
 	}
 }

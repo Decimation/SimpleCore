@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using static SimpleCore.Internal.Common;
 
@@ -52,7 +53,7 @@ namespace SimpleCore.Diagnostics
 		[DebuggerHidden]
 		[AssertionMethod]
 		[ContractAnnotation(COND_FALSE_HALT)]
-		public static void Assert(bool condition, string? msg = null, params object[] args) =>
+		public static void Assert([DoesNotReturnIf(false)] bool condition, string? msg = null, params object[] args) =>
 			Assert<Exception>(condition, msg, args);
 
 		/// <summary>
@@ -62,7 +63,7 @@ namespace SimpleCore.Diagnostics
 		[AssertionMethod]
 		[ContractAnnotation(COND_FALSE_HALT)]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void Assert<TException>(bool condition, string? msg = null, params object[] args)
+		public static void Assert<TException>([DoesNotReturnIf(false)] bool condition, string? msg = null, params object[] args)
 			where TException : Exception, new()
 		{
 			if (!condition) {
@@ -88,5 +89,62 @@ namespace SimpleCore.Diagnostics
 		[ContractAnnotation(VALUE_NULL_HALT)]
 		public static void AssertNotNull(object? value, string? name = null) =>
 			Assert<NullReferenceException>(value != null, name);
+
+		[DebuggerHidden]
+		[AssertionMethod]
+		public static void AssertPositive(long value, string? name = null) => Assert<ArgumentException>(value > 0, name);
+
+		[DebuggerHidden]
+		[AssertionMethod]
+		public static void AssertEqual(object a, object b)
+		{
+			// todo
+			
+			Assert<Exception>(a.Equals(b));
+		}
+		
+		
+		[DebuggerHidden]
+		[AssertionMethod]
+		public static void AssertEqual<T>(T a, T b) where T : IEquatable<T>
+		{
+			// todo
+
+			Assert<Exception>(a.Equals(b));
+		}
+
+
+		[DebuggerHidden]
+		[AssertionMethod]
+		public static void AssertThrows<T>(Action f) where T : Exception
+		{
+			bool throws = false;
+			
+			try {
+				f();
+			}
+			catch (T) {
+				throws = true;
+			}
+			
+			if (!throws) {
+				Fail();
+			}
+		}
+		
+		
+		// [DebuggerHidden]
+		// [AssertionMethod]
+		// public static void AssertEqual<T>(T a, T b) where T : IEquatable<T> => Assert<Exception>(a.Equals(b));
+
+
+		[DebuggerHidden]
+		[AssertionMethod]
+		public static void AssertAll([DoesNotReturnIf(false)] params bool[] conditions)
+		{
+			foreach (bool condition in conditions) {
+				Assert(condition);
+			}
+		}
 	}
 }
