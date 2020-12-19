@@ -39,14 +39,10 @@ namespace Test
 		
 		public static void Main(string[] args)
 		{
-		
 
-			Guard.AssertThrows<GuardException>(() =>
-			{
-				throw new Exception();
-			});
+			var n = new NConsoleOption[] {new() {Name = "a"}, new() {Name = "b"}};
+			NConsoleIO.HandleOptions(n);
 
-			Console.WriteLine("Ok");
 		}
 	}
 }

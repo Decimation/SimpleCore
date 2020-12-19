@@ -8,6 +8,8 @@ using SimpleCore.Utilities;
 using static SimpleCore.Internal.Common;
 using static SimpleCore.Console.CommandLine.NConsole;
 
+#pragma warning disable 8602
+
 // ReSharper disable ParameterTypeCanBeEnumerable.Local
 // ReSharper disable UnusedVariable
 // ReSharper disable UnusedMember.Global
@@ -20,7 +22,7 @@ using static SimpleCore.Console.CommandLine.NConsole;
 namespace SimpleCore.Console.CommandLine
 {
 	/// <summary>
-	///     Program functionality, IO, console interaction, console UI
+	///     Program CLI functionality; IO; console interaction, UI
 	/// </summary>
 	public static class NConsoleIO
 	{
@@ -33,6 +35,8 @@ namespace SimpleCore.Console.CommandLine
 		/// <see cref="Refresh"/>
 		/// </summary>
 		public const ConsoleKey NC_GLOBAL_REFRESH_KEY = ConsoleKey.F5;
+		
+		
 
 		public const char OPTION_N = 'N';
 
@@ -81,6 +85,7 @@ namespace SimpleCore.Console.CommandLine
 
 			return HandleOptions(i);
 		}
+		
 
 		/// <summary>
 		///     Handles user input and options
@@ -104,12 +109,11 @@ namespace SimpleCore.Console.CommandLine
 
 			do {
 				System.Console.Clear();
-
 				DisplayInterface(io, selectedOptions);
+
 
 				// Block until input is entered.
 				while (!System.Console.KeyAvailable) {
-
 
 					// HACK: hacky
 
@@ -128,7 +132,6 @@ namespace SimpleCore.Console.CommandLine
 					Refresh();
 				}
 
-
 				char keyChar = GetChar(cki.Key);
 
 				if (!Char.IsLetterOrDigit(keyChar)) {
@@ -137,8 +140,10 @@ namespace SimpleCore.Console.CommandLine
 
 				var modifiers = cki.Modifiers;
 
-				bool altModifier  = modifiers.HasFlag(NConsoleOption.NC_ALT_FUNC_MODIFIER);
-				bool ctrlModifier = modifiers.HasFlag(NConsoleOption.NC_CTRL_FUNC_MODIFIER);
+				bool altModifier   = modifiers.HasFlag(NConsoleOption.NC_ALT_FUNC_MODIFIER);
+				bool ctrlModifier  = modifiers.HasFlag(NConsoleOption.NC_CTRL_FUNC_MODIFIER);
+				bool comboModifier = modifiers.HasFlag(NConsoleOption.NC_CTRL_FUNC_MODIFIER);
+
 
 				// Handle option
 
@@ -148,17 +153,24 @@ namespace SimpleCore.Console.CommandLine
 
 					var option = io[idx];
 
-					bool useAltFunc  = altModifier  && option.AltFunction  != null;
-					bool useCtrlFunc = ctrlModifier && option.CtrlFunction != null;
+					bool useAltFunc   = altModifier   && option.AltFunction   != null;
+					bool useCtrlFunc  = ctrlModifier  && option.CtrlFunction  != null;
+					bool useComboFunc = comboModifier && option.ComboFunction != null;
 
-					if (useAltFunc && option.AltFunction != null) {
+					if (useComboFunc) {
+						
+						var comboFunc = option.ComboFunction();
+						
+						//
+					}
+
+					else if (useAltFunc) {
 
 						var altFunc = option.AltFunction();
 
-
 						//
 					}
-					else if (useCtrlFunc && option.CtrlFunction != null) {
+					else if (useCtrlFunc) {
 						var ctrlFunc = option.CtrlFunction();
 
 						//
@@ -268,7 +280,7 @@ namespace SimpleCore.Console.CommandLine
 				sb.Append(option.Data);
 			}
 
-			if (!sb.ToString().EndsWith(NConsole.NativeNewLine)) {
+			if (!sb.ToString().EndsWith(NativeNewLine)) {
 				sb.AppendLine();
 			}
 

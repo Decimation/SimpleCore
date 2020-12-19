@@ -71,7 +71,8 @@ namespace SimpleCore.Net
 		public static void OpenUrl(string url)
 		{
 			// https://stackoverflow.com/questions/4580263/how-to-open-in-default-browser-in-c-sharp
-
+			// url must start with a protocol i.e. http://
+			
 			try {
 				Process.Start(url);
 			}

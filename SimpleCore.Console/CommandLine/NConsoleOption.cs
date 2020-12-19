@@ -27,6 +27,11 @@ namespace SimpleCore.Console.CommandLine
 		///     <see cref="NConsoleOption.CtrlFunction" />
 		/// </summary>
 		public const ConsoleModifiers NC_CTRL_FUNC_MODIFIER = ConsoleModifiers.Control;
+		
+		/// <summary>
+		///     <see cref="NConsoleOption.ComboFunction" />
+		/// </summary>
+		public const ConsoleModifiers NC_COMBO_FUNC_MODIFIER = NC_ALT_FUNC_MODIFIER | NC_CTRL_FUNC_MODIFIER;
 
 		/// <summary>
 		///     Default <see cref="Color" />
@@ -53,6 +58,11 @@ namespace SimpleCore.Console.CommandLine
 		///     Function to execute when selected with modifiers (<see cref="NC_CTRL_FUNC_MODIFIER" />)
 		/// </summary>
 		public virtual NConsoleFunction? CtrlFunction { get; set; }
+
+		/// <summary>
+		///     Function to execute when selected with modifiers (<see cref="NC_COMBO_FUNC_MODIFIER" />)
+		/// </summary>
+		public virtual NConsoleFunction? ComboFunction { get; set; }
 
 		/// <summary>
 		///     Information about this <see cref="NConsoleOption" />

@@ -12,8 +12,17 @@ using static SimpleCore.Internal.Common;
 
 namespace SimpleCore.Diagnostics
 {
+	/// <summary>
+	/// Diagnostic utilities, conditions, contracts
+	/// </summary>
 	public static class Guard
 	{
+		/*
+		 * https://www.jetbrains.com/help/resharper/Contract_Annotations.html
+		 * https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/attributes/nullable-analysis
+		 */
+
+
 		private const string VALUE_NULL_HALT = "value:null => halt";
 
 		private const string VALUE_NOTNULL_HALT = "value:notnull => halt";
@@ -23,13 +32,19 @@ namespace SimpleCore.Diagnostics
 		private const string UNCONDITIONAL_HALT = "=> halt";
 
 		[DebuggerHidden]
+		[DoesNotReturn]
 		[AssertionMethod]
 		[ContractAnnotation(UNCONDITIONAL_HALT)]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void Fail(string? msg = null, params object[] args)
 			=> Fail<Exception>(msg, args);
 
+
+		/// <summary>
+		/// Root fail function
+		/// </summary>
 		[DebuggerHidden]
+		[DoesNotReturn]
 		[AssertionMethod]
 		[ContractAnnotation(UNCONDITIONAL_HALT)]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
@@ -63,7 +78,8 @@ namespace SimpleCore.Diagnostics
 		[AssertionMethod]
 		[ContractAnnotation(COND_FALSE_HALT)]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void Assert<TException>([DoesNotReturnIf(false)] bool condition, string? msg = null, params object[] args)
+		public static void Assert<TException>([DoesNotReturnIf(false)] bool condition, 
+			string? msg = null, params object[] args)
 			where TException : Exception, new()
 		{
 			if (!condition) {
@@ -92,18 +108,19 @@ namespace SimpleCore.Diagnostics
 
 		[DebuggerHidden]
 		[AssertionMethod]
-		public static void AssertPositive(long value, string? name = null) => Assert<ArgumentException>(value > 0, name);
+		public static void AssertPositive(long value, string? name = null) =>
+			Assert<ArgumentException>(value > 0, name);
 
 		[DebuggerHidden]
 		[AssertionMethod]
 		public static void AssertEqual(object a, object b)
 		{
 			// todo
-			
+
 			Assert<Exception>(a.Equals(b));
 		}
-		
-		
+
+
 		[DebuggerHidden]
 		[AssertionMethod]
 		public static void AssertEqual<T>(T a, T b) where T : IEquatable<T>
@@ -119,20 +136,20 @@ namespace SimpleCore.Diagnostics
 		public static void AssertThrows<T>(Action f) where T : Exception
 		{
 			bool throws = false;
-			
+
 			try {
 				f();
 			}
 			catch (T) {
 				throws = true;
 			}
-			
+
 			if (!throws) {
 				Fail();
 			}
 		}
-		
-		
+
+
 		// [DebuggerHidden]
 		// [AssertionMethod]
 		// public static void AssertEqual<T>(T a, T b) where T : IEquatable<T> => Assert<Exception>(a.Equals(b));
