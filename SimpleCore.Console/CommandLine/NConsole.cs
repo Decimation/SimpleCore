@@ -11,8 +11,7 @@ using static SimpleCore.Internal.Common;
 // ReSharper disable UnusedMember.Local
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
-
-using Console= global::System.Console;
+using Console = global::System.Console;
 
 namespace SimpleCore.Console.CommandLine
 {
@@ -45,8 +44,6 @@ namespace SimpleCore.Console.CommandLine
 	/// </list>
 	public static class NConsole
 	{
-		
-
 		internal static readonly string NativeNewLine = '\n'.ToString();
 
 		public static void NewLine() => System.Console.WriteLine();
@@ -62,14 +59,24 @@ namespace SimpleCore.Console.CommandLine
 			Success
 		}
 
-		public static void AddColor(ref string s, Color c)
+		public static string AddColor(string s, Color c)
 		{
 			s = s.Pastel(c);
+			return s;
 		}
 
-		public static void AddColorBG(ref string s, Color c)
+		public static string AddColorBG(string s, Color c)
 		{
 			s = s.PastelBg(c);
+			return s;
+		}
+
+		public static string AddUnderline(string s)
+		{
+			//\x1b[36mTEST\x1b[0m
+
+			s = $"\x1b[4m{s}\x1b[0m";
+			return s;
 		}
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
@@ -103,7 +110,6 @@ namespace SimpleCore.Console.CommandLine
 			return s2;
 		}
 
-		
 
 		public static void Init()
 		{
@@ -153,7 +159,7 @@ namespace SimpleCore.Console.CommandLine
 			string s = FormatString(sym, String.Format(msg, args));
 
 			if (fg.HasValue) {
-				AddColor(ref s, fg.Value);
+				s = AddColor(s, fg.Value);
 			}
 			else {
 				var autoFgColor = lvl switch
@@ -165,11 +171,11 @@ namespace SimpleCore.Console.CommandLine
 					_             => Color.White
 				};
 
-				AddColor(ref s, autoFgColor);
+				s = AddColor(s, autoFgColor);
 			}
 
 			if (bg.HasValue) {
-				AddColorBG(ref s, bg.Value);
+				s = AddColorBG(s, bg.Value);
 			}
 
 			if (newLine) {
@@ -230,8 +236,5 @@ namespace SimpleCore.Console.CommandLine
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteSuccess(string msg, params object[] args) => Write(Level.Success, msg, args);
-
-
-		
 	}
 }

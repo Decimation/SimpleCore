@@ -35,8 +35,7 @@ namespace SimpleCore.Console.CommandLine
 		/// <see cref="Refresh"/>
 		/// </summary>
 		public const ConsoleKey NC_GLOBAL_REFRESH_KEY = ConsoleKey.F5;
-		
-		
+
 
 		public const char OPTION_N = 'N';
 
@@ -85,7 +84,7 @@ namespace SimpleCore.Console.CommandLine
 
 			return HandleOptions(i);
 		}
-		
+
 
 		/// <summary>
 		///     Handles user input and options
@@ -158,9 +157,9 @@ namespace SimpleCore.Console.CommandLine
 					bool useComboFunc = comboModifier && option.ComboFunction != null;
 
 					if (useComboFunc) {
-						
+
 						var comboFunc = option.ComboFunction();
-						
+
 						//
 					}
 
@@ -225,7 +224,7 @@ namespace SimpleCore.Console.CommandLine
 		{
 			System.Console.WriteLine();
 			System.Console.WriteLine("Press any key to continue...");
-			System.Console.ReadLine();
+			System.Console.ReadKey();
 		}
 
 		public static void WaitForSecond()

@@ -43,6 +43,10 @@ namespace Test
 			var n = new NConsoleOption[] {new() {Name = "a"}, new() {Name = "b"}};
 			NConsoleIO.HandleOptions(n);
 
+			var s = "foo";
+		s=	NConsole.AddUnderline(s);
+			Console.WriteLine(s);
+			Console.WriteLine("foo");
 		}
 	}
 }
