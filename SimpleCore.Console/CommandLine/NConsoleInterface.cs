@@ -1,6 +1,9 @@
 ﻿#nullable enable
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
+
+// ReSharper disable UnusedMember.Global
 
 // ReSharper disable InconsistentNaming
 
@@ -9,11 +12,11 @@ namespace SimpleCore.Console.CommandLine
 	/// <summary>
 	/// Describes a console interface for use with <see cref="NConsole"/>
 	/// </summary>
-	public class NConsoleUI
+	public class NConsoleInterface
 	{
 		public static string DefaultName { get; set; } = System.Console.Title;
 
-		public NConsoleUI(IEnumerable<NConsoleOption> options,
+		public NConsoleInterface(IEnumerable<NConsoleOption> options,
 			string? name, string? prompt, bool selectMultiple, string? status)
 		{
 			Options        = options;
@@ -23,7 +26,7 @@ namespace SimpleCore.Console.CommandLine
 			Status         = status;
 		}
 
-		public NConsoleUI(IEnumerable<NConsoleOption> options) : this(options, null, null, false, null) { }
+		public NConsoleInterface(IEnumerable<NConsoleOption> options) : this(options, null, null, false, null) { }
 
 		public IEnumerable<NConsoleOption> Options { get; set; }
 
@@ -41,12 +44,14 @@ namespace SimpleCore.Console.CommandLine
 			{
 				var o = Options.ElementAt(i);
 
-				
 
 				return o!;
 			}
 		}
 
 		public int Length => Options.Count();
+
+
+		public HashSet<object> Run() => NConsoleIO.ReadOptions(this);
 	}
 }

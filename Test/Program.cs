@@ -36,17 +36,18 @@ namespace Test
 
 	public static class Program
 	{
-		
 		public static void Main(string[] args)
 		{
 
 			var n = new NConsoleOption[] {new() {Name = "a"}, new() {Name = "b"}};
-			NConsoleIO.HandleOptions(n);
+			NConsoleIO.ReadOptions(n);
 
 			var s = "foo";
-		s=	NConsole.AddUnderline(s);
+			s = NConsole.AddUnderline(s);
 			Console.WriteLine(s);
 			Console.WriteLine("foo");
+
+			NConsole.Write(1, 2, 3);
 		}
 	}
 }

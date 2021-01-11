@@ -27,7 +27,7 @@ namespace SimpleCore.Console.CommandLine
 	public static class NConsoleIO
 	{
 		/// <summary>
-		///     Exits <see cref="HandleOptions{T}"/>
+		///     Exits <see cref="ReadOptions{T}"/>
 		/// </summary>
 		public const ConsoleKey NC_GLOBAL_EXIT_KEY = ConsoleKey.Escape;
 
@@ -77,12 +77,12 @@ namespace SimpleCore.Console.CommandLine
 		/// </summary>
 		/// <param name="options">Array of <see cref="NConsoleOption" /></param>
 		/// <param name="selectMultiple">Whether to return selected options as a <see cref="HashSet{T}" /></param>
-		public static HashSet<object> HandleOptions<T>(IEnumerable<T> options, bool selectMultiple = false)
+		public static HashSet<object> ReadOptions<T>(IEnumerable<T> options, bool selectMultiple = false)
 			where T : NConsoleOption
 		{
-			var i = new NConsoleUI(options, null, null, selectMultiple, null);
+			var i = new NConsoleInterface(options, null, null, selectMultiple, null);
 
-			return HandleOptions(i);
+			return ReadOptions(i);
 		}
 
 
@@ -90,9 +90,9 @@ namespace SimpleCore.Console.CommandLine
 		///     Handles user input and options
 		/// </summary>
 		/// <param name="io">
-		///     <see cref="NConsoleUI" />
+		///     <see cref="NConsoleInterface" />
 		/// </param>
-		public static HashSet<object> HandleOptions(NConsoleUI io)
+		public static HashSet<object> ReadOptions(NConsoleInterface io)
 		{
 			// HACK: very hacky
 
@@ -232,7 +232,7 @@ namespace SimpleCore.Console.CommandLine
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 		}
 
-		private static void DisplayInterface(NConsoleUI io, HashSet<object> selectedOptions)
+		private static void DisplayInterface(NConsoleInterface io, HashSet<object> selectedOptions)
 		{
 			WriteColor(Color.Red, true, io.Name);
 

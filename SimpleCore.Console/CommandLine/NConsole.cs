@@ -38,7 +38,7 @@ namespace SimpleCore.Console.CommandLine
 	///     </item>
 	///     <item>
 	///         <description>
-	///             <see cref="NConsoleUI" />
+	///             <see cref="NConsoleInterface" />
 	///         </description>
 	///     </item>
 	/// </list>
@@ -80,7 +80,7 @@ namespace SimpleCore.Console.CommandLine
 		}
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static string FormatString(char c, string s)
+		public static string FormatString(string c, string s)
 		{
 			var srg = s.Split(NativeNewLine);
 
@@ -110,6 +110,12 @@ namespace SimpleCore.Console.CommandLine
 			return s2;
 		}
 
+		[StringFormatMethod(STRING_FORMAT_ARG)]
+		public static string FormatString(char c, string s)
+		{
+			return FormatString(c.ToString(), s);
+		}
+
 
 		public static void Init()
 		{
@@ -133,6 +139,12 @@ namespace SimpleCore.Console.CommandLine
 			System.Console.BackgroundColor = oldBgColor;
 		}
 
+
+		public static Color? OverrideForegroundColor { get; set; } = null;
+		
+		public static Color? OverrideBackgroundColor { get; set; } = null;
+		
+		
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void Write(string msg, params object[] args) => Write(Level.None, null, null, true, msg, args);
 
@@ -146,37 +158,73 @@ namespace SimpleCore.Console.CommandLine
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void Write(Level lvl, Color? fg, Color? bg, bool newLine, string msg, params object[] args)
 		{
-			char sym = lvl switch
+			string sym = lvl switch
 			{
-				Level.None    => Formatting.NULL_CHAR,
-				Level.Info    => Formatting.ASTERISK,
-				Level.Error   => Formatting.EXCLAMATION,
-				Level.Debug   => Formatting.MUL_SIGN,
-				Level.Success => Formatting.CHECK_MARK,
+				Level.None    => string.Empty,
+				Level.Info    => Formatting.ASTERISK.ToString(),
+				Level.Error   => Formatting.EXCLAMATION.ToString(),
+				Level.Debug   => Formatting.MUL_SIGN.ToString(),
+				Level.Success => Formatting.CHECK_MARK.ToString(),
 				_             => throw new ArgumentOutOfRangeException(nameof(lvl), lvl, null)
 			};
 
-			string s = FormatString(sym, String.Format(msg, args));
+			var fmt = String.Format(msg, args);
 
+			string s = lvl == Level.None ? fmt : FormatString(sym, fmt);
+
+			/*
+			 * Foreground color
+			 */
+			
 			if (fg.HasValue) {
 				s = AddColor(s, fg.Value);
 			}
 			else {
-				var autoFgColor = lvl switch
-				{
-					Level.Info    => Color.White,
-					Level.Error   => Color.Red,
-					Level.Debug   => Color.DarkGray,
-					Level.Success => Color.LawnGreen,
-					_             => Color.White
-				};
 
-				s = AddColor(s, autoFgColor);
+				Color buf;
+
+				if (OverrideForegroundColor.HasValue) {
+					buf = OverrideForegroundColor.Value;
+				}
+				else {
+					Color? autoFgColor = lvl switch
+					{
+						Level.Info    => Color.White,
+						Level.Error   => Color.Red,
+						Level.Debug   => Color.DarkGray,
+						Level.Success => Color.LawnGreen,
+						_ => Color.White,
+						//_             => null,
+					};
+
+					buf = autoFgColor.Value;
+				}
+				
+				
+
+				//Color buf = autoFgColor ?? (CurrentForegroundColor ?? Color.White);
+				
+				
+				s = AddColor(s, buf);
 			}
-
+			
+			/*
+			 * Background color
+			 */
+			
 			if (bg.HasValue) {
 				s = AddColorBG(s, bg.Value);
 			}
+			else {
+
+				if (OverrideBackgroundColor.HasValue) {
+					var buf = OverrideBackgroundColor.Value;
+					s   = AddColor(s, buf);
+				}
+				
+				
+			}
+
 
 			if (newLine) {
 				System.Console.WriteLine(s);
@@ -236,5 +284,11 @@ namespace SimpleCore.Console.CommandLine
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteSuccess(string msg, params object[] args) => Write(Level.Success, msg, args);
+
+		public static void Write(params object[] args)
+		{
+			var s = args.QuickJoin();
+			Write($"{s}");
+		}
 	}
 }
