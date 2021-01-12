@@ -35,9 +35,16 @@
 	<ItemGroup>
 		<PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\icon64.png">
+	    <Pack>True</Pack>
+	    <PackagePath></PackagePath>
+	  </None>
+	</ItemGroup>
 	<PropertyGroup>
 		<PackageId>SimpleCore</PackageId>
-		<Version>1.1.9</Version>
+		<Version>1.2.0</Version>
 		<Authors>Read Stanton (Decimation)</Authors>
 		<PackageTags>Utilities common</PackageTags>
 		<RepositoryUrl>https://github.com/Decimation/SimpleCore</RepositoryUrl>
