@@ -232,6 +232,10 @@ namespace SimpleCore.Console.CommandLine
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 		}
 
+		/// <summary>
+		/// Display interface <paramref name="io"/>.
+		/// </summary>
+		/// <remarks>Used by <see cref="ReadOptions{T}"/></remarks>
 		private static void DisplayInterface(NConsoleInterface io, HashSet<object> selectedOptions)
 		{
 			WriteColor(Color.Red, true, io.Name);
@@ -261,6 +265,11 @@ namespace SimpleCore.Console.CommandLine
 
 			if (io.Status != null) {
 				WriteInfo(io.Status);
+			}
+
+			if (io.SelectMultiple) {
+				NewLine();
+				WriteInfo($"Press {NC_GLOBAL_EXIT_KEY} to save selected values.");
 			}
 		}
 

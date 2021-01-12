@@ -143,7 +143,13 @@ namespace SimpleCore.Console.CommandLine
 		public static Color? OverrideForegroundColor { get; set; } = null;
 		
 		public static Color? OverrideBackgroundColor { get; set; } = null;
-		
+
+
+		public static void ResetOverrideColors()
+		{
+			OverrideForegroundColor = null;
+			OverrideBackgroundColor = null;
+		}
 		
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void Write(string msg, params object[] args) => Write(Level.None, null, null, true, msg, args);
