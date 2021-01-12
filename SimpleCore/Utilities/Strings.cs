@@ -15,6 +15,12 @@ namespace SimpleCore.Utilities
 	{
 		public const string Alphanumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
+		/// <summary>
+		/// Constant <see cref="string.Empty"/>
+		/// </summary>
+		public const string Empty = "";
+		
+		
 		public static string SelectOnlyDigits(this string s) => s.SelectOnly(Char.IsDigit);
 
 		public static string SelectOnly(this string s, Func<char, bool> fn)
