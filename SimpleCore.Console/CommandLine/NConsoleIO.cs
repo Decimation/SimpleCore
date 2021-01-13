@@ -139,9 +139,9 @@ namespace SimpleCore.Console.CommandLine
 
 				var modifiers = cki.Modifiers;
 
-				bool altModifier   = modifiers.HasFlag(NConsoleOption.NC_ALT_FUNC_MODIFIER);
-				bool ctrlModifier  = modifiers.HasFlag(NConsoleOption.NC_CTRL_FUNC_MODIFIER);
-				bool comboModifier = modifiers.HasFlag(NConsoleOption.NC_CTRL_FUNC_MODIFIER);
+
+				bool altModifier  = modifiers.HasFlag(NConsoleOption.NC_ALT_FUNC_MODIFIER);
+				bool ctrlModifier = modifiers.HasFlag(NConsoleOption.NC_CTRL_FUNC_MODIFIER);
 
 
 				// Handle option
@@ -152,20 +152,13 @@ namespace SimpleCore.Console.CommandLine
 
 					var option = io[idx];
 
-					bool useAltFunc   = altModifier   && option.AltFunction   != null;
-					bool useCtrlFunc  = ctrlModifier  && option.CtrlFunction  != null;
-					bool useComboFunc = comboModifier && option.ComboFunction != null;
+					bool useAltFunc  = altModifier  && option.AltFunction  != null;
+					bool useCtrlFunc = ctrlModifier && option.CtrlFunction != null;
+
+					bool useComboFunc = altModifier && ctrlModifier && option.ComboFunction != null;
 
 					if (useComboFunc) {
-
 						var comboFunc = option.ComboFunction();
-
-						//
-					}
-
-					else if (useAltFunc) {
-
-						var altFunc = option.AltFunction();
 
 						//
 					}
@@ -174,6 +167,13 @@ namespace SimpleCore.Console.CommandLine
 
 						//
 					}
+					else if (useAltFunc) {
+
+						var altFunc = option.AltFunction();
+
+						//
+					}
+
 					else {
 						var funcResult = option.Function();
 
@@ -200,7 +200,8 @@ namespace SimpleCore.Console.CommandLine
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static bool ReadConfirmation(string msg, params object[] args)
 		{
-			WriteColor(Color.DeepSkyBlue, false, $"{String.Format(msg, args)} ({OPTION_Y}/{OPTION_N}): ");
+			WriteColor(Color.DeepSkyBlue, false,
+				$"{Formatting.ASTERISK} {String.Format(msg, args)} ({OPTION_Y}/{OPTION_N}): ");
 
 			char key = Char.ToUpper(System.Console.ReadKey().KeyChar);
 
