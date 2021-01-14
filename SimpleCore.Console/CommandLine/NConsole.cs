@@ -176,6 +176,27 @@ namespace SimpleCore.Console.CommandLine
 		public static void Write(Level lvl, string msg, params object[] args) =>
 			Write(lvl, null, null, true, msg, args);
 
+
+		/// <summary>
+		/// <see cref="Level.Info"/>
+		/// </summary>
+		public const string LBL_INFO = "*";
+
+		/// <summary>
+		/// <see cref="Level.Error"/>
+		/// </summary>
+		public const string LBL_ERROR = "!";
+
+		/// <summary>
+		/// <see cref="Level.Debug"/>
+		/// </summary>
+		public const string LBL_DEBUG = "[dbg]";
+
+		/// <summary>
+		/// <see cref="Level.Success"/>
+		/// </summary>
+		public const string LBL_SUCCESS = "#";
+
 		/// <summary>
 		///     Root write method.
 		/// </summary>
@@ -185,10 +206,10 @@ namespace SimpleCore.Console.CommandLine
 			string sym = lvl switch
 			{
 				Level.None    => string.Empty,
-				Level.Info    => Formatting.ASTERISK.ToString(),
-				Level.Error   => Formatting.EXCLAMATION.ToString(),
-				Level.Debug   => Formatting.MUL_SIGN.ToString(),
-				Level.Success => Formatting.CHECK_MARK.ToString(),
+				Level.Info    => LBL_INFO,
+				Level.Error   => LBL_ERROR,
+				Level.Debug   => LBL_DEBUG,
+				Level.Success => LBL_SUCCESS,
 				_             => throw new ArgumentOutOfRangeException(nameof(lvl), lvl, null)
 			};
 

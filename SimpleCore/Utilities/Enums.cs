@@ -33,6 +33,10 @@ namespace SimpleCore.Utilities
 			if (t.GetCustomAttribute<FlagsAttribute>() != null) {
 				string sz = set.QuickJoin();
 				Enum.TryParse(typeof(TEnum), (string) sz, out var e);
+
+				if (e == null) {
+					return default;
+				}
 				return (TEnum) e;
 			}
 
