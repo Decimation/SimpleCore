@@ -52,6 +52,6 @@ namespace SimpleCore.Console.CommandLine
 		public int Length => Options.Count();
 
 
-		public HashSet<object> Run() => NConsoleIO.ReadOptions(this);
+		public HashSet<object> Run() => NConsole.ReadOptions(this);
 	}
 }

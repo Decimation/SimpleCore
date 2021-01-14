@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Text;
+using System.Threading;
 using JetBrains.Annotations;
 using Pastel;
 using SimpleCore.Utilities;
@@ -11,12 +13,15 @@ using static SimpleCore.Internal.Common;
 // ReSharper disable UnusedMember.Local
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
-using Console = global::System.Console;
+// ReSharper disable ParameterTypeCanBeEnumerable.Local
+// ReSharper disable UnusedVariable
+// ReSharper disable ParameterTypeCanBeEnumerable.Global
+
+#pragma warning disable 8602, CA1416
+#nullable enable
 
 namespace SimpleCore.Console.CommandLine
 {
-	// todo
-
 	/// <summary>
 	///     Extended console.
 	/// </summary>
@@ -24,11 +29,6 @@ namespace SimpleCore.Console.CommandLine
 	///     <item>
 	///         <description>
 	///             <see cref="NConsole" />
-	///         </description>
-	///     </item>
-	///     <item>
-	///         <description>
-	///             <see cref="NConsoleIO" />
 	///         </description>
 	///     </item>
 	///     <item>
@@ -44,9 +44,27 @@ namespace SimpleCore.Console.CommandLine
 	/// </list>
 	public static class NConsole
 	{
+		#region Main
+
 		internal static readonly string NativeNewLine = '\n'.ToString();
 
 		public static void NewLine() => System.Console.WriteLine();
+
+		/// <summary>
+		/// Attempts to resize the console window
+		/// </summary>
+		/// <returns><c>true</c> if the operation succeeded</returns>
+		public static bool Resize(int cww, int cwh)
+		{
+			bool canResize = System.Console.LargestWindowWidth  >= cww &&
+			                 System.Console.LargestWindowHeight >= cwh;
+
+			if (canResize) {
+				System.Console.SetWindowSize(cww, cwh);
+			}
+
+			return canResize;
+		}
 
 		public static int BufferLimit { get; set; } = System.Console.BufferWidth - 10;
 
@@ -141,7 +159,7 @@ namespace SimpleCore.Console.CommandLine
 
 
 		public static Color? OverrideForegroundColor { get; set; } = null;
-		
+
 		public static Color? OverrideBackgroundColor { get; set; } = null;
 
 
@@ -150,7 +168,7 @@ namespace SimpleCore.Console.CommandLine
 			OverrideForegroundColor = null;
 			OverrideBackgroundColor = null;
 		}
-		
+
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void Write(string msg, params object[] args) => Write(Level.None, null, null, true, msg, args);
 
@@ -181,7 +199,7 @@ namespace SimpleCore.Console.CommandLine
 			/*
 			 * Foreground color
 			 */
-			
+
 			if (fg.HasValue) {
 				s = AddColor(s, fg.Value);
 			}
@@ -199,25 +217,24 @@ namespace SimpleCore.Console.CommandLine
 						Level.Error   => Color.Red,
 						Level.Debug   => Color.DarkGray,
 						Level.Success => Color.LawnGreen,
-						_ => Color.White,
+						_             => Color.White,
 						//_             => null,
 					};
 
 					buf = autoFgColor.Value;
 				}
-				
-				
+
 
 				//Color buf = autoFgColor ?? (CurrentForegroundColor ?? Color.White);
-				
-				
+
+
 				s = AddColor(s, buf);
 			}
-			
+
 			/*
 			 * Background color
 			 */
-			
+
 			if (bg.HasValue) {
 				s = AddColorBG(s, bg.Value);
 			}
@@ -225,10 +242,10 @@ namespace SimpleCore.Console.CommandLine
 
 				if (OverrideBackgroundColor.HasValue) {
 					var buf = OverrideBackgroundColor.Value;
-					s   = AddColor(s, buf);
+					s = AddColor(s, buf);
 				}
-				
-				
+
+
 			}
 
 
@@ -296,5 +313,298 @@ namespace SimpleCore.Console.CommandLine
 			var s = args.QuickJoin();
 			Write($"{s}");
 		}
+
+		#endregion
+
+		#region IO
+
+		/// <summary>
+		///     Exits <see cref="ReadOptions{T}"/>
+		/// </summary>
+		public const ConsoleKey NC_GLOBAL_EXIT_KEY = ConsoleKey.Escape;
+
+		/// <summary>
+		/// <see cref="Refresh"/>
+		/// </summary>
+		public const ConsoleKey NC_GLOBAL_REFRESH_KEY = ConsoleKey.F5;
+
+		public const char OPTION_N = 'N';
+		public const char OPTION_Y = 'Y';
+
+
+		private const int  MAX_OPTION_N        = 10;
+		private const char OPTION_LETTER_START = 'A';
+
+		/// <summary>
+		///     Signals to continue displaying current interface
+		/// </summary>
+		private const int STATUS_OK = 0;
+
+		/// <summary>
+		///     Signals to reload interface
+		/// </summary>
+		private const int STATUS_REFRESH = 1;
+
+		/// <summary>
+		///     Interface status
+		/// </summary>
+		private static int Status;
+
+		public static string? ReadInput(string prompt)
+		{
+			System.Console.Write("{0}: ", prompt);
+			string? i = System.Console.ReadLine();
+
+			return String.IsNullOrWhiteSpace(i) ? null : i;
+		}
+
+		/// <summary>
+		///     Handles user input and options
+		/// </summary>
+		/// <param name="options">Array of <see cref="NConsoleOption" /></param>
+		/// <param name="selectMultiple">Whether to return selected options as a <see cref="HashSet{T}" /></param>
+		public static HashSet<object> ReadOptions<T>(IEnumerable<T> options, bool selectMultiple = false)
+			where T : NConsoleOption
+		{
+			var i = new NConsoleInterface(options, null, null, selectMultiple, null);
+
+			return ReadOptions(i);
+		}
+
+		/// <summary>
+		///     Handles user input and options
+		/// </summary>
+		/// <param name="ui">
+		///     <see cref="NConsoleInterface" />
+		/// </param>
+		public static HashSet<object> ReadOptions(NConsoleInterface ui)
+		{
+			// HACK: very hacky
+
+			var selectedOptions = new HashSet<object>();
+
+
+			/*
+			 * Handle input
+			 */
+
+
+			ConsoleKeyInfo cki;
+
+			do {
+				System.Console.Clear();
+				DisplayInterface(ui, selectedOptions);
+
+
+				// Block until input is entered.
+				while (!System.Console.KeyAvailable) {
+
+					// HACK: hacky
+
+					if (Interlocked.Exchange(ref Status, STATUS_OK) == STATUS_REFRESH) {
+						System.Console.Clear();
+						DisplayInterface(ui, selectedOptions);
+					}
+				}
+
+
+				// Key was read
+
+				cki = System.Console.ReadKey(true);
+
+				if (cki.Key == NC_GLOBAL_REFRESH_KEY) {
+					Refresh();
+				}
+
+				char keyChar = (char) (int) cki.Key;
+
+				if (!Char.IsLetterOrDigit(keyChar)) {
+					continue;
+				}
+
+				var modifiers = cki.Modifiers;
+
+
+				bool altModifier  = modifiers.HasFlag(NConsoleOption.NC_ALT_FUNC_MODIFIER);
+				bool ctrlModifier = modifiers.HasFlag(NConsoleOption.NC_CTRL_FUNC_MODIFIER);
+
+
+				// Handle option
+
+				int idx = GetIndexFromDisplayOption(keyChar);
+
+				if (idx < ui.Length && idx >= 0) {
+
+					var option = ui[idx];
+
+					bool useAltFunc  = altModifier  && option.AltFunction  != null;
+					bool useCtrlFunc = ctrlModifier && option.CtrlFunction != null;
+
+					bool useComboFunc = altModifier && ctrlModifier && option.ComboFunction != null;
+
+					if (useComboFunc) {
+						var comboFunc = option.ComboFunction();
+
+						//
+					}
+					else if (useCtrlFunc) {
+						var ctrlFunc = option.CtrlFunction();
+
+						//
+					}
+					else if (useAltFunc) {
+						var altFunc = option.AltFunction();
+
+						//
+					}
+					else {
+						var funcResult = option.Function();
+
+						if (funcResult != null) {
+							//
+							if (ui.SelectMultiple) {
+								selectedOptions.Add(funcResult);
+							}
+							else {
+								return new HashSet<object> {funcResult};
+							}
+						}
+					}
+
+
+				}
+
+
+			} while (cki.Key != NC_GLOBAL_EXIT_KEY);
+
+			return selectedOptions;
+		}
+
+		[StringFormatMethod(STRING_FORMAT_ARG)]
+		public static bool ReadConfirmation(string msg, params object[] args)
+		{
+			WriteColor(Color.DeepSkyBlue, false,
+				$"{Formatting.ASTERISK} {String.Format(msg, args)} ({OPTION_Y}/{OPTION_N}): ");
+
+			char key = Char.ToUpper(System.Console.ReadKey().KeyChar);
+
+			System.Console.WriteLine();
+
+			return key switch
+			{
+				OPTION_N => false,
+				OPTION_Y => true,
+				_        => ReadConfirmation(msg, args)
+			};
+
+		}
+
+		public static void Refresh()
+		{
+			Interlocked.Exchange(ref Status, STATUS_REFRESH);
+		}
+
+		public static void WaitForInput()
+		{
+			System.Console.WriteLine();
+			System.Console.WriteLine("Press any key to continue...");
+			System.Console.ReadKey();
+		}
+
+		public static void WaitForSecond()
+		{
+			Thread.Sleep(TimeSpan.FromSeconds(1));
+		}
+
+		/// <summary>
+		/// Display interface <paramref name="ui"/>.
+		/// </summary>
+		/// <remarks>Used by <see cref="ReadOptions{T}"/></remarks>
+		private static void DisplayInterface(NConsoleInterface ui, HashSet<object> selectedOptions)
+		{
+			if (ui.Name != null) {
+				WriteColor(Color.Red, true, ui.Name);
+			}
+
+
+			for (int i = 0; i < ui.Length; i++) {
+				var option = ui[i];
+
+				string s = FormatOption(option, i);
+
+				WriteColor(option.Color, false, s);
+			}
+
+			System.Console.WriteLine();
+
+			// Show options
+			if (ui.SelectMultiple) {
+				string optionsStr = selectedOptions.QuickJoin();
+
+				WriteColor(Color.LightBlue, true, optionsStr);
+			}
+
+			// Handle key reading
+
+			if (ui.Prompt != null) {
+				WriteSuccess(ui.Prompt);
+			}
+
+			if (ui.Status != null) {
+				WriteInfo(ui.Status);
+			}
+
+			if (ui.SelectMultiple) {
+				NewLine();
+				WriteInfo($"Press {NC_GLOBAL_EXIT_KEY} to save selected values.");
+			}
+		}
+
+		private static string FormatOption(NConsoleOption option, int i)
+		{
+			var  sb = new StringBuilder();
+			char c  = GetDisplayOptionFromIndex(i);
+
+			string name = option.Name;
+			sb.Append($"[{c}]: {name} ");
+
+
+			if (option.Data != null) {
+				sb.Append(option.Data);
+			}
+
+			if (!sb.ToString().EndsWith(NativeNewLine)) {
+				sb.AppendLine();
+			}
+
+			return FormatString(Formatting.ASTERISK, sb.ToString());
+		}
+
+		private static char GetDisplayOptionFromIndex(int i)
+		{
+			if (i < MAX_OPTION_N) {
+				return Char.Parse(i.ToString());
+			}
+
+			int d = OPTION_LETTER_START + (i - MAX_OPTION_N);
+
+			return (char) d;
+		}
+
+		private static int GetIndexFromDisplayOption(char c)
+		{
+			if (Char.IsNumber(c)) {
+				return (int) Char.GetNumericValue(c);
+			}
+
+			if (Char.IsLetter(c)) {
+				c = Char.ToUpper(c);
+				return MAX_OPTION_N + (c - OPTION_LETTER_START);
+			}
+
+			return INVALID;
+		}
+
+		#endregion
 	}
 }
