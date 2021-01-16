@@ -59,6 +59,7 @@ namespace SimpleCore.Utilities
 
 
 		public const char BALLOT_X         = '\u2717';
+		
 		public const char HEAVY_BALLOT_X   = '\u2718';
 		
 		public const char CHECK_MARK       = '\u2713';
@@ -66,12 +67,15 @@ namespace SimpleCore.Utilities
 		public const char HEAVY_CHECK_MARK = '\u2714';
 		public const char LOZENGE          = '\u25ca';
 		
-		public const char MUL_SIGN         = '\u00D7';
+		public const char MUL_SIGN  = '\u00D7';
 		
-		public const char NULL_CHAR        = '\0';
-		public const char RAD_SIGN         = '\u221A';
-		public const char RELOAD           = '\u21bb';
-		public const char SUN              = '\u263c';
+		public const char MUL_SIGN2  = '\u2715';
+		
+		
+		public const char NULL_CHAR = '\0';
+		public const char RAD_SIGN  = '\u221A';
+		public const char RELOAD    = '\u21bb';
+		public const char SUN       = '\u263c';
 
 		public static string FormatJoin<T>(this IEnumerable<T> values,
 			string format, IFormatProvider? provider = null, string delim = JOIN_COMMA) where T : IFormattable =>

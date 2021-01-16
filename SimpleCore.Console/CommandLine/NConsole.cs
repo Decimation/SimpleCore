@@ -17,7 +17,7 @@ using static SimpleCore.Internal.Common;
 // ReSharper disable UnusedVariable
 // ReSharper disable ParameterTypeCanBeEnumerable.Global
 
-#pragma warning disable 8602, CA1416
+#pragma warning disable 8602, CA1416, CS8604
 #nullable enable
 
 namespace SimpleCore.Console.CommandLine
@@ -190,13 +190,18 @@ namespace SimpleCore.Console.CommandLine
 		/// <summary>
 		/// <see cref="Level.Debug"/>
 		/// </summary>
-		public const string LBL_DEBUG = "[dbg]";
+		public const string LBL_DEBUG = "~";
 
 		/// <summary>
 		/// <see cref="Level.Success"/>
 		/// </summary>
 		public const string LBL_SUCCESS = "#";
 
+		/// <summary>
+		/// <see cref="Level.None"/>
+		/// </summary>
+		public const string LBL_NONE = Strings.Empty;
+		
 		/// <summary>
 		///     Root write method.
 		/// </summary>
@@ -205,7 +210,7 @@ namespace SimpleCore.Console.CommandLine
 		{
 			string sym = lvl switch
 			{
-				Level.None    => string.Empty,
+				Level.None    => LBL_NONE,
 				Level.Info    => LBL_INFO,
 				Level.Error   => LBL_ERROR,
 				Level.Debug   => LBL_DEBUG,
@@ -349,6 +354,9 @@ namespace SimpleCore.Console.CommandLine
 		/// </summary>
 		public const ConsoleKey NC_GLOBAL_REFRESH_KEY = ConsoleKey.F5;
 
+		
+		
+		
 		public const char OPTION_N = 'N';
 		public const char OPTION_Y = 'Y';
 

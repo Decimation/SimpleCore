@@ -28,6 +28,9 @@ namespace SimpleCore.Console.CommandLine
 
 		public NConsoleInterface(IEnumerable<NConsoleOption> options) : this(options, null, null, false, null) { }
 
+
+		public NConsoleInterface() : this(Enumerable.Empty<NConsoleOption>()) { }
+
 		public IEnumerable<NConsoleOption> Options { get; set; }
 
 		public bool SelectMultiple { get; set; }
@@ -53,5 +56,7 @@ namespace SimpleCore.Console.CommandLine
 
 
 		public HashSet<object> Run() => NConsole.ReadOptions(this);
+
+		
 	}
 }

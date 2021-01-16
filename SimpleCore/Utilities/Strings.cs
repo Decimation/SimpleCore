@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 using static SimpleCore.Internal.Common;
 
 // ReSharper disable UnusedMember.Global
@@ -35,11 +37,10 @@ namespace SimpleCore.Utilities
 			return sx + s + sx;
 		}
 
-		public static string CleanString(string s)
+		public static string CleanString(this string s)
 		{
-			s = s.Replace("\"", String.Empty);
-
-			return s;
+			
+			return s.Replace("\"", String.Empty);
 		}
 
 		public static string Truncate(this string value, int maxLength)
