@@ -5,75 +5,76 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Json;
+using System.Linq;
+using System.Web;
 using RestSharp;
 
 // ReSharper disable UnusedMember.Global
 #nullable enable
 
 
-
 namespace SimpleCore.Net
 {
 	public static class Network
 	{
-		public static void AssertResponse(IRestResponse response)
-		{
-			// todo
+		// NOTE: Regions are code smell...
 
-			if (!response.IsSuccessful) {
-				var sb = new StringBuilder();
-				sb.AppendFormat("Uri: {0}\n", response.ResponseUri);
-				sb.AppendFormat("Code: {0}\n", response.StatusCode);
-
-				Console.WriteLine("\n\n{0}", sb);
-			}
-		}
-
+		#region Mime
 
 		/// <summary>
 		/// Identifies the MIME type of <paramref name="url"/>
 		/// </summary>
-		public static string? IdentifyType(string url)
+		public static string IdentifyType(string url)
 		{
-			//var u =new Uri(url);
-
-			var        req    = new RestRequest(url, Method.HEAD);
-			RestClient client = new();
+			var req    = new RestRequest(url, Method.HEAD);
+			var client = new RestClient();
 
 			var res = client.Execute(req);
 
-
-			foreach (var h in res.Headers) {
-				if (h.Name == "Content-Type") {
-					var t = h.Value;
-
-					return (string?) t;
-				}
-			}
-
-
-			return null;
+			return res.ContentType;
 		}
 
-		public static string DownloadUrl(string url)
+		public static string GetMimeComponent(string type) => type.Split('/')[0];
+
+		private static readonly string[] ImageMimeTypes =
+			{"image", "bmp", "gif", "jpeg", "png", "svg+xml", "tiff", "webp"};
+
+		/// <summary>
+		/// Whether the MIME type <paramref name="type"/> is an image type.
+		/// </summary>
+		public static bool IsImage(string type)
 		{
-			string          fileName = Path.GetFileName(url);
-			using WebClient client   = new();
+			return ImageMimeTypes.Any(i => i == GetMimeComponent(type));
+		}
+
+		#endregion
+
+		public static string DownloadUrl(string url, string folder)
+		{
+			string fileName = Path.GetFileName(url);
+
+			using WebClient client = new();
 			client.Headers.Add("User-Agent: Other");
 
-			var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-				"Desktop", fileName);
+			string? dir = Path.Combine(folder, fileName);
 
 			client.DownloadFile(url, dir);
 
 			return dir;
 		}
 
+		public static string DownloadUrl(string url)
+		{
+			var folder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+			return DownloadUrl(url, folder);
+		}
+
 		public static void OpenUrl(string url)
 		{
 			// https://stackoverflow.com/questions/4580263/how-to-open-in-default-browser-in-c-sharp
 			// url must start with a protocol i.e. http://
-			
+
 			try {
 				Process.Start(url);
 			}
@@ -89,12 +90,11 @@ namespace SimpleCore.Net
 			}
 		}
 
-		private static readonly RestClient Client = new();
-
 		public static IRestResponse GetSimpleResponse(string link)
 		{
 			var restReq = new RestRequest(link);
-			var restRes = Client.Execute(restReq);
+			var client  = new RestClient();
+			var restRes = client.Execute(restReq);
 
 			return restRes;
 		}
@@ -103,16 +103,6 @@ namespace SimpleCore.Net
 		{
 			using var wc = new WebClient();
 			return wc.DownloadString(url);
-		}
-
-		/// <summary>
-		/// Whether the MIME type <paramref name="type"/> is an image type.
-		/// </summary>
-		public static bool IsImage(string? type)
-		{
-			var notImage = type == null || type.Split("/")[0] != "image";
-
-			return !notImage;
 		}
 	}
 }

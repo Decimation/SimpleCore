@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable InconsistentNaming
+#pragma warning disable CA1416
 
 namespace SimpleCore.Console.CommandLine
 {
