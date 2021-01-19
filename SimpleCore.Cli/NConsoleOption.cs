@@ -9,7 +9,7 @@ using System.Drawing;
 
 #pragma warning disable CS8618
 
-namespace SimpleCore.Console.CommandLine
+namespace SimpleCore.Cli
 {
 	/// <summary>
 	///     Represents an interactive console/shell option

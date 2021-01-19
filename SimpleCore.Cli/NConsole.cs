@@ -20,7 +20,7 @@ using static SimpleCore.Internal.Common;
 #pragma warning disable 8602, CA1416, CS8604
 #nullable enable
 
-namespace SimpleCore.Console.CommandLine
+namespace SimpleCore.Cli
 {
 	/// <summary>
 	///     Extended console.

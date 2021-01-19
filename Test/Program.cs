@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
-using SimpleCore.Console.CommandLine;
+using SimpleCore.Cli;
 using SimpleCore.Diagnostics;
 using SimpleCore.Model;
 using SimpleCore.Utilities;

@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCore.Net", "SimpleCor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{279F4354-97DB-4E97-BFFC-F9C09E39F36E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCore.Console", "SimpleCore.Console\SimpleCore.Console.csproj", "{B7B0C8EC-2E19-445D-911A-312E691336FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCore.Cli", "SimpleCore.Cli\SimpleCore.Cli.csproj", "{B7B0C8EC-2E19-445D-911A-312E691336FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCore.Selenium", "SimpleCore.Selenium\SimpleCore.Selenium.csproj", "{D9ADB010-34EF-4ED4-806C-C57F6707AA93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCore.Selenium", "SimpleCore.Selenium\SimpleCore.Selenium.csproj", "{D9ADB010-34EF-4ED4-806C-C57F6707AA93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,14 +1,13 @@
 ﻿#nullable enable
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable InconsistentNaming
 #pragma warning disable CA1416
 
-namespace SimpleCore.Console.CommandLine
+namespace SimpleCore.Cli
 {
 	/// <summary>
 	/// Describes a console interface for use with <see cref="NConsole"/>

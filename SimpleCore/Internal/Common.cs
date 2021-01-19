@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Novus")]
 [assembly: InternalsVisibleTo("SimpleCore.Net")]
-[assembly: InternalsVisibleTo("SimpleCore.Console")]
+[assembly: InternalsVisibleTo("SimpleCore.Cli")]
 namespace SimpleCore.Internal
 {
 	/// <summary>
