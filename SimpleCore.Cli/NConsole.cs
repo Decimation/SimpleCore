@@ -46,7 +46,7 @@ namespace SimpleCore.Cli
 	{
 		#region Main
 
-		internal static readonly string NativeNewLine = '\n'.ToString();
+		public const string ANSI_RESET = "\u001b[0m";
 
 		public static void NewLine() => System.Console.WriteLine();
 
@@ -100,7 +100,7 @@ namespace SimpleCore.Cli
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static string FormatString(string c, string s)
 		{
-			var srg = s.Split(NativeNewLine);
+			var srg = s.Split(Formatting.NativeNewLine);
 
 			for (int i = 0; i < srg.Length; i++) {
 				string y = Formatting.SPACE + srg[i];
@@ -123,7 +123,7 @@ namespace SimpleCore.Cli
 				srg[i] = x2;
 			}
 
-			string s2 = String.Join(NativeNewLine, srg);
+			string s2 = String.Join(Formatting.NativeNewLine, srg);
 
 			return s2;
 		}
@@ -602,7 +602,7 @@ namespace SimpleCore.Cli
 				sb.Append(option.Data);
 			}
 
-			if (!sb.ToString().EndsWith(NativeNewLine)) {
+			if (!sb.ToString().EndsWith(Formatting.NativeNewLine)) {
 				sb.AppendLine();
 			}
 

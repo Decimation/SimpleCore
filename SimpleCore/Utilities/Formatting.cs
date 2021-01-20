@@ -142,5 +142,7 @@ namespace SimpleCore.Utilities
 
 			return SimpleJoin(rg);
 		}
+
+		public static readonly string NativeNewLine = '\n'.ToString();
 	}
 }
