@@ -9,6 +9,8 @@ using System.Linq;
 using System.Web;
 using RestSharp;
 
+// ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+
 // ReSharper disable UnusedMember.Global
 #nullable enable
 
@@ -17,8 +19,6 @@ namespace SimpleCore.Net
 {
 	public static class Network
 	{
-		// NOTE: Regions are code smell...
-
 		#region Mime
 
 		/// <summary>
@@ -49,6 +49,69 @@ namespace SimpleCore.Net
 
 		#endregion
 
+		public static string? GetFinalRedirect(string url)
+		{
+			// https://stackoverflow.com/questions/704956/getting-the-redirected-url-from-the-original-url
+
+			if (String.IsNullOrWhiteSpace(url))
+				return url;
+
+			const int MAX_REDIR = 8;
+
+
+			int maxRedirCount = MAX_REDIR; // prevent infinite loops
+
+			string? newUrl = url;
+
+			do {
+				HttpWebResponse? resp = null;
+
+				try {
+					var req = (HttpWebRequest) WebRequest.Create(url);
+					req.Method            = "HEAD";
+					req.AllowAutoRedirect = false;
+					resp                  = (HttpWebResponse) req.GetResponse();
+
+					switch (resp.StatusCode) {
+						case HttpStatusCode.OK:
+							return newUrl;
+						case HttpStatusCode.Redirect:
+						case HttpStatusCode.MovedPermanently:
+						case HttpStatusCode.RedirectKeepVerb:
+						case HttpStatusCode.RedirectMethod:
+							newUrl = resp.Headers["Location"];
+
+							if (newUrl == null)
+								return url;
+
+							if (newUrl.IndexOf("://", System.StringComparison.Ordinal) == -1) {
+								// Doesn't have a URL Schema, meaning it's a relative or absolute URL
+								Uri u = new Uri(new Uri(url), newUrl);
+								newUrl = u.ToString();
+							}
+
+							break;
+						default:
+							return newUrl;
+					}
+
+					url = newUrl;
+				}
+				catch (WebException) {
+					// Return the last known good URL
+					return newUrl;
+				}
+				catch (Exception) {
+					return null;
+				}
+				finally {
+					resp?.Close();
+				}
+			} while (maxRedirCount-- > 0);
+
+			return newUrl;
+		}
+
 		public static string DownloadUrl(string url, string folder)
 		{
 			string fileName = Path.GetFileName(url);
@@ -65,7 +128,7 @@ namespace SimpleCore.Net
 
 		public static string DownloadUrl(string url)
 		{
-			var folder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+			string? folder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
 			return DownloadUrl(url, folder);
 		}
@@ -90,9 +153,9 @@ namespace SimpleCore.Net
 			}
 		}
 
-		public static IRestResponse GetSimpleResponse(string link)
+		public static IRestResponse GetSimpleResponse(string url)
 		{
-			var restReq = new RestRequest(link);
+			var restReq = new RestRequest(url);
 			var client  = new RestClient();
 			var restRes = client.Execute(restReq);
 

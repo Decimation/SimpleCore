@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+// ReSharper disable UnusedMember.Global
 
 namespace SimpleCore.Utilities
 {

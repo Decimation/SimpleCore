@@ -47,6 +47,7 @@ namespace SimpleCore.Utilities
 		public const char   ASTERISK    = '*';
 		public const char   EXCLAMATION = '!';
 		public const char   SPACE       = ' ';
+
 		public const string ELLIPSES    = "...";
 
 

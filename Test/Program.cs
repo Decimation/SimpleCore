@@ -38,15 +38,15 @@ namespace Test
 	{
 		public static void Main(string[] args)
 		{
-
 			var n = new NConsoleOption[] {new() {Name = "a"}, new() {Name = "b"}};
 			NConsole.ReadOptions(n);
+
 
 			var s = "foo";
 			s = NConsole.AddUnderline(s);
 			Console.WriteLine(s);
 			Console.WriteLine("foo");
-
+			
 			NConsole.Write(1, 2, 3);
 		}
 	}
