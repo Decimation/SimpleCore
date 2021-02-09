@@ -20,10 +20,9 @@ namespace SimpleCore.Net
 {
 	public static class Network
 	{
-
 		public static bool IsUri(string uriName, out Uri uriResult)
 		{
-			
+
 			bool result = Uri.TryCreate(uriName, UriKind.Absolute, out uriResult)
 			              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
@@ -132,6 +131,16 @@ namespace SimpleCore.Net
 					throw;
 				}
 			}
+		}
+
+		public static Stream GetStreamFromUrl(string url)
+		{
+			byte[] imageData = null;
+
+			using (var wc = new WebClient())
+				imageData = wc.DownloadData(url);
+
+			return new MemoryStream(imageData);
 		}
 
 		public static IRestResponse GetSimpleResponse(string url)
