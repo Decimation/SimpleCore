@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 // ReSharper disable UnusedMember.Global
@@ -16,6 +17,17 @@ namespace SimpleCore.Utilities
 	/// </summary>
 	public static class Enums
 	{
+		public static List<TEnum> GetSetFlags<TEnum>(TEnum value) where TEnum : Enum
+		{
+			var flags = Enum.GetValues(typeof(TEnum))
+				.Cast<TEnum>()
+				.Where(f => value.HasFlag(f))
+				.ToList();
+
+			return flags;
+		}
+
+
 		public static TEnum SafeParse<TEnum>(string s) where TEnum : Enum
 		{
 			if (String.IsNullOrWhiteSpace(s)) {
