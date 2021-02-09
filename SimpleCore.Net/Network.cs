@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Json;
 using System.Linq;
+using System.Net.Mime;
 using System.Web;
 using RestSharp;
 
@@ -19,35 +20,15 @@ namespace SimpleCore.Net
 {
 	public static class Network
 	{
-		#region Mime
 
-		/// <summary>
-		/// Identifies the MIME type of <paramref name="url"/>
-		/// </summary>
-		public static string IdentifyType(string url)
+		public static bool IsUri(string uriName, out Uri uriResult)
 		{
-			var req    = new RestRequest(url, Method.HEAD);
-			var client = new RestClient();
+			
+			bool result = Uri.TryCreate(uriName, UriKind.Absolute, out uriResult)
+			              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
-			var res = client.Execute(req);
-
-			return res.ContentType;
+			return result;
 		}
-
-		public static string GetMimeComponent(string type) => type.Split('/')[0];
-
-		private static readonly string[] ImageMimeTypes =
-			{"image", "bmp", "gif", "jpeg", "png", "svg+xml", "tiff", "webp"};
-
-		/// <summary>
-		/// Whether the MIME type <paramref name="type"/> is an image type.
-		/// </summary>
-		public static bool IsImage(string type)
-		{
-			return ImageMimeTypes.Any(i => i == GetMimeComponent(type));
-		}
-
-		#endregion
 
 		public static string? GetFinalRedirect(string url)
 		{
