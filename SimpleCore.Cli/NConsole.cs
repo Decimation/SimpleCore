@@ -48,7 +48,7 @@ namespace SimpleCore.Cli
 
 		public const string ANSI_RESET = "\u001b[0m";
 
-		public static void NewLine() => System.Console.WriteLine();
+		public static void NewLine() => Console.WriteLine();
 
 		/// <summary>
 		/// Attempts to resize the console window
@@ -56,17 +56,17 @@ namespace SimpleCore.Cli
 		/// <returns><c>true</c> if the operation succeeded</returns>
 		public static bool Resize(int cww, int cwh)
 		{
-			bool canResize = System.Console.LargestWindowWidth  >= cww &&
-			                 System.Console.LargestWindowHeight >= cwh;
+			bool canResize = Console.LargestWindowWidth  >= cww &&
+			                 Console.LargestWindowHeight >= cwh;
 
 			if (canResize) {
-				System.Console.SetWindowSize(cww, cwh);
+				Console.SetWindowSize(cww, cwh);
 			}
 
 			return canResize;
 		}
 
-		public static int BufferLimit { get; set; } = System.Console.BufferWidth - 10;
+		public static int BufferLimit { get; set; } = Console.BufferWidth - 10;
 
 		public enum Level
 		{
@@ -77,25 +77,29 @@ namespace SimpleCore.Cli
 			Success
 		}
 
-		public static string AddColor(string s, Color c)
+		#region Color
+
+		public static string AddColor(this string s, Color c)
 		{
 			s = s.Pastel(c);
 			return s;
 		}
 
-		public static string AddColorBG(string s, Color c)
+		public static string AddColorBG(this string s, Color c)
 		{
 			s = s.PastelBg(c);
 			return s;
 		}
 
-		public static string AddUnderline(string s)
+		public static string AddUnderline(this string s)
 		{
 			//\x1b[36mTEST\x1b[0m
 
 			s = $"\x1b[4m{s}\x1b[0m";
 			return s;
 		}
+
+		#endregion
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static string FormatString(string c, string s)
@@ -137,24 +141,24 @@ namespace SimpleCore.Cli
 
 		public static void Init()
 		{
-			System.Console.OutputEncoding = Encoding.Unicode;
+			Console.OutputEncoding = Encoding.Unicode;
 		}
 
 		public static void RunWithColor(ConsoleColor fgColor, Action func) =>
-			RunWithColor(fgColor, System.Console.BackgroundColor, func);
+			RunWithColor(fgColor, Console.BackgroundColor, func);
 
 		public static void RunWithColor(ConsoleColor fgColor, ConsoleColor bgColor, Action func)
 		{
-			var oldFgColor = System.Console.ForegroundColor;
-			var oldBgColor = System.Console.BackgroundColor;
+			var oldFgColor = Console.ForegroundColor;
+			var oldBgColor = Console.BackgroundColor;
 
-			System.Console.ForegroundColor = fgColor;
-			System.Console.BackgroundColor = bgColor;
+			Console.ForegroundColor = fgColor;
+			Console.BackgroundColor = bgColor;
 
 			func();
 
-			System.Console.ForegroundColor = oldFgColor;
-			System.Console.BackgroundColor = oldBgColor;
+			Console.ForegroundColor = oldFgColor;
+			Console.BackgroundColor = oldBgColor;
 		}
 
 
@@ -201,7 +205,7 @@ namespace SimpleCore.Cli
 		/// <see cref="Level.None"/>
 		/// </summary>
 		public const string LBL_NONE = Strings.Empty;
-		
+
 		/// <summary>
 		///     Root write method.
 		/// </summary>
@@ -276,10 +280,10 @@ namespace SimpleCore.Cli
 
 
 			if (newLine) {
-				System.Console.WriteLine(s);
+				Console.WriteLine(s);
 			}
 			else {
-				System.Console.Write(s);
+				Console.Write(s);
 			}
 		}
 
@@ -291,10 +295,10 @@ namespace SimpleCore.Cli
 		public static void WriteColor(Color fgColor, bool newLine, string msg, params object[] args)
 		{
 			if (newLine) {
-				System.Console.WriteLine(msg.Pastel(fgColor), args);
+				Console.WriteLine(msg.Pastel(fgColor), args);
 			}
 			else {
-				System.Console.Write(msg.Pastel(fgColor), args);
+				Console.Write(msg.Pastel(fgColor), args);
 			}
 		}
 
@@ -318,13 +322,14 @@ namespace SimpleCore.Cli
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteInfo(object obj) => WriteInfo(obj.ToString());
 
+
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void WriteOnCurrentLine(Color color, string msg, params object[] args)
 		{
 			msg = String.Format(msg, args);
 
 			string clear = new string('\b', msg.Length);
-			System.Console.Write(clear);
+			Console.Write(clear);
 			WriteColor(color, false, msg);
 		}
 
@@ -354,9 +359,7 @@ namespace SimpleCore.Cli
 		/// </summary>
 		public const ConsoleKey NC_GLOBAL_REFRESH_KEY = ConsoleKey.F5;
 
-		
-		
-		
+
 		public const char OPTION_N = 'N';
 		public const char OPTION_Y = 'Y';
 
@@ -379,13 +382,23 @@ namespace SimpleCore.Cli
 		/// </summary>
 		private static int Status;
 
-		public static string? ReadInput(string prompt)
+		public static string? ReadInput(string? prompt = null, Color? c = null)
 		{
-			System.Console.Write("{0}: ", prompt);
-			string? i = System.Console.ReadLine();
+			if (prompt != null) {
+				var str = string.Format("{0}: ", prompt);
+
+				if (c.HasValue) {
+					str = str.AddColor(c.Value);
+				}
+
+				Console.Write(str);
+			}
+
+			string? i = Console.ReadLine();
 
 			return String.IsNullOrWhiteSpace(i) ? null : i;
 		}
+		
 
 		/// <summary>
 		///     Handles user input and options
@@ -421,17 +434,17 @@ namespace SimpleCore.Cli
 			ConsoleKeyInfo cki;
 
 			do {
-				System.Console.Clear();
+				Console.Clear();
 				DisplayInterface(ui, selectedOptions);
 
 
 				// Block until input is entered.
-				while (!System.Console.KeyAvailable) {
+				while (!Console.KeyAvailable) {
 
 					// HACK: hacky
 
 					if (Interlocked.Exchange(ref Status, STATUS_OK) == STATUS_REFRESH) {
-						System.Console.Clear();
+						Console.Clear();
 						DisplayInterface(ui, selectedOptions);
 					}
 				}
@@ -439,7 +452,7 @@ namespace SimpleCore.Cli
 
 				// Key was read
 
-				cki = System.Console.ReadKey(true);
+				cki = Console.ReadKey(true);
 
 				if (cki.Key == NC_GLOBAL_REFRESH_KEY) {
 					Refresh();
@@ -515,9 +528,9 @@ namespace SimpleCore.Cli
 			WriteColor(Color.DeepSkyBlue, false,
 				$"{Formatting.ASTERISK} {String.Format(msg, args)} ({OPTION_Y}/{OPTION_N}): ");
 
-			char key = Char.ToUpper(System.Console.ReadKey().KeyChar);
+			char key = Char.ToUpper(Console.ReadKey().KeyChar);
 
-			System.Console.WriteLine();
+			Console.WriteLine();
 
 			return key switch
 			{
@@ -535,9 +548,9 @@ namespace SimpleCore.Cli
 
 		public static void WaitForInput()
 		{
-			System.Console.WriteLine();
-			System.Console.WriteLine("Press any key to continue...");
-			System.Console.ReadKey();
+			Console.WriteLine();
+			Console.WriteLine("Press any key to continue...");
+			Console.ReadKey();
 		}
 
 		public static void WaitForSecond()
@@ -564,7 +577,7 @@ namespace SimpleCore.Cli
 				WriteColor(option.Color, false, s);
 			}
 
-			System.Console.WriteLine();
+			Console.WriteLine();
 
 			// Show options
 			if (ui.SelectMultiple) {

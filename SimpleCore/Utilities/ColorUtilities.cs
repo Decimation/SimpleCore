@@ -37,5 +37,17 @@ namespace SimpleCore.Utilities
 
 			return Color.FromArgb(color.A, (int) red, (int) green, (int) blue);
 		}
+
+		public static System.Drawing.Color FromColor(System.ConsoleColor c)
+		{
+			int cInt = (int)c;
+
+			int brightnessCoefficient = ((cInt & 8) > 0) ? 2 : 1;
+			int r                     = ((cInt & 4) > 0) ? 64 * brightnessCoefficient : 0;
+			int g                     = ((cInt & 2) > 0) ? 64 * brightnessCoefficient : 0;
+			int b                     = ((cInt & 1) > 0) ? 64 * brightnessCoefficient : 0;
+
+			return Color.FromArgb(r, g, b);
+		}
 	}
 }

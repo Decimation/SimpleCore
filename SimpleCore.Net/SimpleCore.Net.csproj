@@ -36,5 +36,8 @@
     <PackageReference Include="RestSharp" Version="106.11.7" />
     <PackageReference Include="System.Json" Version="4.7.1" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleCore\SimpleCore.csproj" />
+  </ItemGroup>
 
 </Project>
