@@ -33,7 +33,6 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
-    <PackageReference Include="Pastel" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>

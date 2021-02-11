@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Text;
 using System.Threading;
 using JetBrains.Annotations;
-using Pastel;
 using SimpleCore.Utilities;
 using static SimpleCore.Internal.Common;
 
@@ -78,26 +77,6 @@ namespace SimpleCore.Cli
 		}
 
 		#region Color (ANSI)
-
-		public static string AddColor(this string s, Color c)
-		{
-			s = s.Pastel(c);
-			return s;
-		}
-
-		public static string AddColorBG(this string s, Color c)
-		{
-			s = s.PastelBg(c);
-			return s;
-		}
-
-		public static string AddUnderline(this string s)
-		{
-			//\x1b[36mTEST\x1b[0m
-
-			s = $"\x1b[4m{s}\x1b[0m";
-			return s;
-		}
 
 		//public record KeyValueColor(Color KeyColor, string Key, Color ValueColor, string Value);
 
@@ -193,10 +172,10 @@ namespace SimpleCore.Cli
 		public static void WriteColor(Color fgColor, bool newLine, string msg, params object[] args)
 		{
 			if (newLine) {
-				Console.WriteLine(msg.Pastel(fgColor), args);
+				Console.WriteLine(Formatting.AddColor(msg, fgColor), args);
 			}
 			else {
-				Console.Write(msg.Pastel(fgColor), args);
+				Console.Write(Formatting.AddColor(msg, fgColor), args);
 			}
 		}
 
@@ -265,7 +244,7 @@ namespace SimpleCore.Cli
 			 */
 
 			if (fg.HasValue) {
-				s = AddColor(s, fg.Value);
+				s = Formatting.AddColor(s, fg.Value);
 			}
 			else {
 
@@ -292,7 +271,7 @@ namespace SimpleCore.Cli
 				//Color buf = autoFgColor ?? (CurrentForegroundColor ?? Color.White);
 
 
-				s = AddColor(s, buf);
+				s = Formatting.AddColor(s, buf);
 			}
 
 			/*
@@ -300,13 +279,13 @@ namespace SimpleCore.Cli
 			 */
 
 			if (bg.HasValue) {
-				s = AddColorBG(s, bg.Value);
+				s = Formatting.AddColorBG(s, bg.Value);
 			}
 			else {
 
 				if (OverrideBackgroundColor.HasValue) {
 					var buf = OverrideBackgroundColor.Value;
-					s = AddColor(s, buf);
+					s = Formatting.AddColor(s, buf);
 				}
 
 

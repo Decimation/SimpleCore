@@ -11,6 +11,7 @@ using SimpleCore.Cli;
 using SimpleCore.Diagnostics;
 using SimpleCore.Model;
 using SimpleCore.Utilities;
+using Formatting = SimpleCore.Utilities.Formatting;
 
 
 namespace Test
@@ -43,7 +44,7 @@ namespace Test
 
 
 			var s = "foo";
-			s = NConsole.AddUnderline(s);
+			s = Formatting.AddUnderline(s);
 			Console.WriteLine(s);
 			Console.WriteLine("foo");
 			
