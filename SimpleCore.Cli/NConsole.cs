@@ -77,7 +77,7 @@ namespace SimpleCore.Cli
 			Success
 		}
 
-		#region Color
+		#region Color (ANSI)
 
 		public static string AddColor(this string s, Color c)
 		{
@@ -98,6 +98,27 @@ namespace SimpleCore.Cli
 			s = $"\x1b[4m{s}\x1b[0m";
 			return s;
 		}
+
+		//public record KeyValueColor(Color KeyColor, string Key, Color ValueColor, string Value);
+
+		public static StringBuilder AppendKeyValueWithColor(this StringBuilder sb, Color ck, string k, Color cv, object v)
+		{
+			k += ":";
+			var s = string.Format($"{k.AddColor(ck)} {v.ToString().AddColor(cv)}");
+			
+			sb.Append(s);
+
+			return sb;
+		}
+
+		// public static StringBuilder Append2(this StringBuilder sb, List<KeyValueColor> kv)
+		// {
+		// 	foreach (var pair in kv) {
+		// 		sb.AppendKeyValueWithColor(pair.KeyColor, pair.Key, pair.ValueColor, pair.Value);
+		// 	}
+		//
+		// 	return sb;
+		// }
 
 		#endregion
 
@@ -138,12 +159,6 @@ namespace SimpleCore.Cli
 			return FormatString(c.ToString(), s);
 		}
 
-
-		public static void Init()
-		{
-			Console.OutputEncoding = Encoding.Unicode;
-		}
-
 		public static void RunWithColor(ConsoleColor fgColor, Action func) =>
 			RunWithColor(fgColor, Console.BackgroundColor, func);
 
@@ -161,17 +176,36 @@ namespace SimpleCore.Cli
 			Console.BackgroundColor = oldBgColor;
 		}
 
-
 		public static Color? OverrideForegroundColor { get; set; } = null;
-
 		public static Color? OverrideBackgroundColor { get; set; } = null;
-
 
 		public static void ResetOverrideColors()
 		{
 			OverrideForegroundColor = null;
 			OverrideBackgroundColor = null;
 		}
+
+		[StringFormatMethod(STRING_FORMAT_ARG)]
+		public static void WriteColor(Color fgColor, string msg, params object[] args) =>
+			WriteColor(fgColor, true, msg, args);
+
+		[StringFormatMethod(STRING_FORMAT_ARG)]
+		public static void WriteColor(Color fgColor, bool newLine, string msg, params object[] args)
+		{
+			if (newLine) {
+				Console.WriteLine(msg.Pastel(fgColor), args);
+			}
+			else {
+				Console.Write(msg.Pastel(fgColor), args);
+			}
+		}
+
+
+		public static void Init()
+		{
+			Console.OutputEncoding = Encoding.Unicode;
+		}
+
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void Write(string msg, params object[] args) => Write(Level.None, null, null, true, msg, args);
@@ -284,21 +318,6 @@ namespace SimpleCore.Cli
 			}
 			else {
 				Console.Write(s);
-			}
-		}
-
-		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void WriteColor(Color fgColor, string msg, params object[] args) =>
-			WriteColor(fgColor, true, msg, args);
-
-		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void WriteColor(Color fgColor, bool newLine, string msg, params object[] args)
-		{
-			if (newLine) {
-				Console.WriteLine(msg.Pastel(fgColor), args);
-			}
-			else {
-				Console.Write(msg.Pastel(fgColor), args);
 			}
 		}
 

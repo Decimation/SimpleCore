@@ -38,8 +38,8 @@ namespace Test
 	{
 		public static void Main(string[] args)
 		{
-			var n = new NConsoleOption[] {new() {Name = "a"}, new() {Name = "b"}};
-			NConsole.ReadOptions(n);
+			
+			
 
 
 			var s = "foo";
@@ -48,6 +48,12 @@ namespace Test
 			Console.WriteLine("foo");
 			
 			NConsole.Write(1, 2, 3);
+
+			var sb = new StringBuilder();
+			sb.Append("hi\n");
+			sb.AppendKeyValueWithColor(Color.Red, "hi", Color.Blue, "butt");
+			sb.AppendLine("foo");
+			Console.WriteLine(sb);
 		}
 	}
 }

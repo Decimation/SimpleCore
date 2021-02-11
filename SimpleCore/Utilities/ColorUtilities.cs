@@ -14,6 +14,11 @@ namespace SimpleCore.Utilities
 	/// <seealso cref="ConsoleColor"/>
 	public static class ColorUtilities
 	{
+		public static readonly Color AbsoluteRed   = Color.FromArgb(byte.MaxValue, byte.MaxValue, 0, 0);
+		public static readonly Color AbsoluteGreen = Color.FromArgb(byte.MaxValue, 0, byte.MaxValue, 0);
+		public static readonly Color AbsoluteBlue  = Color.FromArgb(byte.MaxValue, 0, 0, byte.MaxValue);
+
+
 		/// <summary>
 		/// Creates color with corrected brightness.
 		/// </summary>
@@ -48,7 +53,7 @@ namespace SimpleCore.Utilities
 
 		public static Color FromConsoleColor(ConsoleColor c)
 		{
-			int cInt = (int)c;
+			int cInt = (int) c;
 
 			int brightnessCoefficient = ((cInt & 8) > 0) ? 2 : 1;
 			int r                     = ((cInt & 4) > 0) ? 64 * brightnessCoefficient : 0;
@@ -60,17 +65,21 @@ namespace SimpleCore.Utilities
 
 		public static IEnumerable<Color> GetGradients(Color start, Color end, int steps)
 		{
+			// https://stackoverflow.com/questions/2011832/generate-color-gradient-in-c-sharp
+
 			int stepA = ((end.A - start.A) / (steps - 1));
 			int stepR = ((end.R - start.R) / (steps - 1));
 			int stepG = ((end.G - start.G) / (steps - 1));
 			int stepB = ((end.B - start.B) / (steps - 1));
 
-			for (int i = 0; i < steps; i++)
-			{
-				yield return Color.FromArgb(start.A + (stepA * i),
-					start.R                         + (stepR * i),
-					start.G                         + (stepG * i),
-					start.B                         + (stepB * i));
+			for (int i = 0; i < steps; i++) {
+
+				int startA = start.A + (stepA * i);
+				int startR = start.R + (stepR * i);
+				int startG = start.G + (stepG * i);
+				int startB = start.B + (stepB * i);
+
+				yield return Color.FromArgb(startA, startR, startG, startB);
 			}
 		}
 	}
