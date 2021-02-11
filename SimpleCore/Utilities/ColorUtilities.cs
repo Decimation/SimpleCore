@@ -1,9 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+
 // ReSharper disable UnusedMember.Global
 
 namespace SimpleCore.Utilities
 {
+	/// <summary>
+	/// Color utilities.
+	/// </summary>
+	/// <seealso cref="Color"/>
+	/// <seealso cref="KnownColor"/>
+	/// <seealso cref="ConsoleColor"/>
 	public static class ColorUtilities
 	{
 		/// <summary>
@@ -38,7 +46,7 @@ namespace SimpleCore.Utilities
 			return Color.FromArgb(color.A, (int) red, (int) green, (int) blue);
 		}
 
-		public static System.Drawing.Color FromColor(System.ConsoleColor c)
+		public static Color FromConsoleColor(ConsoleColor c)
 		{
 			int cInt = (int)c;
 
@@ -48,6 +56,22 @@ namespace SimpleCore.Utilities
 			int b                     = ((cInt & 1) > 0) ? 64 * brightnessCoefficient : 0;
 
 			return Color.FromArgb(r, g, b);
+		}
+
+		public static IEnumerable<Color> GetGradients(Color start, Color end, int steps)
+		{
+			int stepA = ((end.A - start.A) / (steps - 1));
+			int stepR = ((end.R - start.R) / (steps - 1));
+			int stepG = ((end.G - start.G) / (steps - 1));
+			int stepB = ((end.B - start.B) / (steps - 1));
+
+			for (int i = 0; i < steps; i++)
+			{
+				yield return Color.FromArgb(start.A + (stepA * i),
+					start.R                         + (stepR * i),
+					start.G                         + (stepG * i),
+					start.B                         + (stepB * i));
+			}
 		}
 	}
 }

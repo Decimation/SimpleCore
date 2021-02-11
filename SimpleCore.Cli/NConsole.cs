@@ -398,7 +398,7 @@ namespace SimpleCore.Cli
 
 			return String.IsNullOrWhiteSpace(i) ? null : i;
 		}
-		
+
 
 		/// <summary>
 		///     Handles user input and options
@@ -434,7 +434,6 @@ namespace SimpleCore.Cli
 			ConsoleKeyInfo cki;
 
 			do {
-				Console.Clear();
 				DisplayInterface(ui, selectedOptions);
 
 
@@ -444,7 +443,6 @@ namespace SimpleCore.Cli
 					// HACK: hacky
 
 					if (Interlocked.Exchange(ref Status, STATUS_OK) == STATUS_REFRESH) {
-						Console.Clear();
 						DisplayInterface(ui, selectedOptions);
 					}
 				}
@@ -558,14 +556,18 @@ namespace SimpleCore.Cli
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 		}
 
+		public static Color DefaultColor { get; set; } = Color.Red;
+
 		/// <summary>
 		/// Display interface <paramref name="ui"/>.
 		/// </summary>
 		/// <remarks>Used by <see cref="ReadOptions{T}"/></remarks>
 		private static void DisplayInterface(NConsoleInterface ui, HashSet<object> selectedOptions)
 		{
+			Console.Clear();
+
 			if (ui.Name != null) {
-				WriteColor(Color.Red, true, ui.Name);
+				WriteColor(DefaultColor, true, ui.Name);
 			}
 
 
@@ -600,7 +602,29 @@ namespace SimpleCore.Cli
 				NewLine();
 				WriteInfo($"Press {NC_GLOBAL_EXIT_KEY} to save selected values.");
 			}
+
+			/*
+			 * Auto resizing
+			 */
+
+			if (AutoResizeHeight) {
+				int correction = Console.CursorTop + 1;
+
+
+				if (Console.WindowHeight        != correction && !(correction < AutoResizeMinimumHeight) &&
+				    Console.LargestWindowHeight >= correction) {
+					//Console.SetWindowPosition(0, Console.CursorTop);
+					Console.WindowHeight = correction;
+					DisplayInterface(ui, selectedOptions);
+				}
+			}
+
+
 		}
+
+		public static int AutoResizeMinimumHeight { get; set; } = 20;
+
+		public static bool AutoResizeHeight { get; set; } = true;
 
 		private static string FormatOption(NConsoleOption option, int i)
 		{

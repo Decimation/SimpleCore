@@ -65,8 +65,10 @@ namespace SimpleCore.Net
 		/// <summary>
 		/// Whether the MIME <paramref name="mediaType"/> is of type <paramref name="type"/>
 		/// </summary>
-		public static bool IsType(string mediaType, MimeType type) =>
-			GetTypeComponent(mediaType) == Enum.GetName(type);
+		public static bool IsType(string mediaType, MimeType type)
+		{
+			return GetTypeComponent(mediaType) == Enum.GetName(type).ToLower();
+		}
 
 
 		public static bool IsDirect(string url, MimeType m)
@@ -86,6 +88,6 @@ namespace SimpleCore.Net
 
 	public enum MimeType
 	{
-		image,
+		Image,
 	}
 }
