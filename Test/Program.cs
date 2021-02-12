@@ -7,12 +7,15 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Mathematics;
 using BenchmarkDotNet.Running;
 using SimpleCore.Cli;
 using SimpleCore.Diagnostics;
 using SimpleCore.Model;
+using SimpleCore.Numeric;
 using SimpleCore.Utilities;
 using Formatting = SimpleCore.Utilities.Formatting;
+using MathHelper = SimpleCore.Numeric.MathHelper;
 
 
 namespace Test
@@ -49,7 +52,7 @@ namespace Test
 			Console.WriteLine(colorstr);
 			var i = colorstr.Substring(colorstr.AllIndexesOf("\u001b[").ToArray()[^2], 3);
 			Console.WriteLine(i);
-
+			Console.WriteLine(MathHelper.ConvertToUnit(503816));
 
 		}
 	}

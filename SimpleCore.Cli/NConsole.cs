@@ -610,6 +610,7 @@ namespace SimpleCore.Cli
 
 		private static bool TryAutoResize(Action write)
 		{
+			//todo: inline?
 			if (AutoResizeHeight) {
 				int correction = Console.CursorTop + AutoResizeMargin;
 
@@ -619,8 +620,7 @@ namespace SimpleCore.Cli
 					//Console.SetWindowPosition(0, Console.CursorTop);
 					Console.WindowHeight = correction;
 					write();
-
-					Trace.WriteLine($"Resized -> {correction}");
+					
 					return true;
 				}
 			}
