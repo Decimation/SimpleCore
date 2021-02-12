@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -42,19 +43,14 @@ namespace Test
 			
 			
 
-
-			var s = "foo";
-			s = Formatting.AddUnderline(s);
-			Console.WriteLine(s);
-			Console.WriteLine("foo");
 			
-			NConsole.Write(1, 2, 3);
 
-			var sb = new StringBuilder();
-			sb.Append("hi\n");
-			sb.AppendKeyValueWithColor(Color.Red, "hi", Color.Blue, "butt");
-			sb.AppendLine("foo");
-			Console.WriteLine(sb);
+			var colorstr = "butt".AddColor(Color.Pink) + " butt ";
+			Console.WriteLine(colorstr);
+			var i = colorstr.Substring(colorstr.AllIndexesOf("\u001b[").ToArray()[^2], 3);
+			Console.WriteLine(i);
+
+
 		}
 	}
 }

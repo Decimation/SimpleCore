@@ -45,8 +45,6 @@ namespace SimpleCore.Cli
 	{
 		#region Main
 
-		public const string ANSI_RESET = "\u001b[0m";
-
 		public static void NewLine() => Console.WriteLine();
 
 		/// <summary>
@@ -76,31 +74,105 @@ namespace SimpleCore.Cli
 			Success
 		}
 
-		#region Color (ANSI)
-
-		//public record KeyValueColor(Color KeyColor, string Key, Color ValueColor, string Value);
-
-		public static StringBuilder AppendKeyValueWithColor(this StringBuilder sb, Color ck, string k, Color cv, object v)
+		/// <summary>
+		///     Root write method.
+		/// </summary>
+		[StringFormatMethod(STRING_FORMAT_ARG)]
+		public static void Write(Level lvl, Color? fg, Color? bg, bool newLine, string msg, params object[] args)
 		{
-			k += ":";
-			var s = string.Format($"{k.AddColor(ck)} {v.ToString().AddColor(cv)}");
-			
-			sb.Append(s);
+			string sym = lvl switch
+			{
+				Level.None    => LBL_NONE,
+				Level.Info    => LBL_INFO,
+				Level.Error   => LBL_ERROR,
+				Level.Debug   => LBL_DEBUG,
+				Level.Success => LBL_SUCCESS,
+				_             => throw new ArgumentOutOfRangeException(nameof(lvl), lvl, null)
+			};
 
-			return sb;
+			var fmt = String.Format(msg, args);
+
+			string s = lvl == Level.None ? fmt : FormatString(sym, fmt);
+
+			/*
+			 * Foreground color
+			 */
+
+			if (fg.HasValue) {
+				s = s.AddColor(fg.Value);
+			}
+			else {
+
+				Color buf;
+
+				if (OverrideForegroundColor.HasValue) {
+					buf = OverrideForegroundColor.Value;
+				}
+				else {
+					Color? autoFgColor = lvl switch
+					{
+						Level.Info    => Color.White,
+						Level.Error   => Color.Red,
+						Level.Debug   => Color.DarkGray,
+						Level.Success => Color.LawnGreen,
+						_             => Color.White,
+						//_             => null,
+					};
+
+					buf = autoFgColor.Value;
+				}
+
+
+				//Color buf = autoFgColor ?? (CurrentForegroundColor ?? Color.White);
+
+
+				s = s.AddColor(buf);
+			}
+
+			/*
+			 * Background color
+			 */
+
+			if (bg.HasValue) {
+				s = s.AddColorBG(bg.Value);
+			}
+			else {
+
+				if (OverrideBackgroundColor.HasValue) {
+					var buf = OverrideBackgroundColor.Value;
+					s = s.AddColor(buf);
+				}
+
+
+			}
+
+			
+			
+
+
+			if (newLine) {
+				Console.WriteLine(s);
+			}
+			else {
+				Console.Write(s);
+			}
+
+			//TryAutoResize(() =>
+			//{
+			//	Console.Clear();
+			//	Write(lvl, fg, bg, newLine, msg, args);
+			//});
 		}
 
-		// public static StringBuilder Append2(this StringBuilder sb, List<KeyValueColor> kv)
-		// {
-		// 	foreach (var pair in kv) {
-		// 		sb.AppendKeyValueWithColor(pair.KeyColor, pair.Key, pair.ValueColor, pair.Value);
-		// 	}
-		//
-		// 	return sb;
-		// }
+		[StringFormatMethod(STRING_FORMAT_ARG)]
+		public static void Write(Level lvl, string msg, params object[] args) =>
+			Write(lvl, null, null, true, msg, args);
 
-		#endregion
+		
 
+		/// <summary>
+		/// Root formatting function.
+		/// </summary>
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static string FormatString(string c, string s)
 		{
@@ -172,10 +244,10 @@ namespace SimpleCore.Cli
 		public static void WriteColor(Color fgColor, bool newLine, string msg, params object[] args)
 		{
 			if (newLine) {
-				Console.WriteLine(Formatting.AddColor(msg, fgColor), args);
+				Console.WriteLine(msg.AddColor(fgColor), args);
 			}
 			else {
-				Console.Write(Formatting.AddColor(msg, fgColor), args);
+				Console.Write(msg.AddColor(fgColor), args);
 			}
 		}
 
@@ -188,10 +260,6 @@ namespace SimpleCore.Cli
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void Write(string msg, params object[] args) => Write(Level.None, null, null, true, msg, args);
-
-		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void Write(Level lvl, string msg, params object[] args) =>
-			Write(lvl, null, null, true, msg, args);
 
 
 		/// <summary>
@@ -218,87 +286,6 @@ namespace SimpleCore.Cli
 		/// <see cref="Level.None"/>
 		/// </summary>
 		public const string LBL_NONE = Strings.Empty;
-
-		/// <summary>
-		///     Root write method.
-		/// </summary>
-		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void Write(Level lvl, Color? fg, Color? bg, bool newLine, string msg, params object[] args)
-		{
-			string sym = lvl switch
-			{
-				Level.None    => LBL_NONE,
-				Level.Info    => LBL_INFO,
-				Level.Error   => LBL_ERROR,
-				Level.Debug   => LBL_DEBUG,
-				Level.Success => LBL_SUCCESS,
-				_             => throw new ArgumentOutOfRangeException(nameof(lvl), lvl, null)
-			};
-
-			var fmt = String.Format(msg, args);
-
-			string s = lvl == Level.None ? fmt : FormatString(sym, fmt);
-
-			/*
-			 * Foreground color
-			 */
-
-			if (fg.HasValue) {
-				s = Formatting.AddColor(s, fg.Value);
-			}
-			else {
-
-				Color buf;
-
-				if (OverrideForegroundColor.HasValue) {
-					buf = OverrideForegroundColor.Value;
-				}
-				else {
-					Color? autoFgColor = lvl switch
-					{
-						Level.Info    => Color.White,
-						Level.Error   => Color.Red,
-						Level.Debug   => Color.DarkGray,
-						Level.Success => Color.LawnGreen,
-						_             => Color.White,
-						//_             => null,
-					};
-
-					buf = autoFgColor.Value;
-				}
-
-
-				//Color buf = autoFgColor ?? (CurrentForegroundColor ?? Color.White);
-
-
-				s = Formatting.AddColor(s, buf);
-			}
-
-			/*
-			 * Background color
-			 */
-
-			if (bg.HasValue) {
-				s = Formatting.AddColorBG(s, bg.Value);
-			}
-			else {
-
-				if (OverrideBackgroundColor.HasValue) {
-					var buf = OverrideBackgroundColor.Value;
-					s = Formatting.AddColor(s, buf);
-				}
-
-
-			}
-
-
-			if (newLine) {
-				Console.WriteLine(s);
-			}
-			else {
-				Console.Write(s);
-			}
-		}
 
 		[Conditional(DEBUG_COND)]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
@@ -605,20 +592,43 @@ namespace SimpleCore.Cli
 			 * Auto resizing
 			 */
 
+			// if (AutoResizeHeight) {
+			// 	int correction = Console.CursorTop + 1;
+			//
+			//
+			// 	if (Console.WindowHeight        != correction && !(correction < AutoResizeMinimumHeight) &&
+			// 	    Console.LargestWindowHeight >= correction) {
+			// 		//Console.SetWindowPosition(0, Console.CursorTop);
+			// 		Console.WindowHeight = correction;
+			// 		DisplayInterface(ui, selectedOptions);
+			// 	}
+			// }
+
+			TryAutoResize(() => DisplayInterface(ui, selectedOptions));
+		}
+
+
+		private static bool TryAutoResize(Action write)
+		{
 			if (AutoResizeHeight) {
-				int correction = Console.CursorTop + 1;
+				int correction = Console.CursorTop + AutoResizeMargin;
 
 
 				if (Console.WindowHeight        != correction && !(correction < AutoResizeMinimumHeight) &&
 				    Console.LargestWindowHeight >= correction) {
 					//Console.SetWindowPosition(0, Console.CursorTop);
 					Console.WindowHeight = correction;
-					DisplayInterface(ui, selectedOptions);
+					write();
+
+					Trace.WriteLine($"Resized -> {correction}");
+					return true;
 				}
 			}
 
-
+			return false;
 		}
+
+		public static int AutoResizeMargin { get; set; } = 1;
 
 		public static int AutoResizeMinimumHeight { get; set; } = 20;
 

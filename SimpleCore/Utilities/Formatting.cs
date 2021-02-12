@@ -8,6 +8,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
+// ReSharper disable InconsistentNaming
+
 #nullable enable
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ParameterTypeCanBeEnumerable.Global
@@ -309,6 +311,28 @@ namespace SimpleCore.Utilities
 		}
 
 
+		private static string CloseNestedPastelStrings(string input, Color color, ColorPlane colorPlane)
+		{
+			string closedString = CloseNestedPastelStringRegex1.Replace(input, FORMAT_STRING_END);
+
+			closedString = CloseNestedPastelStringRegex2.Replace(closedString, $"{FORMAT_STRING_END}$0");
+
+			closedString = CloseNestedPastelStringRegex3[colorPlane].Replace(closedString,
+				$"$0{String.Format($"{FORMAT_STRING_START}{FORMAT_STRING_COLOR}", PlaneFormatModifiers[colorPlane], color.R, color.G, color.B)}");
+
+			return closedString;
+		}
+
+		private delegate string ColorFormatFunction(string input, Color color);
+
+		private delegate string HexColorFormatFunction(string input, string hexColor);
+
+		private enum ColorPlane : byte
+		{
+			Foreground,
+			Background
+		}
+
 		/// <summary>
 		///     Returns a string wrapped in an ANSI foreground color code using the specified color.
 		/// </summary>
@@ -354,27 +378,23 @@ namespace SimpleCore.Utilities
 			return HexColorFormatFunctions[_enabled][ColorPlane.Background](input, hexColor);
 		}
 
-
-		private static string CloseNestedPastelStrings(string input, Color color, ColorPlane colorPlane)
+		public static string AddUnderline(this string s)
 		{
-			string closedString = CloseNestedPastelStringRegex1.Replace(input, FORMAT_STRING_END);
+			//\x1b[36mTEST\x1b[0m
 
-			closedString = CloseNestedPastelStringRegex2.Replace(closedString, $"{FORMAT_STRING_END}$0");
-
-			closedString = CloseNestedPastelStringRegex3[colorPlane].Replace(closedString,
-				$"$0{String.Format($"{FORMAT_STRING_START}{FORMAT_STRING_COLOR}", PlaneFormatModifiers[colorPlane], color.R, color.G, color.B)}");
-
-			return closedString;
+			s = $"\x1b[4m{s}\x1b[0m";
+			return s;
 		}
 
-		private delegate string ColorFormatFunction(string input, Color color);
-
-		private delegate string HexColorFormatFunction(string input, string hexColor);
-
-		private enum ColorPlane : byte
+		public static StringBuilder AppendColor(this StringBuilder sb, Color c, object value)
 		{
-			Foreground,
-			Background
+			return sb.Append(value.ToString()!.AddColor(c));
+		}
+
+		public static StringBuilder AppendLabelWithColor(this StringBuilder sb, 
+			Color ck, string k, Color cv, object v)
+		{
+			return sb.AppendColor(ck, k + ": ").AppendColor(cv, v);
 		}
 
 		#endregion
@@ -389,12 +409,6 @@ namespace SimpleCore.Utilities
 			return SimpleJoin(rg);
 		}
 
-		public static string AddUnderline(this string s)
-		{
-			//\x1b[36mTEST\x1b[0m
-
-			s = $"\x1b[4m{s}\x1b[0m";
-			return s;
-		}
+		public const string ANSI_RESET = "\u001b[0m";
 	}
 }
