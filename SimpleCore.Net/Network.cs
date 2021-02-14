@@ -8,6 +8,7 @@ using System.Json;
 using System.Linq;
 using System.Net.Mime;
 using System.Web;
+using HtmlAgilityPack;
 using RestSharp;
 
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
@@ -157,5 +158,8 @@ namespace SimpleCore.Net
 			using var wc = new WebClient();
 			return wc.DownloadString(url);
 		}
+
+
+		
 	}
 }

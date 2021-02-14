@@ -12,6 +12,7 @@ using BenchmarkDotNet.Running;
 using SimpleCore.Cli;
 using SimpleCore.Diagnostics;
 using SimpleCore.Model;
+using SimpleCore.Net;
 using SimpleCore.Numeric;
 using SimpleCore.Utilities;
 using Formatting = SimpleCore.Utilities.Formatting;
@@ -48,12 +49,9 @@ namespace Test
 
 			
 
-			var colorstr = "butt".AddColor(Color.Pink) + " butt ";
-			Console.WriteLine(colorstr);
-			var i = colorstr.Substring(colorstr.AllIndexesOf("\u001b[").ToArray()[^2], 3);
-			Console.WriteLine(i);
-			Console.WriteLine(MathHelper.ConvertToUnit(503816));
+		
 
+			
 		}
 	}
 }
