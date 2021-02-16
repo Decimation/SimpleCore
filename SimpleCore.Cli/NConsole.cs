@@ -146,9 +146,6 @@ namespace SimpleCore.Cli
 
 			}
 
-			
-			
-
 
 			if (newLine) {
 				Console.WriteLine(s);
@@ -168,7 +165,6 @@ namespace SimpleCore.Cli
 		public static void Write(Level lvl, string msg, params object[] args) =>
 			Write(lvl, null, null, true, msg, args);
 
-		
 
 		/// <summary>
 		/// Root formatting function.
@@ -335,7 +331,7 @@ namespace SimpleCore.Cli
 		#region IO
 
 		/// <summary>
-		///     Exits <see cref="ReadOptions{T}"/>
+		///     Exits <see cref="ReadOptions(NConsoleInterface)"/>
 		/// </summary>
 		public const ConsoleKey NC_GLOBAL_EXIT_KEY = ConsoleKey.Escape;
 
@@ -370,7 +366,7 @@ namespace SimpleCore.Cli
 		public static string? ReadInput(string? prompt = null, Color? c = null)
 		{
 			if (prompt != null) {
-				var str = string.Format("{0}: ", prompt);
+				var str = $"{prompt}: ";
 
 				if (c.HasValue) {
 					str = str.AddColor(c.Value);
@@ -390,12 +386,11 @@ namespace SimpleCore.Cli
 		/// </summary>
 		/// <param name="options">Array of <see cref="NConsoleOption" /></param>
 		/// <param name="selectMultiple">Whether to return selected options as a <see cref="HashSet{T}" /></param>
-		public static HashSet<object> ReadOptions<T>(IEnumerable<T> options, bool selectMultiple = false)
-			where T : NConsoleOption
+		public static HashSet<object> ReadOptions(IEnumerable<NConsoleOption> options, bool selectMultiple = false)
 		{
-			var i = new NConsoleInterface(options, null, null, selectMultiple, null);
+			var consoleInterface = new NConsoleInterface(options, null, null, selectMultiple, null);
 
-			return ReadOptions(i);
+			return ReadOptions(consoleInterface);
 		}
 
 		/// <summary>
@@ -467,6 +462,7 @@ namespace SimpleCore.Cli
 
 					bool useComboFunc = altModifier && ctrlModifier && option.ComboFunction != null;
 
+
 					if (useComboFunc) {
 						var comboFunc = option.ComboFunction();
 
@@ -536,17 +532,19 @@ namespace SimpleCore.Cli
 			Console.ReadKey();
 		}
 
-		public static void WaitForSecond()
+		public static void WaitForTimeSpan(TimeSpan span)
 		{
-			Thread.Sleep(TimeSpan.FromSeconds(1));
+			Thread.Sleep(span);
 		}
+
+		public static void WaitForSecond() => WaitForTimeSpan(TimeSpan.FromSeconds(1));
 
 		public static Color DefaultColor { get; set; } = Color.Red;
 
 		/// <summary>
 		/// Display interface <paramref name="ui"/>.
 		/// </summary>
-		/// <remarks>Used by <see cref="ReadOptions{T}"/></remarks>
+		/// <remarks>Used by <see cref="ReadOptions(NConsoleInterface)"/></remarks>
 		private static void DisplayInterface(NConsoleInterface ui, HashSet<object> selectedOptions)
 		{
 			Console.Clear();
@@ -620,7 +618,7 @@ namespace SimpleCore.Cli
 					//Console.SetWindowPosition(0, Console.CursorTop);
 					Console.WindowHeight = correction;
 					write();
-					
+
 					return true;
 				}
 			}
@@ -632,7 +630,7 @@ namespace SimpleCore.Cli
 
 		public static int AutoResizeMinimumHeight { get; set; } = 20;
 
-		public static bool AutoResizeHeight { get; set; } = true;
+		public static bool AutoResizeHeight { get; set; } = false;
 
 		private static string FormatOption(NConsoleOption option, int i)
 		{

@@ -57,6 +57,15 @@ namespace SimpleCore.Utilities
 			return idx < rg.Count && idx >= 0;
 		}
 
+		public static void Replace<T>(this List<T> list, Predicate<T> oldItemSelector, T newItem)
+		{
+			//check for different situations here and throw exception
+			//if list contains multiple items that match the predicate
+			//or check for nullability of list and etc ...
+			var oldItemIndex = list.FindIndex(oldItemSelector);
+			list[oldItemIndex] = newItem;
+		}
+
 		/// <summary>
 		/// Writes a <see cref="Dictionary{TKey,TValue}"/> to file <paramref name="filename"/>.
 		/// </summary>
