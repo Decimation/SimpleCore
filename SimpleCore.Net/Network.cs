@@ -10,6 +10,7 @@ using System.Net.Mime;
 using System.Web;
 using HtmlAgilityPack;
 using RestSharp;
+using SimpleCore.Utilities;
 
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 
@@ -157,6 +158,34 @@ namespace SimpleCore.Net
 		{
 			using var wc = new WebClient();
 			return wc.DownloadString(url);
+		}
+
+		public static bool TryGetString(string url, out string? e)
+		{
+			try {
+				e= GetString(url);
+				return true;
+			}
+			catch (Exception) {
+				e = null;
+				return false;
+			}
+		}
+
+
+
+		public static void DumpResponse(IRestResponse response)
+		{
+			var ct = new ConsoleTable("-", "Value");
+
+			ct.AddRow("Uri", response.ResponseUri);
+			ct.AddRow("Successful", response.IsSuccessful);
+			ct.AddRow("Status code", response.StatusCode);
+			ct.AddRow("Error message", response.ErrorMessage);
+			
+			var str = ct.ToString();
+
+			Trace.WriteLine(str);
 		}
 
 

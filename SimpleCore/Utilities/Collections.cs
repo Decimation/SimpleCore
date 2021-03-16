@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using static SimpleCore.Internal.Common;
@@ -47,6 +48,55 @@ namespace SimpleCore.Utilities
 		}
 
 		private const string DICT_DELIM = "=";
+
+		public static T[] ReplaceAllSequences<T>(this T[] rg, IList<T> sequence, IList<T> replace)
+		{
+			return rg.ToList().ReplaceAllSequences(sequence, replace).ToArray();
+		}
+
+		/// <summary>
+		/// Replaces all occurrences of sequence <paramref name="sequence"/> within <paramref name="rg"/> with <paramref name="replace"/>.
+		/// </summary>
+		/// <param name="rg">Original <see cref="List{T}"/></param>
+		/// <param name="sequence">Sequence to search for</param>
+		/// <param name="replace">Replacement sequence</param>
+		public static IList<T> ReplaceAllSequences<T>(this List<T> rg, IList<T> sequence, IList<T> replace)
+		{
+			int i = 0;
+
+			do {
+				//i = rg.IndexOf(sequence[0], i);
+				
+
+
+				var b = rg.GetRange(i, sequence.Count).SequenceEqual(sequence);
+
+				if (b)
+				{
+					rg.RemoveRange(i, sequence.Count);
+					rg.InsertRange(i, replace);
+					i += sequence.Count;
+				}
+
+				
+				
+
+				//Trace.WriteLine($"{nameof(ReplaceAllSequences)} {i}");
+
+				
+
+				// if (i + sequence.Count >= rg.Count) {
+				//
+				// 	break;
+				// }
+
+				
+
+				
+			} while ( !(++i >= rg.Count) &&  !(i+sequence.Count >= rg.Count));
+
+			return rg;
+		}
 
 		public static bool IndexOutOfBounds<T>(this IList<T> rg, int idx)
 		{

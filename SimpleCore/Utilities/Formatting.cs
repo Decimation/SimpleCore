@@ -48,10 +48,6 @@ namespace SimpleCore.Utilities
 		public const string JOIN_SPACE = " ";
 
 
-		private const string HEX_FORMAT_SPECIFIER = "X";
-
-		private const string HEX_PREFIX = "0x";
-
 		public const char PERIOD      = '.';
 		public const char ASTERISK    = '*';
 		public const char EXCLAMATION = '!';
@@ -86,6 +82,8 @@ namespace SimpleCore.Utilities
 		public const           char   RAD_SIGN      = '\u221A';
 		public const           char   RELOAD        = '\u21bb';
 		public const           char   SUN           = '\u263c';
+
+
 		public static readonly string NativeNewLine = '\n'.ToString();
 
 		#endregion
@@ -119,6 +117,10 @@ namespace SimpleCore.Utilities
 		#endregion
 
 		#region Hex
+
+		private const string HEX_FORMAT_SPECIFIER = "X";
+
+		private const string HEX_PREFIX = "0x";
 
 		public static string ToHexString<T>(T value, HexOptions options = HexOptions.Default)
 		{

@@ -29,7 +29,10 @@ namespace SimpleCore.Net
 		{
 			
 			var req    = new RestRequest(url, Method.HEAD);
+			
 			var client = new RestClient();
+			
+			//client.FollowRedirects = true;
 
 			var res = client.Execute(req);
 

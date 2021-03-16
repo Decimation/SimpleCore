@@ -393,6 +393,30 @@ namespace SimpleCore.Cli
 			return ReadOptions(consoleInterface);
 		}
 
+		/*public static ConsoleKeyInfo Block()
+		{
+			ConsoleKeyInfo cki;
+
+			do {
+				// Block until input is entered.
+				while (!Console.KeyAvailable) {
+
+					// HACK: hacky
+
+
+				}
+
+
+				// Key was read
+
+				cki = Console.ReadKey(true);
+
+
+			} while (cki.Key != ConsoleKey.Escape);
+
+			return cki;
+		}*/
+
 		/// <summary>
 		///     Handles user input and options
 		/// </summary>

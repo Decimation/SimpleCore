@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -45,13 +46,8 @@ namespace Test
 		public static void Main(string[] args)
 		{
 			
-			
 
-			
 
-		
-
-			
 		}
 	}
 }

@@ -85,7 +85,9 @@ namespace SimpleCore.Utilities
 			return table;
 		}
 
-		public override string ToString()
+		public override string ToString() => ToMarkDownString();
+
+		public string ToDefaultString()
 		{
 			var builder = new StringBuilder();
 
@@ -118,14 +120,16 @@ namespace SimpleCore.Utilities
 			builder.AppendLine(divider);
 			builder.AppendLine(columnHeaders);
 
-			foreach (var row in results) {
+			foreach (var row in results)
+			{
 				builder.AppendLine(divider);
 				builder.AppendLine(row);
 			}
 
 			builder.AppendLine(divider);
 
-			if (Options.EnableCount) {
+			if (Options.EnableCount)
+			{
 				builder.AppendLine("");
 				builder.AppendFormat(" Count: {0}", Rows.Count);
 			}
@@ -237,6 +241,9 @@ namespace SimpleCore.Utilities
 			return columnLengths;
 		}
 
+		/*
+		 * NOTE: Markdown string is default
+		 */
 		
 		public void Write(ConsoleTableFormat consoleTableFormat = ConsoleTableFormat.MarkDown)
 		{
