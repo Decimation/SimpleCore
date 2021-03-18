@@ -309,7 +309,7 @@ namespace SimpleCore.Cli
 		{
 			msg = String.Format(msg, args);
 
-			string clear = new string('\b', msg.Length);
+			string clear = new('\b', msg.Length);
 			Console.Write(clear);
 			WriteColor(color, false, msg);
 		}
@@ -340,13 +340,18 @@ namespace SimpleCore.Cli
 		/// </summary>
 		public const ConsoleKey NC_GLOBAL_REFRESH_KEY = ConsoleKey.F5;
 
+		public const ConsoleKey NC_GLOBAL_RETURN_KEY = ConsoleKey.F1;
 
-		public const char OPTION_N = 'N';
-		public const char OPTION_Y = 'Y';
+		public const char       OPTION_N              = 'N';
+		public const char       OPTION_Y              = 'Y';
 
 
 		private const int  MAX_OPTION_N        = 10;
+
 		private const char OPTION_LETTER_START = 'A';
+
+
+		public const  int  MAX_DISPLAY_OPTIONS = 36;
 
 		/// <summary>
 		///     Signals to continue displaying current interface
@@ -458,6 +463,10 @@ namespace SimpleCore.Cli
 
 				if (cki.Key == NC_GLOBAL_REFRESH_KEY) {
 					Refresh();
+				}
+
+				if (cki.Key == NC_GLOBAL_RETURN_KEY) {
+					return new HashSet<object> {true};//todo
 				}
 
 				char keyChar = (char) (int) cki.Key;

@@ -66,34 +66,27 @@ namespace SimpleCore.Utilities
 
 			do {
 				//i = rg.IndexOf(sequence[0], i);
-				
 
 
 				var b = rg.GetRange(i, sequence.Count).SequenceEqual(sequence);
 
-				if (b)
-				{
+				if (b) {
 					rg.RemoveRange(i, sequence.Count);
 					rg.InsertRange(i, replace);
 					i += sequence.Count;
 				}
 
-				
-				
 
 				//Trace.WriteLine($"{nameof(ReplaceAllSequences)} {i}");
 
-				
 
 				// if (i + sequence.Count >= rg.Count) {
 				//
 				// 	break;
 				// }
 
-				
 
-				
-			} while ( !(++i >= rg.Count) &&  !(i+sequence.Count >= rg.Count));
+			} while (!(++i >= rg.Count) && !(i + sequence.Count >= rg.Count));
 
 			return rg;
 		}
