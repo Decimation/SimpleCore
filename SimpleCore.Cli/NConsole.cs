@@ -7,6 +7,7 @@ using System.Threading;
 using JetBrains.Annotations;
 using SimpleCore.Utilities;
 using static SimpleCore.Internal.Common;
+// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 
 // ReSharper disable InvocationIsSkipped
 // ReSharper disable UnusedMember.Local
@@ -330,6 +331,8 @@ namespace SimpleCore.Cli
 
 		#region IO
 
+		#region Keys
+
 		/// <summary>
 		///     Exits <see cref="ReadOptions(NConsoleInterface)"/>
 		/// </summary>
@@ -340,18 +343,27 @@ namespace SimpleCore.Cli
 		/// </summary>
 		public const ConsoleKey NC_GLOBAL_REFRESH_KEY = ConsoleKey.F5;
 
+		/// <summary>
+		/// Return
+		/// </summary>
 		public const ConsoleKey NC_GLOBAL_RETURN_KEY = ConsoleKey.F1;
 
-		public const char       OPTION_N              = 'N';
-		public const char       OPTION_Y              = 'Y';
+		/// <summary>
+		///     <see cref="NConsoleOption.AltFunction" />
+		/// </summary>
+		public const ConsoleModifiers NC_ALT_FUNC_MODIFIER = ConsoleModifiers.Alt;
 
+		/// <summary>
+		///     <see cref="NConsoleOption.CtrlFunction" />
+		/// </summary>
+		public const ConsoleModifiers NC_CTRL_FUNC_MODIFIER = ConsoleModifiers.Control;
 
-		private const int  MAX_OPTION_N        = 10;
+		/// <summary>
+		///     <see cref="NConsoleOption.ComboFunction" />
+		/// </summary>
+		public const ConsoleModifiers NC_COMBO_FUNC_MODIFIER = NC_ALT_FUNC_MODIFIER | NC_CTRL_FUNC_MODIFIER;
 
-		private const char OPTION_LETTER_START = 'A';
-
-
-		public const  int  MAX_DISPLAY_OPTIONS = 36;
+		#endregion
 
 		/// <summary>
 		///     Signals to continue displaying current interface
@@ -461,12 +473,15 @@ namespace SimpleCore.Cli
 
 				cki = Console.ReadKey(true);
 
-				if (cki.Key == NC_GLOBAL_REFRESH_KEY) {
-					Refresh();
-				}
+				// Handle special keys
 
-				if (cki.Key == NC_GLOBAL_RETURN_KEY) {
-					return new HashSet<object> {true};//todo
+				switch (cki.Key) {
+					case NC_GLOBAL_REFRESH_KEY:
+						Refresh();
+						break;
+					case NC_GLOBAL_RETURN_KEY:
+						//todo
+						return new HashSet<object> {true};
 				}
 
 				char keyChar = (char) (int) cki.Key;
@@ -478,8 +493,8 @@ namespace SimpleCore.Cli
 				var modifiers = cki.Modifiers;
 
 
-				bool altModifier  = modifiers.HasFlag(NConsoleOption.NC_ALT_FUNC_MODIFIER);
-				bool ctrlModifier = modifiers.HasFlag(NConsoleOption.NC_CTRL_FUNC_MODIFIER);
+				bool altModifier  = modifiers.HasFlag(NC_ALT_FUNC_MODIFIER);
+				bool ctrlModifier = modifiers.HasFlag(NC_CTRL_FUNC_MODIFIER);
 
 
 				// Handle option
@@ -664,6 +679,21 @@ namespace SimpleCore.Cli
 		public static int AutoResizeMinimumHeight { get; set; } = 20;
 
 		public static bool AutoResizeHeight { get; set; } = false;
+
+		#region Options
+
+		public const char OPTION_N = 'N';
+		public const char OPTION_Y = 'Y';
+
+
+		private const int MAX_OPTION_N = 10;
+
+		private const char OPTION_LETTER_START = 'A';
+
+
+		public const int MAX_DISPLAY_OPTIONS = 36;
+
+		#endregion
 
 		private static string FormatOption(NConsoleOption option, int i)
 		{

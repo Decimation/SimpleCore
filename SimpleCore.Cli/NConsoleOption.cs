@@ -20,21 +20,6 @@ namespace SimpleCore.Cli
 	public interface NConsoleOption
 	{
 		/// <summary>
-		///     <see cref="NConsoleOption.AltFunction" />
-		/// </summary>
-		public const ConsoleModifiers NC_ALT_FUNC_MODIFIER = ConsoleModifiers.Alt;
-
-		/// <summary>
-		///     <see cref="NConsoleOption.CtrlFunction" />
-		/// </summary>
-		public const ConsoleModifiers NC_CTRL_FUNC_MODIFIER = ConsoleModifiers.Control;
-
-		/// <summary>
-		///     <see cref="NConsoleOption.ComboFunction" />
-		/// </summary>
-		public const ConsoleModifiers NC_COMBO_FUNC_MODIFIER = NC_ALT_FUNC_MODIFIER | NC_CTRL_FUNC_MODIFIER;
-
-		/// <summary>
 		///     Default <see cref="Color" />
 		/// </summary>
 		public static readonly Color DefaultOptionColor = Color.White;
@@ -51,17 +36,17 @@ namespace SimpleCore.Cli
 		public NConsoleFunction Function { get; set; }
 
 		/// <summary>
-		///     Function to execute when selected with modifiers (<see cref="NC_ALT_FUNC_MODIFIER" />)
+		///     Function to execute when selected with modifiers (<see cref="NConsole.NC_ALT_FUNC_MODIFIER" />)
 		/// </summary>
 		public NConsoleFunction? AltFunction { get; set; }
 
 		/// <summary>
-		///     Function to execute when selected with modifiers (<see cref="NC_CTRL_FUNC_MODIFIER" />)
+		///     Function to execute when selected with modifiers (<see cref="NConsole.NC_CTRL_FUNC_MODIFIER" />)
 		/// </summary>
 		public NConsoleFunction? CtrlFunction { get; set; }
 
 		/// <summary>
-		///     Function to execute when selected with modifiers (<see cref="NC_COMBO_FUNC_MODIFIER" />)
+		///     Function to execute when selected with modifiers (<see cref="NConsole.NC_COMBO_FUNC_MODIFIER" />)
 		/// </summary>
 		public NConsoleFunction? ComboFunction { get; set; }
 

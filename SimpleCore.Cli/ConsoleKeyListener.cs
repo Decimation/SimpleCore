@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 
 namespace SimpleCore.Cli
 {
+	//TODO: WIP
+
 	public static class ConsoleKeyListener
 	{
 		public delegate void KeyEventHandler(object sender, EventArgs e);
@@ -22,7 +24,7 @@ namespace SimpleCore.Cli
 
 		public class KeyEventArgs : EventArgs
 		{
-			public ConsoleKeyInfo key;
+			public ConsoleKeyInfo Key { get; init; }
 		}
 
 		private static void Listen()
@@ -42,7 +44,7 @@ namespace SimpleCore.Cli
 
 
 			Trace.WriteLine($"{cki.Key} {cki.KeyChar}");
-			KeyInputEvent?.Invoke(null, new KeyEventArgs() {key = cki});
+			KeyInputEvent?.Invoke(null, new KeyEventArgs() {Key = cki});
 		}
 
 		public static void Start()
@@ -51,6 +53,7 @@ namespace SimpleCore.Cli
 			ListenThread.Start();
 
 			SpinWait.SpinUntil(() => ListenThread.IsAlive);
+			
 		}
 
 		public static void End()

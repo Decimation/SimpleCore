@@ -77,7 +77,7 @@ namespace SimpleCore.Utilities
 				}
 
 
-				//Trace.WriteLine($"{nameof(ReplaceAllSequences)} {i}");
+				Trace.WriteLine($"{nameof(ReplaceAllSequences)} {i}");
 
 
 				// if (i + sequence.Count >= rg.Count) {
@@ -86,7 +86,7 @@ namespace SimpleCore.Utilities
 				// }
 
 
-			} while (!(++i >= rg.Count) && !(i + sequence.Count >= rg.Count));
+			} while (!(++i >= rg.Count));
 
 			return rg;
 		}
