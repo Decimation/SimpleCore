@@ -31,6 +31,15 @@ namespace SimpleCore.Net
 			return result;
 		}
 
+		public static bool IsUriAlive(Uri u)
+		{
+			var rc  = new RestClient();
+			var res = rc.Execute(new RestRequest(u));
+
+
+			return res.IsSuccessful;
+		}
+
 		public static string? GetFinalRedirect(string url)
 		{
 			// https://stackoverflow.com/questions/704956/getting-the-redirected-url-from-the-original-url
@@ -94,7 +103,7 @@ namespace SimpleCore.Net
 			return newUrl;
 		}
 
-		public static string DownloadUrl(string url, string folder)
+		public static string Download(string url, string folder)
 		{
 			string fileName = Path.GetFileName(url);
 
@@ -108,11 +117,11 @@ namespace SimpleCore.Net
 			return dir;
 		}
 
-		public static string DownloadUrl(string url)
+		public static string Download(string url)
 		{
 			string? folder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-			return DownloadUrl(url, folder);
+			return Download(url, folder);
 		}
 
 		public static void OpenUrl(string url)
@@ -135,7 +144,7 @@ namespace SimpleCore.Net
 			}
 		}
 
-		public static Stream GetStreamFromUrl(string url)
+		public static Stream GetStream(string url)
 		{
 
 			using var wc = new WebClient();
@@ -163,7 +172,7 @@ namespace SimpleCore.Net
 		public static bool TryGetString(string url, out string? e)
 		{
 			try {
-				e= GetString(url);
+				e = GetString(url);
 				return true;
 			}
 			catch (Exception) {
@@ -171,7 +180,6 @@ namespace SimpleCore.Net
 				return false;
 			}
 		}
-
 
 
 		public static void DumpResponse(IRestResponse response)
@@ -182,13 +190,10 @@ namespace SimpleCore.Net
 			ct.AddRow("Successful", response.IsSuccessful);
 			ct.AddRow("Status code", response.StatusCode);
 			ct.AddRow("Error message", response.ErrorMessage);
-			
+
 			var str = ct.ToString();
 
 			Trace.WriteLine(str);
 		}
-
-
-		
 	}
 }

@@ -45,9 +45,15 @@ namespace Test
 	{
 		public static void Main(string[] args)
 		{
-			
 
+			var s  = Network.GetStream("https://i.imgur.com/QtCausw.png");
+			var ms = s as MemoryStream;
+			var rg = new byte[256];
+			ms.Read(rg,0,256);
+			Console.WriteLine(MediaTypes.ResolveFromData(rg));
+			Console.WriteLine(Network.IsUriAlive(new ("http://karmadecay.com/results/u14728299")));
 
+			Console.WriteLine(Network.GetSimpleResponse("https://ascii2d.net/search/url/https://i.imgur.com/QtCausw.jpg").Content);
 		}
 	}
 }

@@ -21,14 +21,13 @@ namespace UnitTest
 		{
 			const string jpg = "https://i.ytimg.com/vi/r45a-l9Gqdk/hqdefault.jpg";
 
-
+			var i = MediaTypes.Identify(jpg);
 			Assert.True(Network.IsUri(jpg, out var u));
-			Assert.True(MediaTypes.IsType(MediaTypes.Identify(jpg), MimeType.Image));
+			Assert.True(MediaTypes.GetExtensions(i).Contains("jpe"));
+			Assert.True(MediaTypes.GetTypeComponent(i) =="image");
+			Assert.True(MediaTypes.GetSubTypeComponent(i) == "jpeg");
 
-			Assert.True(MediaTypes.IsDirect(jpg, MimeType.Image));
-			Assert.True(MediaTypes.GetTypeComponent("image/jpg")              == "image");
-			Assert.True(MediaTypes.GetSubTypeComponent("image/jpg")           == "jpg");
-			Assert.True(MediaTypes.GetTypeComponent("text/html;charset=utf8") == "text");
+
 		}
 
 		private class a : Enumeration

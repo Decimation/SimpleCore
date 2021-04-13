@@ -44,6 +44,8 @@ namespace SimpleCore.Utilities
 			return s.Replace("\"", String.Empty);
 		}
 
+		public static string Truncate(this string value) => value.Truncate(Console.BufferWidth);
+
 		public static string Truncate(this string value, int maxLength)
 		{
 			if (String.IsNullOrEmpty(value)) {
