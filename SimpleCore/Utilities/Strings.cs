@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using static SimpleCore.Internal.Common;
+// ReSharper disable StringIndexOfIsCultureSpecific.1
 
 // ReSharper disable UnusedMember.Global
 
@@ -152,6 +153,11 @@ namespace SimpleCore.Utilities
 
 			int adjustedPosA = posA + a.Length;
 			return adjustedPosA >= posB ? String.Empty : value.Substring(adjustedPosA, posB - adjustedPosA);
+		}
+
+		public static string RemoveLastOccurrence(this  string s, string s2)
+		{
+			return s.Remove(s.LastIndexOf(s2));
 		}
 
 		/// <summary>

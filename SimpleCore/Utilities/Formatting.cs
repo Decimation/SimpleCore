@@ -388,16 +388,7 @@ namespace SimpleCore.Utilities
 			return s;
 		}
 
-		public static StringBuilder AppendColor(this StringBuilder sb, Color c, object value)
-		{
-			return sb.Append(value.ToString()!.AddColor(c));
-		}
-
-		public static StringBuilder AppendLabelWithColor(this StringBuilder sb, 
-			Color ck, string k, Color cv, object v)
-		{
-			return sb.AppendColor(ck, k + ": ").AppendColor(cv, v);
-		}
+		
 
 		#endregion
 

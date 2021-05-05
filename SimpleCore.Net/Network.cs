@@ -33,11 +33,36 @@ namespace SimpleCore.Net
 
 		public static bool IsUriAlive(Uri u)
 		{
-			var rc  = new RestClient();
+			/*var request = (HttpWebRequest)WebRequest.Create(u);
+
+			var response = (HttpWebResponse)request.GetResponse();
+
+			if (response.StatusCode == HttpStatusCode.NotFound)
+			{
+				return false;
+			}
+
+			return true;*/
+
+
+			/*var rc  = new RestClient();
 			var res = rc.Execute(new RestRequest(u));
+			return res.IsSuccessful;*/
 
 
-			return res.IsSuccessful;
+			try {
+				var request = (HttpWebRequest) WebRequest.Create(u);
+
+				var response = (HttpWebResponse) request.GetResponse();
+				
+
+				return true;
+			}
+			catch (WebException e) {
+				return false;
+			}
+
+
 		}
 
 		public static string? GetFinalRedirect(string url)
@@ -87,6 +112,8 @@ namespace SimpleCore.Net
 					}
 
 					url = newUrl;
+
+
 				}
 				catch (WebException) {
 					// Return the last known good URL
