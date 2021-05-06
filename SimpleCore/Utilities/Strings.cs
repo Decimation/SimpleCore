@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -213,30 +214,97 @@ namespace SimpleCore.Utilities
 			// Step 7
 			return d[n, m];
 		}
+	}
 
+	public class ExtendedStringBuilder
+	{
+		public StringBuilder Builder { get; init; }
 
-		public static void AppendSafe(this StringBuilder sb, string name, object? val, string? valStr = null)
+		public Color? Primary   { get; init; }
+		public Color? Secondary { get; init; }
+		public ExtendedStringBuilder() : this(new StringBuilder()) { }
+
+		public ExtendedStringBuilder(StringBuilder builder)
 		{
+			Builder = builder;
+		}
+
+		public static implicit operator ExtendedStringBuilder(StringBuilder sb)
+		{
+			return new ExtendedStringBuilder(sb);
+		}
+
+		public string Indent { get; set; } = new string(' ', 5);
+
+		public ExtendedStringBuilder Append(string value)
+		{
+			Builder.Append(value);
+			return this;
+		}
+
+		public ExtendedStringBuilder AppendLine(string value)
+		{
+			Builder.AppendLine(value);
+			return this;
+		}
+
+		public override string ToString()
+		{
+			return Builder.ToString();
+		}
+
+		public string IndentFields(string s)
+		{
+			//return s.Replace("\n", "\n" + Indent);
+
+			var split = s.Split('\n');
+
+			var j = string.Join($"\n{Indent}", split);
+
+			return Indent + j;
+		}
+
+
+		
+		public ExtendedStringBuilder Append(string name, object? val, string? valStr = null, bool newLine=true)
+		{
+
+
 			if (val != null) {
 
 				// Patterns are so epic
-				
+
 				switch (val) {
 					case IList {Count: 0}:
 					case string s when String.IsNullOrWhiteSpace(s):
-						return;
+						return this;
 
 					default:
 					{
 						valStr ??= val.ToString();
 
+						if (Primary.HasValue) {
+							name = name.AddColor(Primary.Value);
+						}
+
+						if (Secondary.HasValue) {
+							valStr = valStr.AddColor(Secondary.Value);
+						}
+
 						string? fs = $"{name}: {valStr}".Truncate();
-						sb.Append($"{fs}\n");
+
+						if (newLine) {
+							fs += "\n";
+						}
+
+						Builder.Append(fs);
 						break;
 					}
 				}
 
 			}
+
+			return this;
 		}
 	}
 }
