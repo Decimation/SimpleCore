@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
@@ -78,10 +79,10 @@ namespace SimpleCore.Utilities
 		public const char MUL_SIGN2 = '\u2715';
 
 
-		public const           char   NULL_CHAR     = '\0';
-		public const           char   RAD_SIGN      = '\u221A';
-		public const           char   RELOAD        = '\u21bb';
-		public const           char   SUN           = '\u263c';
+		public const char NULL_CHAR = '\0';
+		public const char RAD_SIGN  = '\u221A';
+		public const char RELOAD    = '\u21bb';
+		public const char SUN       = '\u263c';
 
 
 		public static readonly string NativeNewLine = '\n'.ToString();
@@ -232,7 +233,8 @@ namespace SimpleCore.Utilities
 			(i, c) => ColorHexFormat(i, c, ColorPlane.Background);
 
 
-		private static readonly ReadOnlyDictionary<bool, ReadOnlyDictionary<ColorPlane, ColorFormatFunction>> ColorFormatFunctions
+		private static readonly ReadOnlyDictionary<bool, ReadOnlyDictionary<ColorPlane, ColorFormatFunction>>
+			ColorFormatFunctions
 				= new(
 					new Dictionary<bool, ReadOnlyDictionary<ColorPlane, ColorFormatFunction>>
 					{
@@ -250,7 +252,8 @@ namespace SimpleCore.Utilities
 							})
 					});
 
-		private static readonly ReadOnlyDictionary<bool, ReadOnlyDictionary<ColorPlane, HexColorFormatFunction>> HexColorFormatFunctions = new(
+		private static readonly ReadOnlyDictionary<bool, ReadOnlyDictionary<ColorPlane, HexColorFormatFunction>>
+			HexColorFormatFunctions = new(
 				new Dictionary<bool, ReadOnlyDictionary<ColorPlane, HexColorFormatFunction>>
 				{
 					[false] = new(
@@ -388,8 +391,6 @@ namespace SimpleCore.Utilities
 			return s;
 		}
 
-		
-
 		#endregion
 
 		public static string ToString<T>(T[] rg)
@@ -403,5 +404,55 @@ namespace SimpleCore.Utilities
 		}
 
 		public const string ANSI_RESET = "\u001b[0m";
+
+		
+	}
+
+	public class DefaultFieldViewHandler : IFieldViewHandler
+	{
+		public string Indent => new string(' ', 5);
+
+		public string GetString(IFieldView f)
+		{
+			var sb = new StringBuilder();
+
+			foreach (var (key, val) in f.GetFields()) {
+
+				
+				if (val != null)
+				{
+
+					// Patterns are so epic
+
+					switch (val)
+					{
+						case IList { Count: 0 }:
+						case string s when String.IsNullOrWhiteSpace(s):
+							continue;
+
+						default:
+						{
+							string? fs = $"{key}: {val}".Truncate();
+							sb.Append($"{fs}\n");
+							break;
+						}
+					}
+
+				}
+			}
+
+			return sb.ToString();
+		}
+	}
+
+	public interface IFieldViewHandler
+	{
+		string Indent { get; }
+		string GetString(IFieldView f);
+	}
+
+	public interface IFieldView
+	{
+		Dictionary<string, object> GetFields();
 	}
 }

@@ -1,10 +1,15 @@
+#nullable enable
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using static SimpleCore.Internal.Common;
+
+// ReSharper disable UnusedMember.Local
+
 // ReSharper disable StringIndexOfIsCultureSpecific.1
 
 // ReSharper disable UnusedMember.Global
@@ -23,8 +28,8 @@ namespace SimpleCore.Utilities
 		/// Constant <see cref="string.Empty"/>
 		/// </summary>
 		public const string Empty = "";
-		
-		
+
+
 		public static string SelectOnlyDigits(this string s) => s.SelectOnly(Char.IsDigit);
 
 		public static string SelectOnly(this string s, Func<char, bool> fn)
@@ -41,11 +46,11 @@ namespace SimpleCore.Utilities
 
 		public static string CleanString(this string s)
 		{
-			
+
 			return s.Replace("\"", String.Empty);
 		}
 
-		public static string Truncate(this string value) => value.Truncate(Console.BufferWidth);
+		public static string Truncate(this string value) => value.Truncate(Console.WindowWidth - 5);
 
 		public static string Truncate(this string value, int maxLength)
 		{
@@ -54,6 +59,17 @@ namespace SimpleCore.Utilities
 			}
 
 			return value.Length <= maxLength ? value : value.Substring(0, maxLength);
+		}
+
+		public static bool StringWraps(string s)
+		{
+			/*
+			 * Assuming buffer width equals window width
+			 *
+			 * If 'Wrap text output on resize' is ticked, this is true
+			 */
+
+			return s.Length >= Console.WindowWidth;
 		}
 
 		/// <summary>Convert a word that is formatted in pascal case to have splits (by space) at each upper case letter.</summary>
@@ -69,15 +85,17 @@ namespace SimpleCore.Utilities
 				.Select(s => s[RandomInstance.Next(s.Length)])
 				.ToArray());
 		}
+
 		public static IEnumerable<int> AllIndexesOf(this string str, string searchstring)
 		{
 			int minIndex = str.IndexOf(searchstring);
-			while (minIndex != -1)
-			{
+
+			while (minIndex != -1) {
 				yield return minIndex;
 				minIndex = str.IndexOf(searchstring, minIndex + searchstring.Length);
 			}
 		}
+
 		/// <summary>
 		///     Simulates Java substring function
 		/// </summary>
@@ -155,7 +173,7 @@ namespace SimpleCore.Utilities
 			return adjustedPosA >= posB ? String.Empty : value.Substring(adjustedPosA, posB - adjustedPosA);
 		}
 
-		public static string RemoveLastOccurrence(this  string s, string s2)
+		public static string RemoveLastOccurrence(this string s, string s2)
 		{
 			return s.Remove(s.LastIndexOf(s2));
 		}
@@ -194,6 +212,31 @@ namespace SimpleCore.Utilities
 
 			// Step 7
 			return d[n, m];
+		}
+
+
+		public static void AppendSafe(this StringBuilder sb, string name, object? val, string? valStr = null)
+		{
+			if (val != null) {
+
+				// Patterns are so epic
+				
+				switch (val) {
+					case IList {Count: 0}:
+					case string s when String.IsNullOrWhiteSpace(s):
+						return;
+
+					default:
+					{
+						valStr ??= val.ToString();
+
+						string? fs = $"{name}: {valStr}".Truncate();
+						sb.Append($"{fs}\n");
+						break;
+					}
+				}
+
+			}
 		}
 	}
 }
