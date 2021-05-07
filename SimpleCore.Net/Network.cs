@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Net.Mime;
 using System.Web;
 using HtmlAgilityPack;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using SimpleCore.Utilities;
 
@@ -31,6 +33,7 @@ namespace SimpleCore.Net
 			return result;
 		}
 
+		
 		public static bool IsUriAlive(Uri u)
 		{
 			/*var request = (HttpWebRequest)WebRequest.Create(u);

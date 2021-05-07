@@ -48,7 +48,7 @@ namespace Test
 
 			
 
-			Network.GetFinalRedirect("https://ascii2d.net/search/url/https://files.catbox.moe/txvi31.png");
+			//Network.GetFinalRedirect("https://ascii2d.net/search/url/https://files.catbox.moe/txvi31.png");
 			
 		}
 	}
