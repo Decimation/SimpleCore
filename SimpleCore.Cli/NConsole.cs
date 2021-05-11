@@ -587,6 +587,7 @@ namespace SimpleCore.Cli
 
 		public static void WaitForSecond() => WaitForTimeSpan(TimeSpan.FromSeconds(1));
 
+		
 		public static Color DefaultColor { get; set; } = Color.Red;
 
 		/// <summary>
@@ -600,6 +601,7 @@ namespace SimpleCore.Cli
 			if (ui.Name != null) {
 				WriteColor(DefaultColor, true, ui.Name);
 			}
+			
 
 
 			for (int i = 0; i < ui.Length; i++) {

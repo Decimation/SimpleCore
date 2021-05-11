@@ -51,7 +51,11 @@ namespace SimpleCore.Utilities
 			return s.Replace("\"", String.Empty);
 		}
 
-		public static string Truncate(this string value) => value.Truncate(Console.WindowWidth - 5);
+		public static string Truncate(this string value)
+		{
+			//return value.Truncate(Console.WindowWidth - 5);
+			return value.Truncate(100);
+		}
 
 		public static string Truncate(this string value, int maxLength)
 		{
@@ -220,8 +224,9 @@ namespace SimpleCore.Utilities
 	{
 		public StringBuilder Builder { get; init; }
 
-		public Color? Primary   { get; init; }
-		public Color? Secondary { get; init; }
+		//public Color? Primary   { get; init; }
+		//public Color? Secondary { get; init; }
+
 		public ExtendedStringBuilder() : this(new StringBuilder()) { }
 
 		public ExtendedStringBuilder(StringBuilder builder)
@@ -283,13 +288,14 @@ namespace SimpleCore.Utilities
 					{
 						valStr ??= val.ToString();
 
-						if (Primary.HasValue) {
-							name = name.AddColor(Primary.Value);
-						}
+						
+						//if (Primary.HasValue) {
+						//	name = name.AddColor(Primary.Value);
+						//}
 
-						if (Secondary.HasValue) {
-							valStr = valStr.AddColor(Secondary.Value);
-						}
+						//if (Secondary.HasValue) {
+						//	valStr = valStr.AddColor(Secondary.Value);
+						//}
 
 						string? fs = $"{name}: {valStr}".Truncate();
 

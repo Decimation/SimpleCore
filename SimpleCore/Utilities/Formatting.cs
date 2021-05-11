@@ -408,7 +408,7 @@ namespace SimpleCore.Utilities
 		
 	}
 
-	public class DefaultFieldViewHandler : IFieldViewHandler
+	/*public class DefaultFieldViewHandler : IFieldViewHandler
 	{
 		public string Indent => new string(' ', 5);
 
@@ -454,5 +454,5 @@ namespace SimpleCore.Utilities
 	public interface IFieldView
 	{
 		Dictionary<string, object> GetFields();
-	}
+	}*/
 }

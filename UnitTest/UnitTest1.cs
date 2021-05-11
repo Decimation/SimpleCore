@@ -30,6 +30,26 @@ namespace UnitTest
 
 		}
 
+		[Test]
+		public void enumtest()
+		{
+			var name1 = "combo1";
+			var p     = Enum.Parse<MyEnum>(name1);
+			var flags = Enums.GetSetFlags(p);
+			var str   = flags.QuickJoin();
+
+			Assert.AreEqual(str,"a, b, c");
+		}
+
+		[Flags]
+		enum MyEnum
+		{
+			a = 0,
+			b = 1 << 0,
+			c = 1 << 1,
+
+			combo1 = b | c,
+		}
 		private class a : Enumeration
 		{
 			public static          string str;

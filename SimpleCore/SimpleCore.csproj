@@ -34,6 +34,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
+		<PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
+		<PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
 	</ItemGroup>
 
 	<ItemGroup>

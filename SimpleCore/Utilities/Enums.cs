@@ -17,12 +17,20 @@ namespace SimpleCore.Utilities
 	/// </summary>
 	public static class Enums
 	{
-		public static List<TEnum> GetSetFlags<TEnum>(TEnum value) where TEnum : Enum
+		public static List<TEnum> GetSetFlags<TEnum>(TEnum value, bool excludeZero = true) where TEnum : Enum
 		{
 			var flags = Enum.GetValues(typeof(TEnum))
 				.Cast<TEnum>()
 				.Where(f => value.HasFlag(f))
 				.ToList();
+
+			
+			if (excludeZero) {
+				flags.RemoveAll(e => Convert.ToInt32(e) == 0);
+
+			}
+
+			//flags.RemoveAll(e => e.Equals(value));
 
 			return flags;
 		}
@@ -49,6 +57,7 @@ namespace SimpleCore.Utilities
 				if (e == null) {
 					return default;
 				}
+
 				return (TEnum) e;
 			}
 
