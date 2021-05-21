@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
+
 // ReSharper disable UnusedMember.Global
 
 namespace SimpleCore.Utilities
@@ -96,13 +97,13 @@ namespace SimpleCore.Utilities
 
 			// set right alinment if is a number
 			var columnAlignment = Enumerable.Range(0, Columns.Count)
-				.Select(GetNumberAlignment)
-				.ToList();
+			                                .Select(GetNumberAlignment)
+			                                .ToList();
 
 			// create the string format with padding
 			var format = Enumerable.Range(0, Columns.Count)
-				.Select(i => " | {"    + i + "," + columnAlignment[i] + columnLengths[i] + "}")
-				.Aggregate((s, a) => s + a) + " |";
+			                       .Select(i => " | {"    + i + "," + columnAlignment[i] + columnLengths[i] + "}")
+			                       .Aggregate((s, a) => s + a) + " |";
 
 			// find the longest formatted line
 			var maxRowLength  = Math.Max(0, Rows.Any() ? Rows.Max(row => string.Format(format, row).Length) : 0);
@@ -120,16 +121,14 @@ namespace SimpleCore.Utilities
 			builder.AppendLine(divider);
 			builder.AppendLine(columnHeaders);
 
-			foreach (var row in results)
-			{
+			foreach (var row in results) {
 				builder.AppendLine(divider);
 				builder.AppendLine(row);
 			}
 
 			builder.AppendLine(divider);
 
-			if (Options.EnableCount)
-			{
+			if (Options.EnableCount) {
 				builder.AppendLine("");
 				builder.AppendFormat(" Count: {0}", Rows.Count);
 			}
@@ -210,14 +209,15 @@ namespace SimpleCore.Utilities
 		{
 			// set right alinment if is a number
 			var columnAlignment = Enumerable.Range(0, Columns.Count)
-				.Select(GetNumberAlignment)
-				.ToList();
+			                                .Select(GetNumberAlignment)
+			                                .ToList();
 
 			var delimiterStr = delimiter == char.MinValue ? string.Empty : delimiter.ToString();
 
 			var format = (Enumerable.Range(0, Columns.Count)
-				.Select(i => " "       + delimiterStr + " {" + i + "," + columnAlignment[i] + columnLengths[i] + "}")
-				.Aggregate((s, a) => s + a) + " " + delimiterStr).Trim();
+			                        .Select(i => " "              + delimiterStr + " {" + i + "," + columnAlignment[i] +
+			                                     columnLengths[i] + "}")
+			                        .Aggregate((s, a) => s + a) + " " + delimiterStr).Trim();
 			return format;
 		}
 
@@ -233,18 +233,18 @@ namespace SimpleCore.Utilities
 		private List<int> ColumnLengths()
 		{
 			var columnLengths = Columns
-				.Select((t, i) => Rows.Select(x => x[i])
-					.Union(new[] {Columns[i]})
-					.Where(x => x != null)
-					.Select(x => x.ToString().Length).Max())
-				.ToList();
+			                    .Select((t, i) => Rows.Select(x => x[i])
+			                                          .Union(new[] {Columns[i]})
+			                                          .Where(x => x != null)
+			                                          .Select(x => x.ToString().Length).Max())
+			                    .ToList();
 			return columnLengths;
 		}
 
 		/*
 		 * NOTE: Markdown string is default
 		 */
-		
+
 		public void Write(ConsoleTableFormat consoleTableFormat = ConsoleTableFormat.MarkDown)
 		{
 			switch (consoleTableFormat) {

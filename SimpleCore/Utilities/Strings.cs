@@ -63,7 +63,7 @@ namespace SimpleCore.Utilities
 				return value;
 			}
 
-			return value.Length <= maxLength ? value : value.Substring(0, maxLength);
+			return value.Length <= maxLength ? value : value[..maxLength];
 		}
 
 		public static bool StringWraps(string s)

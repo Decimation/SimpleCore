@@ -133,6 +133,7 @@ namespace SimpleCore.Net
 			return newUrl;
 		}
 
+		
 		public static string Download(string url, string folder)
 		{
 			string fileName = Path.GetFileName(url);
@@ -147,6 +148,7 @@ namespace SimpleCore.Net
 			return dir;
 		}
 
+		
 		public static string Download(string url)
 		{
 			string? folder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);

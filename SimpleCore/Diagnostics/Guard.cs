@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using static SimpleCore.Internal.Common;
+using NotNull = JetBrains.Annotations.NotNullAttribute;
 
 // ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedMember.Global
@@ -68,8 +69,12 @@ namespace SimpleCore.Diagnostics
 		[DebuggerHidden]
 		[AssertionMethod]
 		[ContractAnnotation(COND_FALSE_HALT)]
-		public static void Assert([DoesNotReturnIf(false)] bool condition, string? msg = null, params object[] args) =>
+		public static void Assert([AssertionCondition(AssertionConditionType.IS_TRUE)] [DoesNotReturnIf(false)]
+		                          bool condition,
+		                          string? msg = null, params object[] args)
+		{
 			Assert<Exception>(condition, msg, args);
+		}
 
 		/// <summary>
 		/// Root assertion function
@@ -78,7 +83,9 @@ namespace SimpleCore.Diagnostics
 		[AssertionMethod]
 		[ContractAnnotation(COND_FALSE_HALT)]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void Assert<TException>([DoesNotReturnIf(false)] bool condition, 
+		public static void Assert<TException>(
+			[AssertionCondition(AssertionConditionType.IS_TRUE)] [DoesNotReturnIf(false)]
+			bool condition,
 			string? msg = null, params object[] args)
 			where TException : Exception, new()
 		{
@@ -90,26 +97,29 @@ namespace SimpleCore.Diagnostics
 		[DebuggerHidden]
 		[AssertionMethod]
 		[ContractAnnotation(VALUE_NULL_HALT)]
-		public static void AssertArgumentNotNull(object? value, string? name = null) =>
+		public static void AssertArgumentNotNull([NotNull] [AssertionCondition(AssertionConditionType.IS_NOT_NULL)]
+		                                         object? value,
+		                                         string? name = null)
+		{
 			Assert<ArgumentNullException>(value != null, name);
-
-		// [DebuggerHidden]
-		// [AssertionMethod]
-		// [ContractAnnotation(VALUE_NULL_HALT)]
-		// public static void AssertNotNull<T>(T? value, string? name = null) where T : class
-		// 	=> Assert<NullReferenceException>(value != null, name);
+		}
 
 
 		[DebuggerHidden]
 		[AssertionMethod]
 		[ContractAnnotation(VALUE_NULL_HALT)]
-		public static void AssertNotNull(object? value, string? name = null) =>
+		public static void AssertNotNull([NotNull] [AssertionCondition(AssertionConditionType.IS_NOT_NULL)]
+		                                 object? value, string? name = null)
+		{
 			Assert<NullReferenceException>(value != null, name);
+		}
 
 		[DebuggerHidden]
 		[AssertionMethod]
-		public static void AssertPositive(long value, string? name = null) =>
+		public static void AssertPositive(long value, string? name = null)
+		{
 			Assert<ArgumentException>(value > 0, name);
+		}
 
 		[DebuggerHidden]
 		[AssertionMethod]
@@ -157,7 +167,8 @@ namespace SimpleCore.Diagnostics
 
 		[DebuggerHidden]
 		[AssertionMethod]
-		public static void AssertAll([DoesNotReturnIf(false)] params bool[] conditions)
+		public static void AssertAll([DoesNotReturnIf(false)] [AssertionCondition(AssertionConditionType.IS_TRUE)]
+		                             params bool[] conditions)
 		{
 			foreach (bool condition in conditions) {
 				Assert(condition);

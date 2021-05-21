@@ -46,7 +46,7 @@
 	</ItemGroup>
 	<PropertyGroup>
 		<PackageId>SimpleCore</PackageId>
-		<Version>1.2.0</Version>
+		<Version>1.2.2</Version>
 		<Authors>Read Stanton (Decimation)</Authors>
 		<PackageTags>Utilities common</PackageTags>
 		<RepositoryUrl>https://github.com/Decimation/SimpleCore</RepositoryUrl>

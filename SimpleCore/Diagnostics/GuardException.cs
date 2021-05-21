@@ -1,9 +1,11 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+
 // ReSharper disable UnusedMember.Global
 
 namespace SimpleCore.Diagnostics
