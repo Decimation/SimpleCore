@@ -20,12 +20,6 @@ namespace SimpleCore.Cli
 	public interface NConsoleOption
 	{
 		/// <summary>
-		///     Default <see cref="Color" />
-		/// </summary>
-		public static readonly Color DefaultOptionColor = Color.White;
-
-
-		/// <summary>
 		///     Display name
 		/// </summary>
 		public string Name { get; set; }
@@ -55,10 +49,6 @@ namespace SimpleCore.Cli
 		/// </summary>
 		public string? Data { get; set; }
 
-		/// <summary>
-		///     Display color
-		/// </summary>
-		public Color Color { get; set; }
 
 		public static NConsoleOption[] FromArray<T>(T[] values, Func<T, string> getName)
 		{
@@ -99,7 +89,5 @@ namespace SimpleCore.Cli
 		public virtual NConsoleFunction? ComboFunction { get; set; }
 
 		public virtual string? Data { get; set; }
-
-		public virtual Color Color { get; set; } = NConsoleOption.DefaultOptionColor;
 	}
 }
