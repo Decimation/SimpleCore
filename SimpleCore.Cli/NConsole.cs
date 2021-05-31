@@ -16,7 +16,7 @@ using static SimpleCore.Internal.Common;
 // ReSharper disable UnusedVariable
 // ReSharper disable ParameterTypeCanBeEnumerable.Global
 
-#pragma warning disable 8602, CA1416, CS8604, IDE0059
+#pragma warning disable 8602, CA1416, CS8604
 #nullable enable
 
 namespace SimpleCore.Cli

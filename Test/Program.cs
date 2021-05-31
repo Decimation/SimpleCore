@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -10,6 +9,7 @@ using System.Threading;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Mathematics;
 using BenchmarkDotNet.Running;
+using Newtonsoft.Json.Linq;
 using SimpleCore.Cli;
 using SimpleCore.Diagnostics;
 using SimpleCore.Model;
@@ -46,12 +46,31 @@ namespace Test
 		public static void Main(string[] args)
 		{
 
-			
 
 			//Network.GetFinalRedirect("https://ascii2d.net/search/url/https://files.catbox.moe/txvi31.png");
 
-			var x = NConsole.ReadInput("io", s => (s != "g"));
-			
+
+			var q = @"query ($id: Int) { # Define which variables will be used in the query (id)
+				Media(id: $id, type: ANIME) { # Insert our variables into the query arguments (id) (type: ANIME is hard-coded in the query)
+					id
+					title {
+						romaji
+						english
+						native
+					}
+				}
+			}";
+
+
+			var rc = new SimpleGraphQLClient("https://graphql.anilist.co");
+
+			var x = (JObject) rc.Execute(q, new
+			{
+				query = q,
+				id    = 339
+			});
+
+			Console.WriteLine(x["data"]["Media"]["title"]["english"].ToString());
 		}
 	}
 }
