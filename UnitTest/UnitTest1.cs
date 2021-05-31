@@ -56,7 +56,7 @@ namespace UnitTest
 		{
 			public static          string str;
 			public                 string str2;
-			public static readonly EnumerationTestType      a1 = new EnumerationTestType(1, "g");
+			public static readonly EnumerationTestType      a1 = new(1, "g");
 			public EnumerationTestType(int id, string name) : base(id, name) { }
 		}
 

@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 
 // ReSharper disable InconsistentNaming
@@ -17,38 +18,40 @@ namespace SimpleCore.Cli
 	/// <summary>
 	///     Represents an interactive console/shell option
 	/// </summary>
-	public interface NConsoleOption
+	public class NConsoleOption
 	{
 		/// <summary>
 		///     Display name
 		/// </summary>
-		public string Name { get; set; }
+		[MaybeNull]
+		public virtual string Name { get; set; }
 
 		/// <summary>
 		///     Function to execute when selected
 		/// </summary>
-		public NConsoleFunction Function { get; set; }
+		public virtual NConsoleFunction Function { get; set; }
 
 		/// <summary>
 		///     Function to execute when selected with modifiers (<see cref="NConsole.NC_ALT_FUNC_MODIFIER" />)
 		/// </summary>
-		public NConsoleFunction? AltFunction { get; set; }
+		public virtual NConsoleFunction? AltFunction { get; set; }
 
 		/// <summary>
 		///     Function to execute when selected with modifiers (<see cref="NConsole.NC_CTRL_FUNC_MODIFIER" />)
 		/// </summary>
-		public NConsoleFunction? CtrlFunction { get; set; }
+		public virtual NConsoleFunction? CtrlFunction { get; set; }
 
 		/// <summary>
 		///     Function to execute when selected with modifiers (<see cref="NConsole.NC_COMBO_FUNC_MODIFIER" />)
 		/// </summary>
-		public NConsoleFunction? ComboFunction { get; set; }
+		public virtual NConsoleFunction? ComboFunction { get; set; }
 
 		/// <summary>
 		///     Information about this <see cref="NConsoleOption" />
 		/// </summary>
-		public string? Data { get; set; }
+		public virtual string? Data { get; set; }
 
+		public static NConsoleOption[] FromArray<T>(T[] values) => FromArray(values, arg => arg!.ToString()!);
 
 		public static NConsoleOption[] FromArray<T>(T[] values, Func<T, string> getName)
 		{
@@ -59,7 +62,7 @@ namespace SimpleCore.Cli
 
 				var name = getName(option);
 
-				rg[i] = new NConsoleOptionBasic
+				rg[i] = new NConsoleOption
 				{
 					Name     = name,
 					Function = () => option
@@ -74,20 +77,5 @@ namespace SimpleCore.Cli
 			var options = (TEnum[]) Enum.GetValues(typeof(TEnum));
 			return FromArray(options, e => Enum.GetName(typeof(TEnum), e) ?? throw new InvalidOperationException());
 		}
-	}
-
-	public class NConsoleOptionBasic : NConsoleOption
-	{
-		public virtual string Name { get; set; }
-
-		public virtual NConsoleFunction Function { get; set; }
-
-		public virtual NConsoleFunction? AltFunction { get; set; }
-
-		public virtual NConsoleFunction? CtrlFunction { get; set; }
-
-		public virtual NConsoleFunction? ComboFunction { get; set; }
-
-		public virtual string? Data { get; set; }
 	}
 }

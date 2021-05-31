@@ -49,6 +49,8 @@ namespace Test
 			
 
 			//Network.GetFinalRedirect("https://ascii2d.net/search/url/https://files.catbox.moe/txvi31.png");
+
+			var x = NConsole.ReadInput("io", s => (s != "g"));
 			
 		}
 	}

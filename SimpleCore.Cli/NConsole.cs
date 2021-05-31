@@ -16,7 +16,7 @@ using static SimpleCore.Internal.Common;
 // ReSharper disable UnusedVariable
 // ReSharper disable ParameterTypeCanBeEnumerable.Global
 
-#pragma warning disable 8602, CA1416, CS8604
+#pragma warning disable 8602, CA1416, CS8604, IDE0059
 #nullable enable
 
 namespace SimpleCore.Cli
@@ -232,12 +232,46 @@ namespace SimpleCore.Cli
 			return cki;
 		}*/
 
+
+		/// <summary>
+		///     Display dialog
+		/// </summary>
+		private static void DisplayDialog(NConsoleDialog dialog, HashSet<object> selectedOptions)
+		{
+			Console.Clear();
+
+			if (dialog.Header is { }) {
+				Write(false, dialog.Header);
+			}
+
+			for (int i = 0; i < dialog.Options.Count; i++) {
+				var option = dialog.Options[i];
+
+				string s = FormatOption(option, i);
+
+				Write(false, s);
+			}
+
+			Console.WriteLine();
+
+			// Show options
+			if (dialog.SelectMultiple) {
+				string optionsStr = selectedOptions.QuickJoin();
+
+				Write(true, optionsStr);
+			}
+
+			/*
+			 * Auto resizing
+			 */
+
+			//TryAutoResize(() => DisplayInterface(options, selectedOptions, selectMultiple));
+		}
+
 		/// <summary>
 		///     Handles user input and options
 		/// </summary>
-		/// <param name="options">Array of <see cref="NConsoleOption" /></param>
-		/// <param name="selectMultiple">Whether to return selected options as a <see cref="HashSet{T}" /></param>
-		public static HashSet<object> ReadOptions(IList<NConsoleOption> options, bool selectMultiple)
+		public static HashSet<object> ReadOptions(NConsoleDialog dialog)
 		{
 			// HACK: very hacky
 
@@ -250,14 +284,14 @@ namespace SimpleCore.Cli
 			ConsoleKeyInfo cki;
 
 			do {
-				DisplayInterface(options, selectedOptions, selectMultiple);
+				DisplayDialog(dialog, selectedOptions);
 
 				// Block until input is entered.
 				while (!Console.KeyAvailable) {
 					// HACK: hacky
 
 					if (Interlocked.Exchange(ref Status, STATUS_OK) == STATUS_REFRESH) {
-						DisplayInterface(options, selectedOptions, selectMultiple);
+						DisplayDialog(dialog, selectedOptions);
 					}
 				}
 
@@ -292,8 +326,8 @@ namespace SimpleCore.Cli
 
 				int idx = GetIndexFromDisplayOption(keyChar);
 
-				if (idx < options.Count && idx >= 0) {
-					var option = options[idx];
+				if (idx < dialog.Options.Count && idx >= 0) {
+					var option = dialog.Options[idx];
 
 					bool useAltFunc  = altModifier  && option.AltFunction  != null;
 					bool useCtrlFunc = ctrlModifier && option.CtrlFunction != null;
@@ -320,7 +354,7 @@ namespace SimpleCore.Cli
 
 						if (funcResult != null) {
 							//
-							if (selectMultiple) {
+							if (dialog.SelectMultiple) {
 								selectedOptions.Add(funcResult);
 							}
 							else {
@@ -334,17 +368,38 @@ namespace SimpleCore.Cli
 			return selectedOptions;
 		}
 
-		public static string? ReadInput(string? prompt = null)
+
+		public static string ReadInput(string? prompt = null, Func<string, bool>? invalid = null)
 		{
-			if (prompt != null) {
-				string? str = $"{prompt}: ";
+			invalid ??= String.IsNullOrWhiteSpace;
 
-				Console.Write(str);
-			}
+			string? input;
+			bool    isInvalid;
 
-			string? i = Console.ReadLine();
 
-			return String.IsNullOrWhiteSpace(i) ? null : i;
+			do {
+				//https://stackoverflow.com/questions/8946808/can-console-clear-be-used-to-only-clear-a-line-instead-of-whole-console
+
+				Console.Write("\r" + new string(' ', Console.WindowWidth - 1) + "\r");
+
+				if (prompt != null) {
+					string str = $"{prompt}: ";
+
+					Console.Write(str);
+				}
+
+				input     = Console.ReadLine();
+				isInvalid = invalid(input);
+
+				if (isInvalid) {
+					Console.CursorTop--;
+					
+				}
+
+			} while (isInvalid);
+
+
+			return input;
 		}
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
@@ -377,40 +432,8 @@ namespace SimpleCore.Cli
 
 		public static void WaitForSecond() => WaitForTimeSpan(TimeSpan.FromSeconds(1));
 
-		/// <summary>
-		///     Display interface
-		/// </summary>
-		private static void DisplayInterface(IList<NConsoleOption> options, HashSet<object> selectedOptions,
-		                                     bool selectMultiple)
-		{
-			Console.Clear();
 
-			for (int i = 0; i < options.Count; i++) {
-				var option = options[i];
-
-				string s = FormatOption(option, i);
-
-				Write(false, s);
-			}
-
-			Console.WriteLine();
-
-			// Show options
-			if (selectMultiple) {
-				string optionsStr = selectedOptions.QuickJoin();
-
-				Write(true, optionsStr);
-			}
-
-			// Handle key reading
-
-			/*
-			 * Auto resizing
-			 */
-
-			TryAutoResize(() => DisplayInterface(options, selectedOptions, selectMultiple));
-		}
-
+		/*
 		private static bool TryAutoResize(Action write)
 		{
 			//todo: inline?
@@ -435,10 +458,12 @@ namespace SimpleCore.Cli
 		public static int AutoResizeMinimumHeight { get; set; } = 20;
 
 		public static bool AutoResizeHeight { get; set; } = false;
+		*/
 
 		#region Options
 
 		public const char OPTION_N = 'N';
+
 		public const char OPTION_Y = 'Y';
 
 		private const int MAX_OPTION_N = 10;
@@ -454,11 +479,15 @@ namespace SimpleCore.Cli
 			var  sb = new StringBuilder();
 			char c  = GetDisplayOptionFromIndex(i);
 
-			string name = option.Name;
-			sb.Append($"[{c}]: {name} ");
+			string? name = option.Name;
+			sb.Append($"[{c}]: ");
+
+			if (name != null) {
+				sb.Append($"{name} ");
+			}
 
 			if (option.Data != null) {
-				sb.Append(option.Data);
+				sb.Append($"{option.Data}");
 			}
 
 			if (!sb.ToString().EndsWith(Formatting.NativeNewLine)) {
@@ -494,5 +523,12 @@ namespace SimpleCore.Cli
 		}
 
 		#endregion IO
+
+
+		/*
+		 * https://github.com/sindresorhus/cli-spinners/blob/main/spinners.json
+		 * https://github.com/sindresorhus/cli-spinners
+		 * https://www.npmjs.com/package/cli-spinners
+		 */
 	}
 }

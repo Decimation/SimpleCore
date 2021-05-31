@@ -105,7 +105,7 @@ namespace SimpleCore.Net
 
 							if (newUrl.IndexOf("://", System.StringComparison.Ordinal) == -1) {
 								// Doesn't have a URL Schema, meaning it's a relative or absolute URL
-								Uri u = new Uri(new Uri(url), newUrl);
+								Uri u = new(new Uri(url), newUrl);
 								newUrl = u.ToString();
 							}
 
