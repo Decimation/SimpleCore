@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -48,29 +49,14 @@ namespace Test
 
 
 			//Network.GetFinalRedirect("https://ascii2d.net/search/url/https://files.catbox.moe/txvi31.png");
-
-
-			var q = @"query ($id: Int) { # Define which variables will be used in the query (id)
-				Media(id: $id, type: ANIME) { # Insert our variables into the query arguments (id) (type: ANIME is hard-coded in the query)
-					id
-					title {
-						romaji
-						english
-						native
-					}
-				}
-			}";
-
-
-			var rc = new SimpleGraphQLClient("https://graphql.anilist.co");
-
-			var x = (JObject) rc.Execute(q, new
-			{
-				query = q,
-				id    = 339
-			});
-
-			Console.WriteLine(x["data"]["Media"]["title"]["english"].ToString());
+			//Console.WriteLine( new UriBuilder(new Uri("https://ascii2d.net/search/url/").Host).Uri);
+			//Console.WriteLine(new Uri("https://ascii2d.net/search/url/").GetComponents(UriComponents.NormalizedHost, UriFormat.Unescaped));
+			//Console.WriteLine((new UriBuilder("ascii2d.net").Uri));
+			//ServicePointManager.UseNagleAlgorithm = false;
+			
+			var b = MediaTypes.IsDirect("https://files.catbox.moe/txvi31.png", MimeType.Image);
+			Console.WriteLine(b);
 		}
+
 	}
 }

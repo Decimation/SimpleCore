@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using static SimpleCore.Internal.Common;
 using NotNull = JetBrains.Annotations.NotNullAttribute;

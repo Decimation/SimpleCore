@@ -1,22 +1,18 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using RestSharp;
+using SimpleCore.Diagnostics;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
-using Newtonsoft.Json;
-using RestSharp;
-using SimpleCore.Diagnostics;
-using SimpleCore.Utilities;
 
 #pragma warning disable 8618
 
 // ReSharper disable UnusedMember.Global
 #nullable enable
+
 namespace SimpleCore.Net
 {
 	public static class MediaTypes
@@ -28,34 +24,43 @@ namespace SimpleCore.Net
 
 		//todo
 
+
+
+
 		/// <summary>
 		/// Identifies the MIME type of <paramref name="url"/>
 		/// </summary>
 		public static string? Identify(string url)
 		{
-
 			var req = new RestRequest(url, Method.HEAD);
-
 			var client = new RestClient();
 
 			//client.FollowRedirects = true;
 
 			var res = client.Execute(req);
 
-			if (res.StatusCode == HttpStatusCode.NotFound) {
+			if (res.StatusCode == HttpStatusCode.NotFound)
+			{
 				return null;
 			}
 
 			return res.ContentType;
+
+			//var r = (HttpWebRequest) WebRequest.Create(url);
+
+			//r.Method = "HEAD";
+			//r.Proxy  = null;
+			//var x = r.GetResponse();
+
+			//return x.ContentType;
+
+
 		}
+
 		/// <summary>
 		/// Whether the MIME <paramref name="mime"/> is of type <paramref name="type"/>
 		/// </summary>
-		public static bool IsType(string mime, MimeType type)
-		{
-			return GetTypeComponent(mime) == Enum.GetName(type)!.ToLower();
-		}
-
+		public static bool IsType(string mime, MimeType type) => GetTypeComponent(mime) == Enum.GetName(type)!.ToLower();
 
 		public static bool IsDirect(string url, MimeType m)
 		{
@@ -63,37 +68,35 @@ namespace SimpleCore.Net
 
 			var mediaType = Identify(url);
 
-			if (mediaType == null)
-			{
+			if (mediaType == null) {
 				return false;
 			}
 
 			var b = IsType(mediaType, m);
 
 			return b;
-
 		}
+
 		/*
 		 * https://github.com/khellang/MimeTypes/blob/master/src/MimeTypes/MimeTypeFunctions.ttinclude
 		 */
 
-
 		[DllImport("urlmon.dll", CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = false)]
 		private static extern int FindMimeFromData(IntPtr pBC,
-			[MarshalAs(UnmanagedType.LPWStr)] string pwzUrl,
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I1, SizeParamIndex = 3)]
-			byte[] pBuffer,
-			int cbSize,
-			[MarshalAs(UnmanagedType.LPWStr)] string pwzMimeProposed,
-			int dwMimeFlags,
-			out IntPtr ppwzMimeOut,
-			int dwReserved);
+		                                           [MarshalAs(UnmanagedType.LPWStr)] string pwzUrl,
+		                                           [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I1,
+		                                                      SizeParamIndex                      = 3)]
+		                                           byte[] pBuffer,
+		                                           int cbSize,
+		                                           [MarshalAs(UnmanagedType.LPWStr)] string pwzMimeProposed,
+		                                           int dwMimeFlags,
+		                                           out IntPtr ppwzMimeOut,
+		                                           int dwReserved);
 
 		public static string ResolveFromData(string url) => ResolveFromData(Network.GetStream(url));
 
 		public static string ResolveFromData(Stream s)
 		{
-
 			var       ms = s as MemoryStream;
 			const int i  = 256;
 			var       rg = new byte[i];
@@ -114,7 +117,6 @@ namespace SimpleCore.Net
 
 			Guard.AssertArgumentNotNull(dataBytes, nameof(dataBytes));
 
-
 			string mimeRet = String.Empty;
 
 			if (!string.IsNullOrEmpty(mimeProposed)) {
@@ -122,11 +124,10 @@ namespace SimpleCore.Net
 				mimeRet = mimeProposed;
 			}
 
-			int ret = FindMimeFromData(IntPtr.Zero, null, dataBytes, dataBytes.Length, 
-				mimeProposed, 0, out var outPtr, 0);
+			int ret = FindMimeFromData(IntPtr.Zero, null, dataBytes, dataBytes.Length,
+			                           mimeProposed, 0, out var outPtr, 0);
 
 			if (ret == 0 && outPtr != IntPtr.Zero) {
-
 				var str = Marshal.PtrToStringUni(outPtr)!;
 
 				Marshal.FreeHGlobal(outPtr);
@@ -136,7 +137,6 @@ namespace SimpleCore.Net
 
 			return mimeRet;
 		}
-
 
 		/*private static IEnumerable<(string Extension, string Type)> GetMediaTypes(
 			IEnumerable<KeyValuePair<string, MimeType>> mimeTypes)
@@ -156,7 +156,6 @@ namespace SimpleCore.Net
 
 		private const int TYPE_I = 0;
 
-
 		private const int SUBTYPE_I = 1;
 
 		public static string GetTypeComponent(string mime) => mime.Split(DELIM)[TYPE_I];
@@ -166,7 +165,6 @@ namespace SimpleCore.Net
 			// NOTE: doesn't handle parameters
 			return mime.Split(DELIM)[SUBTYPE_I];
 		}
-
 
 		private const string DB_JSON_URL = "https://cdn.jsdelivr.net/gh/jshttp/mime-db@master/db.json";
 
@@ -195,12 +193,14 @@ namespace SimpleCore.Net
 			Database = GetDatabase();
 		}
 	}
+
 	public enum MimeType
 	{
 		Image,
 		Video,
 		Audio
 	}
+
 	public class MimeTypeInfo
 	{
 		public MimeTypeInfo()

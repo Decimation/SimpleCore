@@ -1,24 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RestSharp;
+using SimpleCore.Utilities;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Json;
-using System.Linq;
-using System.Net.Mime;
-using System.Web;
-using HtmlAgilityPack;
-using Newtonsoft.Json.Linq;
-using RestSharp;
-using SimpleCore.Utilities;
 
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 
 // ReSharper disable UnusedMember.Global
 #nullable enable
-
 
 namespace SimpleCore.Net
 {
@@ -26,14 +16,13 @@ namespace SimpleCore.Net
 	{
 		public static bool IsUri(string uriName, out Uri? uriResult)
 		{
-
 			bool result = Uri.TryCreate(uriName, UriKind.Absolute, out uriResult)
 			              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
 			return result;
 		}
 
-		
+
 		public static bool IsUriAlive(Uri u)
 		{
 			/*var request = (HttpWebRequest)WebRequest.Create(u);
@@ -47,25 +36,29 @@ namespace SimpleCore.Net
 
 			return true;*/
 
-
 			/*var rc  = new RestClient();
 			var res = rc.Execute(new RestRequest(u));
 			return res.IsSuccessful;*/
 
-
-			try {
-				var request = (HttpWebRequest) WebRequest.Create(u);
-
-				var response = (HttpWebResponse) request.GetResponse();
-				
+			try
+			{
+				var request = (HttpWebRequest)WebRequest.Create(u);
+				var response = (HttpWebResponse)request.GetResponse();
 
 				return true;
 			}
-			catch (WebException e) {
+			catch (WebException e)
+			{
 				return false;
 			}
 
 
+			//var req = (HttpWebRequest) WebRequest.Create(u);
+			//req.Method            = "HEAD";
+			//req.AllowAutoRedirect = false;
+			//var resp = (HttpWebResponse) req.GetResponse();
+
+			//return resp.StatusCode == HttpStatusCode.OK;
 		}
 
 		public static string? GetFinalRedirect(string url)
@@ -76,7 +69,6 @@ namespace SimpleCore.Net
 				return url;
 
 			const int MAX_REDIR = 8;
-
 
 			int maxRedirCount = MAX_REDIR; // prevent infinite loops
 
@@ -94,6 +86,7 @@ namespace SimpleCore.Net
 					switch (resp.StatusCode) {
 						case HttpStatusCode.OK:
 							return newUrl;
+
 						case HttpStatusCode.Redirect:
 						case HttpStatusCode.MovedPermanently:
 						case HttpStatusCode.RedirectKeepVerb:
@@ -110,13 +103,12 @@ namespace SimpleCore.Net
 							}
 
 							break;
+
 						default:
 							return newUrl;
 					}
 
 					url = newUrl;
-
-
 				}
 				catch (WebException) {
 					// Return the last known good URL
@@ -133,7 +125,6 @@ namespace SimpleCore.Net
 			return newUrl;
 		}
 
-		
 		public static string Download(string url, string folder)
 		{
 			string fileName = Path.GetFileName(url);
@@ -148,7 +139,6 @@ namespace SimpleCore.Net
 			return dir;
 		}
 
-		
 		public static string Download(string url)
 		{
 			string? folder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
@@ -178,7 +168,6 @@ namespace SimpleCore.Net
 
 		public static Stream GetStream(string url)
 		{
-
 			using var wc = new WebClient();
 
 			byte[]? imageData = wc.DownloadData(url);
@@ -212,7 +201,6 @@ namespace SimpleCore.Net
 				return false;
 			}
 		}
-
 
 		public static void DumpResponse(IRestResponse response)
 		{

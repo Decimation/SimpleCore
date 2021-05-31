@@ -126,7 +126,7 @@ namespace SimpleCore.Utilities
 			string[] lines = File.ReadAllLines(filename);
 
 			var dict = lines.Select(l => l.Split(DICT_DELIM))
-				.ToDictionary(a => a[0], a => a[1]);
+			                .ToDictionary(a => a[0], a => a[1]);
 
 			return dict;
 		}
@@ -146,7 +146,7 @@ namespace SimpleCore.Utilities
 		}
 
 		public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dic,
-			TKey k, TValue d = default)
+		                                                     TKey k, TValue d = default)
 		{
 			if (!dic.ContainsKey(k)) {
 				dic.Add(k, d);

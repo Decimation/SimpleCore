@@ -18,6 +18,13 @@ namespace UnitTest
 
 
 		[Test]
+		[TestCase(@"https://i.imgur.com/QtCausw.png")]
+		public void UriAliveTest(string s)
+		{
+			Assert.True(Network.IsUriAlive(new Uri(s)));
+		}
+
+		[Test]
 		public void MediaTypesTest()
 		{
 			const string jpg = "https://i.ytimg.com/vi/r45a-l9Gqdk/hqdefault.jpg";
