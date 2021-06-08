@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
@@ -81,14 +82,14 @@ namespace SimpleCore.Utilities
 		public static string SplitPascalCase(string convert)
 		{
 			return Regex.Replace(Regex.Replace(convert, @"(\P{Ll})(\P{Ll}\p{Ll})", "$1 $2"),
-				@"(\p{Ll})(\P{Ll})", "$1 $2");
+			                     @"(\p{Ll})(\P{Ll})", "$1 $2");
 		}
 
 		public static string CreateRandom(int length)
 		{
 			return new(Enumerable.Repeat(Alphanumeric, length)
-				.Select(s => s[RandomInstance.Next(s.Length)])
-				.ToArray());
+			                     .Select(s => s[RandomInstance.Next(s.Length)])
+			                     .ToArray());
 		}
 
 		public static IEnumerable<int> AllIndexesOf(this string str, string searchstring)
@@ -104,38 +105,23 @@ namespace SimpleCore.Utilities
 		/// <summary>
 		///     Simulates Java substring function
 		/// </summary>
-		public static string JSubstring(this string s, int beginIndex)
-		{
-			//
-			return s[beginIndex..];
-		}
+		public static string JSubstring(this string s, int beginIndex) => s[beginIndex..];
 
 		/// <summary>
 		///     Simulates Java substring function
 		/// </summary>
-		public static string JSubstring(this string s, int beginIndex, int endIndex)
-		{
-			//
-			return s.Substring(beginIndex, endIndex - beginIndex + 1);
-		}
+		public static string JSubstring(this string s, int beginIndex, int endIndex) =>
+			s.Substring(beginIndex, endIndex - beginIndex + 1);
 
 		/// <summary>
 		///     Simulates Java substring function
 		/// </summary>
-		public static string JSubstring(this string s, Range r)
-		{
-			//
-			return s.JSubstring(r.Start.Value, r.End.Value);
-		}
+		public static string JSubstring(this string s, Range r) => s.JSubstring(r.Start.Value, r.End.Value);
 
 		/// <summary>
 		///     Simulates Java substring function
 		/// </summary>
-		public static string JSubstring(this string s, Index i)
-		{
-			//
-			return s.JSubstring(i.Value);
-		}
+		public static string JSubstring(this string s, Index i) => s.JSubstring(i.Value);
 
 
 		/// <summary>
@@ -178,10 +164,8 @@ namespace SimpleCore.Utilities
 			return adjustedPosA >= posB ? String.Empty : value.Substring(adjustedPosA, posB - adjustedPosA);
 		}
 
-		public static string RemoveLastOccurrence(this string s, string s2)
-		{
-			return s.Remove(s.LastIndexOf(s2));
-		}
+		public static string RemoveLastOccurrence(this string s, string s2) =>
+			s.Remove(s.LastIndexOf(s2, StringComparison.Ordinal));
 
 		/// <summary>
 		///     Compute the Levenshtein distance (approximate string matching) between <paramref name="s"/> and <paramref name="t"/>
@@ -218,6 +202,23 @@ namespace SimpleCore.Utilities
 			// Step 7
 			return d[n, m];
 		}
+
+
+
+		public static string Indent { get; set; } = new string(' ', 5);
+
+		public static string IndentFields(string s) => IndentFields(s, Indent );
+
+		public static string IndentFields(string s, string indent)
+		{
+			//return s.Replace("\n", "\n" + Indent);
+
+			var split = s.Split('\n');
+
+			var j = string.Join($"\n{indent}", split);
+
+			return indent + j;
+		}
 	}
 
 	public class ExtendedStringBuilder
@@ -239,7 +240,6 @@ namespace SimpleCore.Utilities
 			return new ExtendedStringBuilder(sb);
 		}
 
-		public string Indent { get; set; } = new string(' ', 5);
 
 		public ExtendedStringBuilder Append(string value)
 		{
@@ -253,25 +253,12 @@ namespace SimpleCore.Utilities
 			return this;
 		}
 
-		public override string ToString()
-		{
-			return Builder.ToString();
-		}
+		public override string ToString() => Builder.ToString();
 
-		public string IndentFields(string s)
-		{
-			//return s.Replace("\n", "\n" + Indent);
-
-			var split = s.Split('\n');
-
-			var j = string.Join($"\n{Indent}", split);
-
-			return Indent + j;
-		}
+		public string IndentFields(string s) => Strings.IndentFields(s);
 
 
-		
-		public ExtendedStringBuilder Append(string name, object? val, string? valStr = null, bool newLine=true)
+		public ExtendedStringBuilder Append(string name, object? val, string? valStr = null, bool newLine = true)
 		{
 
 
@@ -288,7 +275,7 @@ namespace SimpleCore.Utilities
 					{
 						valStr ??= val.ToString();
 
-						
+
 						//if (Primary.HasValue) {
 						//	name = name.AddColor(Primary.Value);
 						//}

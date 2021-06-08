@@ -54,8 +54,31 @@ namespace Test
 			//Console.WriteLine((new UriBuilder("ascii2d.net").Uri));
 			//ServicePointManager.UseNagleAlgorithm = false;
 			
-			var b = MediaTypes.IsDirect("https://files.catbox.moe/txvi31.png", MimeType.Image);
-			Console.WriteLine(b);
+			// var b = MediaTypes.IsDirect("https://files.catbox.moe/txvi31.png", MimeType.Image);
+			// Console.WriteLine(b);
+
+
+
+
+			var sw = Stopwatch.StartNew();
+			Run();
+			sw.Stop();
+			Console.WriteLine(sw.Elapsed.TotalSeconds);
+
+			Console.WriteLine(Time(Run).TotalSeconds);
+		}
+
+		static TimeSpan Time(Action f)
+		{
+			var sw = Stopwatch.StartNew();
+			f();
+			sw.Stop();
+			return sw.Elapsed;
+		}
+
+		static void Run()
+		{
+			Thread.Sleep(TimeSpan.FromMilliseconds(100));
 		}
 
 	}

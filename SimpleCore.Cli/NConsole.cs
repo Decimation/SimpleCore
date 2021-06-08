@@ -244,7 +244,9 @@ namespace SimpleCore.Cli
 				Write(false, dialog.Header);
 			}
 
-			for (int i = 0; i < dialog.Options.Count; i++) {
+			var clamp = Math.Clamp(dialog.Options.Count, 0, MAX_DISPLAY_OPTIONS);
+
+			for (int i = 0; i < clamp; i++) {
 				var option = dialog.Options[i];
 
 				string s = FormatOption(option, i);
@@ -393,7 +395,7 @@ namespace SimpleCore.Cli
 
 				if (isInvalid) {
 					Console.CursorTop--;
-					
+
 				}
 
 			} while (isInvalid);

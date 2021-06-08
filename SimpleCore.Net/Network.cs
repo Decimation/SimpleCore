@@ -3,7 +3,10 @@ using SimpleCore.Utilities;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
+using AngleSharp.Dom;
+using AngleSharp.Html.Dom;
 
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 
@@ -40,15 +43,13 @@ namespace SimpleCore.Net
 			var res = rc.Execute(new RestRequest(u));
 			return res.IsSuccessful;*/
 
-			try
-			{
-				var request = (HttpWebRequest)WebRequest.Create(u);
-				var response = (HttpWebResponse)request.GetResponse();
+			try {
+				var request  = (HttpWebRequest) WebRequest.Create(u);
+				var response = (HttpWebResponse) request.GetResponse();
 
 				return true;
 			}
-			catch (WebException e)
-			{
+			catch (WebException e) {
 				return false;
 			}
 
@@ -137,6 +138,16 @@ namespace SimpleCore.Net
 			client.DownloadFile(url, dir);
 
 			return dir;
+		}
+
+		public static string? GetExclusiveText(this INode node)
+		{
+			return node.ChildNodes.OfType<IText>().Select(m => m.Text).FirstOrDefault();
+		}
+
+		public static string TryGetAttribute(this INode n, string s)
+		{
+			return ((IHtmlElement) n).GetAttribute(s);
 		}
 
 		public static string Download(string url)
