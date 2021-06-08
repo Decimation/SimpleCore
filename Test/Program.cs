@@ -19,6 +19,7 @@ using SimpleCore.Numeric;
 using SimpleCore.Utilities;
 using Formatting = SimpleCore.Utilities.Formatting;
 using MathHelper = SimpleCore.Numeric.MathHelper;
+using Timer = System.Timers.Timer;
 
 
 namespace Test
@@ -48,38 +49,34 @@ namespace Test
 		{
 
 
-			//Network.GetFinalRedirect("https://ascii2d.net/search/url/https://files.catbox.moe/txvi31.png");
-			//Console.WriteLine( new UriBuilder(new Uri("https://ascii2d.net/search/url/").Host).Uri);
-			//Console.WriteLine(new Uri("https://ascii2d.net/search/url/").GetComponents(UriComponents.NormalizedHost, UriFormat.Unescaped));
-			//Console.WriteLine((new UriBuilder("ascii2d.net").Uri));
+			var u = new Uri("https://ascii2d.net/search/url/https://files.catbox.moe/txvi31.png");
+
+			Console.WriteLine(Network.GetHostUri(u));
+			Console.WriteLine(Network.GetHostComponent(u));
+
 			//ServicePointManager.UseNagleAlgorithm = false;
-			
+
 			// var b = MediaTypes.IsDirect("https://files.catbox.moe/txvi31.png", MimeType.Image);
 			// Console.WriteLine(b);
-
-
 
 
 			var sw = Stopwatch.StartNew();
 			Run();
 			sw.Stop();
-			Console.WriteLine(sw.Elapsed.TotalSeconds);
+			Console.WriteLine(sw.Elapsed.Ticks/10_000);
 
-			Console.WriteLine(Time(Run).TotalSeconds);
-		}
-
-		static TimeSpan Time(Action f)
-		{
-			var sw = Stopwatch.StartNew();
-			f();
-			sw.Stop();
-			return sw.Elapsed;
+			Console.WriteLine(ThreadingUtilities.MeasureAction(Run).Ticks/10_000);
 		}
 
 		static void Run()
 		{
-			Thread.Sleep(TimeSpan.FromMilliseconds(100));
-		}
+			//var dt = DateTime.Now;
 
+			//while (DateTime.Now.Millisecond >= dt.Millisecond+1) {
+				
+			//
+
+			Thread.Sleep(TimeSpan.FromMilliseconds(1000));
+		}
 	}
 }

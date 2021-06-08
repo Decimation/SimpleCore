@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SimpleCore.Utilities
 {
-	public static class TaskUtilities
+	public static class ThreadingUtilities
 	{
 		public static Task ForEachAsync<T>(this IEnumerable<T> sequence, Func<T, Task> action)
 		{
@@ -34,6 +35,18 @@ namespace SimpleCore.Utilities
 			else {
 				error();
 			}
+		}
+
+		public static TimeSpan MeasureAction(Action f)
+		{
+			var sw = Stopwatch.StartNew();
+			//var x=Environment.TickCount64;
+
+			f();
+			//var d = Environment.TickCount64 - x;
+			sw.Stop();
+			return sw.Elapsed;
+			//return TimeSpan.FromTicks(d);
 		}
 	}
 }

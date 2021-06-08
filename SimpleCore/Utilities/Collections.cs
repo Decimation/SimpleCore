@@ -105,7 +105,7 @@ namespace SimpleCore.Utilities
 			//check for different situations here and throw exception
 			//if list contains multiple items that match the predicate
 			//or check for nullability of list and etc ...
-			var oldItemIndex = list.FindIndex(oldItemSelector);
+			int oldItemIndex = list.FindIndex(oldItemSelector);
 			list[oldItemIndex] = newItem;
 		}
 

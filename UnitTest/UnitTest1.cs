@@ -9,6 +9,9 @@ using SimpleCore.Model;
 using SimpleCore.Net;
 using SimpleCore.Utilities;
 
+// ReSharper disable InconsistentNaming
+#pragma warning disable 649
+
 namespace UnitTest
 {
 	public class Tests
@@ -61,9 +64,11 @@ namespace UnitTest
 
 		private class EnumerationTestType : Enumeration
 		{
-			public static          string str;
-			public                 string str2;
-			public static readonly EnumerationTestType      a1 = new(1, "g");
+			public static string str;
+			public        string str2;
+
+			public static readonly EnumerationTestType a1 = new(1, "g");
+
 			public EnumerationTestType(int id, string name) : base(id, name) { }
 		}
 
@@ -89,10 +94,7 @@ namespace UnitTest
 				Guard.Assert(false);
 
 			});
-
-			Guard.Assert(false);
-			Console.WriteLine();
-			Assert.True(false);
+			
 		}
 
 		[Test]

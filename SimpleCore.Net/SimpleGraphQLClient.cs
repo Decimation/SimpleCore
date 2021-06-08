@@ -3,6 +3,9 @@ using System.Net;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 // ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Global
+// ReSharper disable RedundantAnonymousTypePropertyName
+#pragma warning disable IDE0037
 
 namespace SimpleCore.Net
 {
@@ -26,14 +29,16 @@ namespace SimpleCore.Net
 		public dynamic Execute(string query, object variables = null,
 		                       Dictionary<string, string> additionalHeaders = null, int timeout = 0)
 		{
-			var request = new RestRequest("/", Method.POST);
-			request.Timeout = timeout;
-
-			if (additionalHeaders != null && additionalHeaders.Count > 0)
+			var request = new RestRequest("/", Method.POST)
 			{
-				foreach (var additionalHeader in additionalHeaders)
+				Timeout = timeout
+			};
+
+			if (additionalHeaders is {Count: > 0})
+			{
+				foreach ((string key, string value) in additionalHeaders)
 				{
-					request.AddHeader(additionalHeader.Key, additionalHeader.Value);
+					request.AddHeader(key, value);
 				}
 			}
 

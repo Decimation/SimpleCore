@@ -17,6 +17,17 @@ namespace SimpleCore.Net
 {
 	public static class Network
 	{
+		public static Uri GetHostUri(Uri u)
+		{
+			return new UriBuilder(u.Host).Uri;
+		}
+
+		public static string GetHostComponent(Uri u)
+		{
+			return u.GetComponents(UriComponents.NormalizedHost, UriFormat.Unescaped);
+		}
+
+
 		public static bool IsUri(string uriName, out Uri? uriResult)
 		{
 			bool result = Uri.TryCreate(uriName, UriKind.Absolute, out uriResult)
@@ -28,38 +39,15 @@ namespace SimpleCore.Net
 
 		public static bool IsUriAlive(Uri u)
 		{
-			/*var request = (HttpWebRequest)WebRequest.Create(u);
-
-			var response = (HttpWebResponse)request.GetResponse();
-
-			if (response.StatusCode == HttpStatusCode.NotFound)
-			{
-				return false;
-			}
-
-			return true;*/
-
-			/*var rc  = new RestClient();
-			var res = rc.Execute(new RestRequest(u));
-			return res.IsSuccessful;*/
-
 			try {
 				var request  = (HttpWebRequest) WebRequest.Create(u);
 				var response = (HttpWebResponse) request.GetResponse();
 
 				return true;
 			}
-			catch (WebException e) {
+			catch (WebException) {
 				return false;
 			}
-
-
-			//var req = (HttpWebRequest) WebRequest.Create(u);
-			//req.Method            = "HEAD";
-			//req.AllowAutoRedirect = false;
-			//var resp = (HttpWebResponse) req.GetResponse();
-
-			//return resp.StatusCode == HttpStatusCode.OK;
 		}
 
 		public static string? GetFinalRedirect(string url)
@@ -126,94 +114,16 @@ namespace SimpleCore.Net
 			return newUrl;
 		}
 
-		public static string Download(string url, string folder)
+		public static IRestResponse GetResponse(string url)
 		{
-			string fileName = Path.GetFileName(url);
-
-			using WebClient client = new();
-			client.Headers.Add("User-Agent: Other");
-
-			string? dir = Path.Combine(folder, fileName);
-
-			client.DownloadFile(url, dir);
-
-			return dir;
-		}
-
-		public static string? GetExclusiveText(this INode node)
-		{
-			return node.ChildNodes.OfType<IText>().Select(m => m.Text).FirstOrDefault();
-		}
-
-		public static string TryGetAttribute(this INode n, string s)
-		{
-			return ((IHtmlElement) n).GetAttribute(s);
-		}
-
-		public static string Download(string url)
-		{
-			string? folder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
-			return Download(url, folder);
-		}
-
-		public static void OpenUrl(string url)
-		{
-			// https://stackoverflow.com/questions/4580263/how-to-open-in-default-browser-in-c-sharp
-			// url must start with a protocol i.e. http://
-
-			try {
-				Process.Start(url);
-			}
-			catch {
-				// hack because of this: https://github.com/dotnet/corefx/issues/10361
-				if (OperatingSystem.IsWindows()) {
-					url = url.Replace("&", "^&");
-					Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") {CreateNoWindow = true});
-				}
-				else {
-					throw;
-				}
-			}
-		}
-
-		public static Stream GetStream(string url)
-		{
-			using var wc = new WebClient();
-
-			byte[]? imageData = wc.DownloadData(url);
-
-			return new MemoryStream(imageData);
-		}
-
-		public static IRestResponse GetSimpleResponse(string url)
-		{
-			var restReq = new RestRequest(url);
 			var client  = new RestClient();
+			var restReq = new RestRequest(url);
 			var restRes = client.Execute(restReq);
 
 			return restRes;
 		}
 
-		public static string GetString(string url)
-		{
-			using var wc = new WebClient();
-			return wc.DownloadString(url);
-		}
-
-		public static bool TryGetString(string url, out string? e)
-		{
-			try {
-				e = GetString(url);
-				return true;
-			}
-			catch (Exception) {
-				e = null;
-				return false;
-			}
-		}
-
-		public static void DumpResponse(IRestResponse response)
+		/*public static void DumpResponse(IRestResponse response)
 		{
 			var ct = new ConsoleTable("-", "Value");
 
@@ -225,6 +135,6 @@ namespace SimpleCore.Net
 			var str = ct.ToString();
 
 			Trace.WriteLine(str);
-		}
+		}*/
 	}
 }

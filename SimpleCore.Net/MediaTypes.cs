@@ -7,7 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
-
+#pragma warning disable 8602
+#pragma warning disable 8604
+#pragma warning disable 8625
 #pragma warning disable 8618
 
 // ReSharper disable UnusedMember.Global
@@ -15,6 +17,10 @@ using System.Runtime.InteropServices;
 
 namespace SimpleCore.Net
 {
+
+	/// <summary>
+	/// Media types, MIME types, etc.
+	/// </summary>
 	public static class MediaTypes
 	{
 		/*
@@ -93,7 +99,7 @@ namespace SimpleCore.Net
 		                                           out IntPtr ppwzMimeOut,
 		                                           int dwReserved);
 
-		public static string ResolveFromData(string url) => ResolveFromData(Network.GetStream(url));
+		public static string ResolveFromData(string url) => ResolveFromData(WebUtilities.GetStream(url));
 
 		public static string ResolveFromData(Stream s)
 		{
