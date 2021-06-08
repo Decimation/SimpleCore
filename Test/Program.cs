@@ -49,23 +49,12 @@ namespace Test
 		{
 
 
-			var u = new Uri("https://ascii2d.net/search/url/https://files.catbox.moe/txvi31.png");
-
-			Console.WriteLine(Network.GetHostUri(u));
-			Console.WriteLine(Network.GetHostComponent(u));
-
-			//ServicePointManager.UseNagleAlgorithm = false;
-
-			// var b = MediaTypes.IsDirect("https://files.catbox.moe/txvi31.png", MimeType.Image);
-			// Console.WriteLine(b);
-
+			var v = "https://static.zerochan.net/Atago.%28Azur.Lane%29.full.2750747.png";
 
 			var sw = Stopwatch.StartNew();
-			Run();
+			var x  = MediaTypes.IsDirect(v, MimeType.Image);
 			sw.Stop();
-			Console.WriteLine(sw.Elapsed.Ticks/10_000);
-
-			Console.WriteLine(ThreadingUtilities.MeasureAction(Run).Ticks/10_000);
+			Debug.WriteLine($"{sw.Elapsed.TotalSeconds}");
 		}
 
 		static void Run()

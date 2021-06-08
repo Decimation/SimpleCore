@@ -40,11 +40,7 @@ namespace SimpleCore.Utilities
 			return s.Where(fn).Aggregate(String.Empty, (current, t) => current + t);
 		}
 
-		public static string CreateSeparator(string s)
-		{
-			string sx = new('-', 10);
-			return sx + s + sx;
-		}
+		
 
 		public static string CleanString(this string s)
 		{
@@ -204,6 +200,7 @@ namespace SimpleCore.Utilities
 		}
 
 
+		public static string Separator { get; set; } = new string('-', 20);
 
 		public static string Indent { get; set; } = new string(' ', 5);
 

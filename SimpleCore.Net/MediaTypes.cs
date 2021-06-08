@@ -52,14 +52,18 @@ namespace SimpleCore.Net
 
 			return res.ContentType;
 
-			//var r = (HttpWebRequest) WebRequest.Create(url);
+			//var r = (HttpWebRequest)WebRequest.Create(url);
 
 			//r.Method = "HEAD";
-			//r.Proxy  = null;
-			//var x = r.GetResponse();
+			//r.Proxy = null;
 
-			//return x.ContentType;
-
+			//try {
+			//	var x = r.GetResponse();
+			//	return x.ContentType;
+			//}
+			//catch (Exception e) {
+			//	return null;
+			//}
 
 		}
 
