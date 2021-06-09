@@ -1,9 +1,9 @@
-﻿using JetBrains.Annotations;
-using SimpleCore.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using JetBrains.Annotations;
+using SimpleCore.Utilities;
 using static SimpleCore.Internal.Common;
 
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
@@ -16,7 +16,7 @@ using static SimpleCore.Internal.Common;
 // ReSharper disable UnusedVariable
 // ReSharper disable ParameterTypeCanBeEnumerable.Global
 
-#pragma warning disable 8602, CA1416, CS8604
+#pragma warning disable 8602, CA1416, CS8604, IDE0059
 #nullable enable
 
 namespace SimpleCore.Cli
@@ -35,7 +35,16 @@ namespace SimpleCore.Cli
 	///             <see cref="NConsoleOption" />
 	///         </description>
 	///     </item>
-	///     
+	///     <item>
+	///         <description>
+	///             <see cref="NConsoleDialog" />
+	///         </description>
+	///     </item>
+	/// <item>
+	///         <description>
+	///             <see cref="NConsoleProgress" />
+	///         </description>
+	///     </item>
 	/// </list>
 	public static class NConsole
 	{
@@ -81,7 +90,7 @@ namespace SimpleCore.Cli
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static string FormatString(string c, string s)
 		{
-			string[]? srg = s.Split(Formatting.NativeNewLine);
+			string[] srg = s.Split(Formatting.NativeNewLine);
 
 			for (int i = 0; i < srg.Length; i++) {
 				string y = Formatting.SPACE + srg[i];
@@ -114,7 +123,7 @@ namespace SimpleCore.Cli
 
 		public static void Init()
 		{
-			Console.OutputEncoding = Encoding.Unicode;
+			//Console.OutputEncoding = Encoding.Unicode;
 		}
 
 		[StringFormatMethod(STRING_FORMAT_ARG)]
@@ -129,6 +138,7 @@ namespace SimpleCore.Cli
 			Console.Write(clear);
 			Write(msg);
 		}
+
 		public static void Write(params object[] args)
 		{
 			string? s = args.QuickJoin();
@@ -263,7 +273,6 @@ namespace SimpleCore.Cli
 			}
 
 
-
 			/*
 			 * Auto resizing
 			 */
@@ -274,9 +283,10 @@ namespace SimpleCore.Cli
 		/// <summary>
 		///     Handles user input and options
 		/// </summary>
+		/// <remarks>Returns when <see cref="NConsoleOption.Function"/> returns a non-null value</remarks>
 		public static HashSet<object> ReadOptions(NConsoleDialog dialog)
 		{
-			// HACK: very hacky
+			
 
 			var selectedOptions = new HashSet<object>();
 
@@ -315,6 +325,7 @@ namespace SimpleCore.Cli
 				}
 
 				char keyChar = (char) (int) cki.Key;
+				//char keyChar = (char)(int)cki.KeyChar;
 
 				if (!Char.IsLetterOrDigit(keyChar)) {
 					continue;

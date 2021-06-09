@@ -1,21 +1,102 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 // ReSharper disable UnusedMember.Global
-
+#pragma warning disable CA1416
 namespace SimpleCore.Cli
 {
 	public static class NConsoleProgress
 	{
 		/*
+		 * https://github.com/sindresorhus/cli-spinners/blob/main/spinners.json
 		 *
+		 * https://jsbin.com/tofehujixe/1/edit?js,output
+		 * https://www.npmjs.com/package/cli-spinners
+		 * https://www.fileformat.info/info/unicode/block/braille_patterns/images.htm
 		 */
 
-		public static string[] dots8bit = new[]
+		#region Spinners
+
+		public static string[] Dots =
+		{
+			"⠋",
+			"⠙",
+			"⠹",
+			"⠸",
+			"⠼",
+			"⠴",
+			"⠦",
+			"⠧",
+			"⠇",
+			"⠏"
+		};
+
+		public static string[] Dots2 =
+		{
+			"⣾",
+			"⣽",
+			"⣻",
+			"⢿",
+			"⡿",
+			"⣟",
+			"⣯",
+			"⣷"
+		};
+
+		public static string[] Dots3 =
+		{
+			"⠋",
+			"⠙",
+			"⠚",
+			"⠞",
+			"⠖",
+			"⠦",
+			"⠴",
+			"⠲",
+			"⠳",
+			"⠓"
+		};
+
+		public static string[] Dots4 =
+		{
+			"⠄",
+			"⠆",
+			"⠇",
+			"⠋",
+			"⠙",
+			"⠸",
+			"⠰",
+			"⠠",
+			"⠰",
+			"⠸",
+			"⠙",
+			"⠋",
+			"⠇",
+			"⠆"
+		};
+
+		public static string[] Dots5 =
+		{
+			"⠋",
+			"⠙",
+			"⠚",
+			"⠒",
+			"⠂",
+			"⠂",
+			"⠒",
+			"⠲",
+			"⠴",
+			"⠦",
+			"⠖",
+			"⠒",
+			"⠐",
+			"⠐",
+			"⠒",
+			"⠓",
+			"⠋"
+		};
+
+		public static string[] Dots8Bit =
 		{
 			"⠀",
 			"⠁",
@@ -275,60 +356,7 @@ namespace SimpleCore.Cli
 			"⣿"
 		};
 
-		public static string[] dots = new[]
-		{
-			"⠋",
-			"⠙",
-			"⠹",
-			"⠸",
-			"⠼",
-			"⠴",
-			"⠦",
-			"⠧",
-			"⠇",
-			"⠏"
-		};
-
-		public static string[] dots5 = new string[]
-		{
-			"⠋",
-			"⠙",
-			"⠚",
-			"⠒",
-			"⠂",
-			"⠂",
-			"⠒",
-			"⠲",
-			"⠴",
-			"⠦",
-			"⠖",
-			"⠒",
-			"⠐",
-			"⠐",
-			"⠒",
-			"⠓",
-			"⠋"
-		};
-
-		public static string[] dots4 = new string[]
-		{
-			"⠄",
-			"⠆",
-			"⠇",
-			"⠋",
-			"⠙",
-			"⠸",
-			"⠰",
-			"⠠",
-			"⠰",
-			"⠸",
-			"⠙",
-			"⠋",
-			"⠇",
-			"⠆"
-		};
-
-		public static string[] dots9 = new string[]
+		public static string[] Dots9 =
 		{
 			"⢹",
 			"⢺",
@@ -340,7 +368,30 @@ namespace SimpleCore.Cli
 			"⡏"
 		};
 
-		public static string[] dots12 = new string[]
+		public static string[] Dots10 =
+		{
+			"⢄",
+			"⢂",
+			"⢁",
+			"⡁",
+			"⡈",
+			"⡐",
+			"⡠"
+		};
+
+		public static string[] Dots11 =
+		{
+			"⠁",
+			"⠂",
+			"⠄",
+			"⡀",
+			"⢀",
+			"⠠",
+			"⠐",
+			"⠈"
+		};
+
+		public static string[] Dots12 =
 		{
 			"⢀⠀",
 			"⡀⠀",
@@ -400,23 +451,70 @@ namespace SimpleCore.Cli
 			"⠀⡀"
 		};
 
-
-		public static void Show(object token)
+		public static string[] Progress7 =
 		{
-			var cancellationToken = (CancellationToken) token;
+			"▰▱▱▱▱▱▱",
+			"▰▰▱▱▱▱▱",
+			"▰▰▰▱▱▱▱",
+			"▰▰▰▰▱▱▱",
+			"▰▰▰▰▰▱▱",
+			"▰▰▰▰▰▰▱",
+			"▰▰▰▰▰▰▰",
+			"▰▱▱▱▱▱▱"
+		};
+
+		public static string[] Progress10 =
+		{
+			"▰▱▱▱▱▱▱▱▱▱",
+			"▰▰▱▱▱▱▱▱▱▱",
+			"▰▰▰▱▱▱▱▱▱▱",
+			"▰▰▰▰▱▱▱▱▱▱",
+			"▰▰▰▰▰▱▱▱▱▱",
+			"▰▰▰▰▰▰▱▱▱▱",
+			"▰▰▰▰▰▰▰▱▱▱",
+			"▰▰▰▰▰▰▰▰▱▱",
+			"▰▰▰▰▰▰▰▰▰▱",
+			"▰▰▰▰▰▰▰▰▰▰",
+			"▰▱▱▱▱▱▱▱▱▱"
+		};
+
+		public static string[] Line =
+		{
+			"-",
+			"\\",
+			"|",
+			"/"
+		};
+
+		#endregion
+
+
+		public static string[] Current { get; set; } = Dots2;
+
+		public static TimeSpan Duration { get; set; } = TimeSpan.FromMilliseconds(80);
+
+
+		public static void Queue(CancellationTokenSource cts)
+		{
+			// Pass the token to the cancelable operation.
+			ThreadPool.QueueUserWorkItem(Show, cts.Token);
+		}
+
+		public static void Show(object obj)
+		{
+			var token = (CancellationToken) obj;
 
 			var oldTitle = Console.Title;
 
-			while (!cancellationToken.IsCancellationRequested) {
-				for (int j = 0; j < dots12.Length; j++) {
+			while (!token.IsCancellationRequested) {
+				foreach (string t in Current) {
+					Console.Title = $"{oldTitle} \r{t}";
 
-					Console.Title = $"{oldTitle} \r{dots12[j]}";
-
-					if (cancellationToken.IsCancellationRequested) {
+					if (token.IsCancellationRequested) {
 						break;
 					}
 
-					Thread.Sleep(80);
+					Thread.Sleep(Duration);
 				}
 
 			}

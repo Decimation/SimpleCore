@@ -35,13 +35,12 @@ namespace SimpleCore.Net
 			return uriWithoutScheme;
 
 		}
+
 		public static bool IsUri(string uriName, out Uri? uriResult)
 		{
-			bool result = Uri.TryCreate(uriName, UriKind.Absolute, out  uriResult)
+			bool result = Uri.TryCreate(uriName, UriKind.Absolute, out uriResult)
 			              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
-
-			
 
 			// if (!result) {
 			// 	var b = new UriBuilder(StripScheme(new Uri(uriName)))

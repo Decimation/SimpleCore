@@ -84,6 +84,8 @@ namespace SimpleCore.Utilities
 		public const char RELOAD    = '\u21bb';
 		public const char SUN       = '\u263c';
 
+		
+
 
 		public static readonly string NativeNewLine = '\n'.ToString();
 

@@ -47,16 +47,19 @@ namespace Test
 	{
 		public static void Main(string[] args)
 		{
-			
-			
 
-			
 
-			
 
+			var cts = new CancellationTokenSource();
+
+			NConsoleProgress.Queue(cts);
+
+			var x = Console.ReadKey();
+			cts.Cancel();
 
 		}
 
+		
 		static void Run()
 		{
 			//var dt = DateTime.Now;
