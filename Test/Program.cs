@@ -47,14 +47,14 @@ namespace Test
 	{
 		public static void Main(string[] args)
 		{
+			
+			
+
+			
+
+			
 
 
-			var v = "https://static.zerochan.net/Atago.%28Azur.Lane%29.full.2750747.png";
-
-			var sw = Stopwatch.StartNew();
-			var x  = MediaTypes.IsDirect(v, MimeType.Image);
-			sw.Stop();
-			Debug.WriteLine($"{sw.Elapsed.TotalSeconds}");
 		}
 
 		static void Run()

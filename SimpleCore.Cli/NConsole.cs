@@ -129,7 +129,6 @@ namespace SimpleCore.Cli
 			Console.Write(clear);
 			Write(msg);
 		}
-
 		public static void Write(params object[] args)
 		{
 			string? s = args.QuickJoin();
@@ -262,6 +261,8 @@ namespace SimpleCore.Cli
 
 				Write(true, optionsStr);
 			}
+
+
 
 			/*
 			 * Auto resizing

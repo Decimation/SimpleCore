@@ -27,11 +27,33 @@ namespace SimpleCore.Net
 			return u.GetComponents(UriComponents.NormalizedHost, UriFormat.Unescaped);
 		}
 
+		public static string StripScheme(Uri uri)
+		{
 
+			string uriWithoutScheme = uri.Host + uri.PathAndQuery + uri.Fragment;
+
+			return uriWithoutScheme;
+
+		}
 		public static bool IsUri(string uriName, out Uri? uriResult)
 		{
-			bool result = Uri.TryCreate(uriName, UriKind.Absolute, out uriResult)
+			bool result = Uri.TryCreate(uriName, UriKind.Absolute, out  uriResult)
 			              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+
+			
+
+			// if (!result) {
+			// 	var b = new UriBuilder(StripScheme(new Uri(uriName)))
+			// 	{
+			// 		Scheme = Uri.UriSchemeHttps, 
+			// 		Port = -1
+			// 	};
+			// 	uriResult = b.Uri;
+			//
+			// 	//uriResult = new Uri(uriResult.ToString().Replace("file:", "http:"));
+			// }
+
 
 			return result;
 		}
