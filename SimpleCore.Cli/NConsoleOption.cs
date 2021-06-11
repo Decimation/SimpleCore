@@ -59,7 +59,7 @@ namespace SimpleCore.Cli
 			for (int i = 0; i < rg.Length; i++) {
 				var option = values[i];
 
-				var name = getName(option);
+				string name = getName(option);
 
 				rg[i] = new NConsoleOption
 				{

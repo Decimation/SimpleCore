@@ -493,6 +493,7 @@ namespace SimpleCore.Cli
 
 		public static TimeSpan Duration { get; set; } = TimeSpan.FromMilliseconds(80);
 
+		
 
 		public static void Queue(CancellationTokenSource cts)
 		{

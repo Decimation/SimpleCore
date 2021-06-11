@@ -74,7 +74,7 @@ namespace SimpleCore.Cli
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static void Write(bool newLine, string msg, params object[] args)
 		{
-			string? fmt = String.Format(msg, args);
+			string fmt = String.Format(msg, args);
 
 			if (newLine) {
 				Console.WriteLine(fmt);
@@ -88,38 +88,81 @@ namespace SimpleCore.Cli
 		///     Root formatting function.
 		/// </summary>
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static string FormatString(string c, string s)
+		public static string FormatString(string delim, string s)
 		{
-			string[] srg = s.Split(Formatting.NativeNewLine);
+			string[] split = s.Split(StringConstants.NativeNewLine);
 
-			for (int i = 0; i < srg.Length; i++) {
-				string y = Formatting.SPACE + srg[i];
+			for (int i = 0; i < split.Length; i++) {
+				string a = StringConstants.SPACE + split[i];
 
-				string x;
+				string b;
 
-				if (String.IsNullOrWhiteSpace(y)) {
-					x = String.Empty;
+				if (String.IsNullOrWhiteSpace(a)) {
+					b = String.Empty;
 				}
 				else {
-					x = c + y;
+					b = delim + a;
 				}
 
-				string x2 = x.Truncate(BufferLimit);
+				string c = b.Truncate(BufferLimit);
 
-				if (x2.Length < x.Length) {
-					x2 += Formatting.ELLIPSES;
+				if (c.Length < b.Length) {
+					c += StringConstants.ELLIPSES;
 				}
 
-				srg[i] = x2;
+				split[i] = c;
 			}
 
-			string s2 = String.Join(Formatting.NativeNewLine, srg);
-
-			return s2;
+			return String.Join(StringConstants.NativeNewLine, split);
 		}
 
-		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static string FormatString(char c, string s) => FormatString(c.ToString(), s);
+		private static string FormatOption(NConsoleOption option, int i)
+		{
+			var  sb = new StringBuilder();
+			char c  = GetDisplayOptionFromIndex(i);
+
+			string? name = option.Name;
+			sb.Append($"[{c}]: ");
+
+			if (name != null) {
+				sb.Append($"{name} ");
+			}
+
+			if (option.Data != null) {
+				sb.Append($"{option.Data}");
+			}
+
+			if (!sb.ToString().EndsWith(StringConstants.NativeNewLine)) {
+				sb.AppendLine();
+			}
+
+			return FormatString(StringConstants.ASTERISK.ToString(), sb.ToString());
+		}
+
+		private static char GetDisplayOptionFromIndex(int i)
+		{
+			if (i < MAX_OPTION_N) {
+				return Char.Parse(i.ToString());
+			}
+
+			int d = OPTION_LETTER_START + (i - MAX_OPTION_N);
+
+			return (char) d;
+		}
+
+		private static int GetIndexFromDisplayOption(char c)
+		{
+			if (Char.IsNumber(c)) {
+				return (int) Char.GetNumericValue(c);
+			}
+
+			if (Char.IsLetter(c)) {
+				c = Char.ToUpper(c);
+				return MAX_OPTION_N + (c - OPTION_LETTER_START);
+			}
+
+			return INVALID;
+		}
 
 		public static void Init()
 		{
@@ -141,7 +184,7 @@ namespace SimpleCore.Cli
 
 		public static void Write(params object[] args)
 		{
-			string? s = args.QuickJoin();
+			string s = args.QuickJoin();
 			Write($"{s}");
 		}
 
@@ -271,13 +314,6 @@ namespace SimpleCore.Cli
 
 				Write(true, optionsStr);
 			}
-
-
-			/*
-			 * Auto resizing
-			 */
-
-			//TryAutoResize(() => DisplayInterface(options, selectedOptions, selectMultiple));
 		}
 
 		/// <summary>
@@ -286,8 +322,6 @@ namespace SimpleCore.Cli
 		/// <remarks>Returns when <see cref="NConsoleOption.Function"/> returns a non-null value</remarks>
 		public static HashSet<object> ReadOptions(NConsoleDialog dialog)
 		{
-			
-
 			var selectedOptions = new HashSet<object>();
 
 			/*
@@ -419,7 +453,7 @@ namespace SimpleCore.Cli
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static bool ReadConfirmation(string msg, params object[] args)
 		{
-			Write($"{Formatting.ASTERISK} {String.Format(msg, args)} ({OPTION_Y}/{OPTION_N}): ");
+			Write($"{StringConstants.ASTERISK} {String.Format(msg, args)} ({OPTION_Y}/{OPTION_N}): ");
 
 			char key = Char.ToUpper(Console.ReadKey().KeyChar);
 
@@ -446,34 +480,6 @@ namespace SimpleCore.Cli
 
 		public static void WaitForSecond() => WaitForTimeSpan(TimeSpan.FromSeconds(1));
 
-
-		/*
-		private static bool TryAutoResize(Action write)
-		{
-			//todo: inline?
-			if (AutoResizeHeight) {
-				int correction = Console.CursorTop + AutoResizeMargin;
-
-				if (Console.WindowHeight        != correction && !(correction < AutoResizeMinimumHeight) &&
-				    Console.LargestWindowHeight >= correction) {
-					//Console.SetWindowPosition(0, Console.CursorTop);
-					Console.WindowHeight = correction;
-					write();
-
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		public static int AutoResizeMargin { get; set; } = 1;
-
-		public static int AutoResizeMinimumHeight { get; set; } = 20;
-
-		public static bool AutoResizeHeight { get; set; } = false;
-		*/
-
 		#region Options
 
 		public const char OPTION_N = 'N';
@@ -487,54 +493,6 @@ namespace SimpleCore.Cli
 		public const int MAX_DISPLAY_OPTIONS = 36;
 
 		#endregion Options
-
-		private static string FormatOption(NConsoleOption option, int i)
-		{
-			var  sb = new StringBuilder();
-			char c  = GetDisplayOptionFromIndex(i);
-
-			string? name = option.Name;
-			sb.Append($"[{c}]: ");
-
-			if (name != null) {
-				sb.Append($"{name} ");
-			}
-
-			if (option.Data != null) {
-				sb.Append($"{option.Data}");
-			}
-
-			if (!sb.ToString().EndsWith(Formatting.NativeNewLine)) {
-				sb.AppendLine();
-			}
-
-			return FormatString(Formatting.ASTERISK, sb.ToString());
-		}
-
-		private static char GetDisplayOptionFromIndex(int i)
-		{
-			if (i < MAX_OPTION_N) {
-				return Char.Parse(i.ToString());
-			}
-
-			int d = OPTION_LETTER_START + (i - MAX_OPTION_N);
-
-			return (char) d;
-		}
-
-		private static int GetIndexFromDisplayOption(char c)
-		{
-			if (Char.IsNumber(c)) {
-				return (int) Char.GetNumericValue(c);
-			}
-
-			if (Char.IsLetter(c)) {
-				c = Char.ToUpper(c);
-				return MAX_OPTION_N + (c - OPTION_LETTER_START);
-			}
-
-			return INVALID;
-		}
 
 		#endregion IO
 

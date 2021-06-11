@@ -17,7 +17,6 @@ using SimpleCore.Model;
 using SimpleCore.Net;
 using SimpleCore.Numeric;
 using SimpleCore.Utilities;
-using Formatting = SimpleCore.Utilities.Formatting;
 using MathHelper = SimpleCore.Numeric.MathHelper;
 using Timer = System.Timers.Timer;
 

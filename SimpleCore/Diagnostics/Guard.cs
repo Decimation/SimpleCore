@@ -1,4 +1,5 @@
-﻿using System;
+﻿// ReSharper disable IdentifierTypo
+using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -8,15 +9,22 @@ using NotNull = JetBrains.Annotations.NotNullAttribute;
 
 // ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedMember.Global
-
 #pragma warning disable IDE0051
 #nullable enable
+
+using AC = JetBrains.Annotations.AssertionConditionAttribute;
+using ACT = JetBrains.Annotations.AssertionConditionType;
+using DNRI = System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute;
+
 
 namespace SimpleCore.Diagnostics
 {
 	/// <summary>
 	/// Diagnostic utilities, conditions, contracts
 	/// </summary>
+	/// <seealso cref="Debug"/>
+	/// <seealso cref="Trace"/>
+	/// <seealso cref="Debugger"/>
 	public static class Guard
 	{
 		/*
@@ -56,7 +64,7 @@ namespace SimpleCore.Diagnostics
 			TException exception;
 
 			if (msg != null) {
-				string? s = String.Format(msg, args);
+				string s = String.Format(msg, args);
 
 				exception = (TException) Activator.CreateInstance(typeof(TException), s)!;
 			}
@@ -70,9 +78,9 @@ namespace SimpleCore.Diagnostics
 		[DebuggerHidden]
 		[AssertionMethod]
 		[ContractAnnotation(COND_FALSE_HALT)]
-		public static void Assert([AssertionCondition(AssertionConditionType.IS_TRUE)] [DoesNotReturnIf(false)]
-		                          bool condition,
-		                          string? msg = null, params object[] args)
+		public static void Assert([AC(ACT.IS_TRUE)] [DNRI(false)] bool condition,
+		                          string? msg = null,
+		                          params object[] args)
 		{
 			Assert<Exception>(condition, msg, args);
 		}
@@ -84,10 +92,8 @@ namespace SimpleCore.Diagnostics
 		[AssertionMethod]
 		[ContractAnnotation(COND_FALSE_HALT)]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void Assert<TException>(
-			[AssertionCondition(AssertionConditionType.IS_TRUE)] [DoesNotReturnIf(false)]
-			bool condition,
-			string? msg = null, params object[] args)
+		public static void Assert<TException>([AC(ACT.IS_TRUE)] [DNRI(false)] bool condition,
+		                                      string? msg = null, params object[] args)
 			where TException : Exception, new()
 		{
 			if (!condition) {
@@ -98,8 +104,7 @@ namespace SimpleCore.Diagnostics
 		[DebuggerHidden]
 		[AssertionMethod]
 		[ContractAnnotation(VALUE_NULL_HALT)]
-		public static void AssertArgumentNotNull([NotNull] [AssertionCondition(AssertionConditionType.IS_NOT_NULL)]
-		                                         object? value,
+		public static void AssertArgumentNotNull([NotNull] [AC(ACT.IS_NOT_NULL)] object? value,
 		                                         string? name = null)
 		{
 			Assert<ArgumentNullException>(value != null, name);
@@ -109,8 +114,7 @@ namespace SimpleCore.Diagnostics
 		[DebuggerHidden]
 		[AssertionMethod]
 		[ContractAnnotation(VALUE_NULL_HALT)]
-		public static void AssertNotNull([NotNull] [AssertionCondition(AssertionConditionType.IS_NOT_NULL)]
-		                                 object? value, string? name = null)
+		public static void AssertNotNull([NotNull] [AC(ACT.IS_NOT_NULL)] object? value, string? name = null)
 		{
 			Assert<NullReferenceException>(value != null, name);
 		}
@@ -168,8 +172,7 @@ namespace SimpleCore.Diagnostics
 
 		[DebuggerHidden]
 		[AssertionMethod]
-		public static void AssertAll([DoesNotReturnIf(false)] [AssertionCondition(AssertionConditionType.IS_TRUE)]
-		                             params bool[] conditions)
+		public static void AssertAll([DNRI(false)] [AC(ACT.IS_TRUE)] params bool[] conditions)
 		{
 			foreach (bool condition in conditions) {
 				Assert(condition);

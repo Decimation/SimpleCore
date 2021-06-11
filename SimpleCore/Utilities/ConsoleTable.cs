@@ -9,6 +9,8 @@ using System.Text.RegularExpressions;
 
 namespace SimpleCore.Utilities
 {
+	// https://github.com/khalidabuhakmeh/ConsoleTables
+
 	/// <summary>
 	/// From <a href="https://github.com/khalidabuhakmeh/ConsoleTables/blob/master/src/ConsoleTables/ConsoleTable.cs">ConsoleTable repo</a>
 	/// </summary>

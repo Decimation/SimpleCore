@@ -18,152 +18,12 @@ using System.Text.RegularExpressions;
 
 namespace SimpleCore.Utilities
 {
-	// https://github.com/khalidabuhakmeh/ConsoleTables
-
-	[Flags]
-	public enum HexOptions
+	public static class Pastel
 	{
-		None = 0,
-
-		Prefix = 1,
-
-		Lowercase = 1 << 1,
-
-		Default = Prefix
-	}
-
-	/// <summary>
-	///     Utilities for formatting.
-	/// </summary>
-	public static class Formatting
-	{
-		#region Constants
-
-		public const string JOIN_COMMA = ", ";
-
-		/// <summary>
-		///     Scope resolution operator
-		/// </summary>
-		public const string JOIN_SCOPE = "::";
-
-		public const string JOIN_SPACE = " ";
-
-
-		public const char PERIOD      = '.';
-		public const char ASTERISK    = '*';
-		public const char EXCLAMATION = '!';
-		public const char SPACE       = ' ';
-
-		public const string ELLIPSES = "...";
-
-
-		public const char ARROW_DOWN       = '\u2193';
-		public const char ARROW_LEFT       = '\u2190';
-		public const char ARROW_LEFT_RIGHT = '\u2194';
-		public const char ARROW_RIGHT      = '\u2192';
-		public const char ARROW_UP         = '\u2191';
-		public const char ARROW_UP_DOWN    = '\u2195';
-
-
-		public const char BALLOT_X = '\u2717';
-
-		public const char HEAVY_BALLOT_X = '\u2718';
-
-		public const char CHECK_MARK = '\u2713';
-
-		public const char HEAVY_CHECK_MARK = '\u2714';
-		public const char LOZENGE          = '\u25ca';
-
-		public const char MUL_SIGN = '\u00D7';
-
-		public const char MUL_SIGN2 = '\u2715';
-
-
-		public const char NULL_CHAR = '\0';
-		public const char RAD_SIGN  = '\u221A';
-		public const char RELOAD    = '\u21bb';
-		public const char SUN       = '\u263c';
-
-		
-
-
-		public static readonly string NativeNewLine = '\n'.ToString();
-
-		#endregion
-
-		#region Join
-
-		public static string FormatJoin<T>(this IEnumerable<T> values,
-			string format, IFormatProvider? provider = null, string delim = JOIN_COMMA) where T : IFormattable =>
-			String.Join(delim, values.Select(v => v.ToString(format, provider)));
-
-		/// <summary>
-		///     Concatenates the strings returned by <paramref name="toString" />
-		///     using the specified separator between each element or member.
-		/// </summary>
-		/// <param name="values">Collection of values</param>
-		/// <param name="toString">
-		///     Function which returns a <see cref="string" /> given a member of <paramref name="values" />
-		/// </param>
-		/// <param name="delim">Delimiter</param>
-		/// <typeparam name="T">Element type</typeparam>
-		public static string FuncJoin<T>(this IEnumerable<T> values,
-			Func<T, string> toString, string delim = JOIN_COMMA) =>
-			String.Join(delim, values.Select(toString));
-
-		public static string QuickJoin<T>(this IEnumerable<T> enumerable, string delim = JOIN_COMMA) =>
-			String.Join(delim, enumerable);
-
-		public static string SimpleJoin<T>(this IEnumerable<T> values, string delim = JOIN_COMMA) =>
-			String.Join(delim, values);
-
-		#endregion
-
-		#region Hex
-
-		private const string HEX_FORMAT_SPECIFIER = "X";
-
-		private const string HEX_PREFIX = "0x";
-
-		public static string ToHexString<T>(T value, HexOptions options = HexOptions.Default)
-		{
-			var sb = new StringBuilder();
-
-			if (options.HasFlagFast(HexOptions.Prefix)) {
-				sb.Append(HEX_PREFIX);
-			}
-
-			string? hexStr;
-
-			if (value is IFormattable fmt) {
-				hexStr = fmt.ToString(HEX_FORMAT_SPECIFIER, null);
-			}
-			else {
-				throw new NotImplementedException();
-			}
-
-			if (options.HasFlagFast(HexOptions.Lowercase)) {
-				hexStr = hexStr.ToLower();
-			}
-
-			sb.Append(hexStr);
-
-			return sb.ToString();
-		}
-
-		public static unsafe string ToHexString(void* value, HexOptions options = HexOptions.Default) =>
-			ToHexString((long) value, options);
-
-		public static string ToHexString(IntPtr value, HexOptions options = HexOptions.Default) =>
-			ToHexString((long) value, options);
-
-		#endregion
-
-		#region Pastel
-
 		//https://github.com/silkfire/Pastel/blob/master/src/ConsoleExtensions.cs
 
-		private const int  STD_OUTPUT_HANDLE                  = -11;
+		private const int STD_OUTPUT_HANDLE = -11;
+
 		private const uint ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
 
 		private const string K32 = "kernel32.dll";
@@ -192,7 +52,8 @@ namespace SimpleCore.Utilities
 			new($"({FORMAT_STRING_END.Replace("[", @"\[")})+", RegexOptions.Compiled);
 
 		private static readonly Regex CloseNestedPastelStringRegex2 = new(
-			$"(?<!^)(?<!{FORMAT_STRING_END.Replace("[", @"\[")})(?<!{String.Format($"{FORMAT_STRING_START.Replace("[", @"\[")}{FORMAT_STRING_COLOR}", new[] {$"(?:{PlaneFormatModifiers[ColorPlane.Foreground]}|{PlaneFormatModifiers[ColorPlane.Background]})"}.Concat(Enumerable.Repeat(@"\d{1,3}", 3)).Cast<object>().ToArray())})(?:{String.Format(FORMAT_STRING_START.Replace("[", @"\["), $"(?:{PlaneFormatModifiers[ColorPlane.Foreground]}|{PlaneFormatModifiers[ColorPlane.Background]})")})",
+			$"(?<!^)(?<!{FORMAT_STRING_END.Replace("[", @"\[")})(?<!{String.Format($"{FORMAT_STRING_START.Replace("[", @"\[")}{FORMAT_STRING_COLOR}", new[] {$"(?:{PlaneFormatModifiers[ColorPlane.Foreground]}|{PlaneFormatModifiers[ColorPlane.Background]})"}.Concat(Enumerable.Repeat(@"\d{1,3}", 3)).Cast<object>().ToArray())})(?:{String.Format(FORMAT_STRING_START.Replace("[", @"\["), $"(?:{PlaneFormatModifiers[ColorPlane.Foreground]}|{PlaneFormatModifiers[ColorPlane.Background]})")})"
+			,
 			RegexOptions.Compiled);
 
 		private static readonly ReadOnlyDictionary<ColorPlane, Regex> CloseNestedPastelStringRegex3 =
@@ -200,11 +61,13 @@ namespace SimpleCore.Utilities
 			{
 				[ColorPlane.Foreground] =
 					new(
-						$"(?:{FORMAT_STRING_END.Replace("[", @"\[")})(?!{String.Format(FORMAT_STRING_START.Replace("[", @"\["), PlaneFormatModifiers[ColorPlane.Foreground])})(?!$)",
+						$"(?:{FORMAT_STRING_END.Replace("[", @"\[")})(?!{String.Format(FORMAT_STRING_START.Replace("[", @"\["), PlaneFormatModifiers[ColorPlane.Foreground])})(?!$)"
+						,
 						RegexOptions.Compiled),
 				[ColorPlane.Background] =
 					new(
-						$"(?:{FORMAT_STRING_END.Replace("[", @"\[")})(?!{String.Format(FORMAT_STRING_START.Replace("[", @"\["), PlaneFormatModifiers[ColorPlane.Background])})(?!$)",
+						$"(?:{FORMAT_STRING_END.Replace("[", @"\[")})(?!{String.Format(FORMAT_STRING_START.Replace("[", @"\["), PlaneFormatModifiers[ColorPlane.Background])})(?!$)"
+						,
 						RegexOptions.Compiled)
 			});
 
@@ -273,7 +136,7 @@ namespace SimpleCore.Utilities
 				});
 
 
-		static Formatting()
+		static Pastel()
 		{
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
 				var iStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -325,7 +188,7 @@ namespace SimpleCore.Utilities
 			closedString = CloseNestedPastelStringRegex2.Replace(closedString, $"{FORMAT_STRING_END}$0");
 
 			closedString = CloseNestedPastelStringRegex3[colorPlane].Replace(closedString,
-				$"$0{String.Format($"{FORMAT_STRING_START}{FORMAT_STRING_COLOR}", PlaneFormatModifiers[colorPlane], color.R, color.G, color.B)}");
+			                                                                 $"$0{String.Format($"{FORMAT_STRING_START}{FORMAT_STRING_COLOR}", PlaneFormatModifiers[colorPlane], color.R, color.G, color.B)}");
 
 			return closedString;
 		}
@@ -392,21 +255,5 @@ namespace SimpleCore.Utilities
 			s = $"\x1b[4m{s}\x1b[0m";
 			return s;
 		}
-
-		#endregion
-
-		public static string ToString<T>(T[] rg)
-		{
-			if (typeof(T) == typeof(byte)) {
-				byte[]? byteArray = rg as byte[];
-				return FormatJoin(byteArray!, HEX_FORMAT_SPECIFIER);
-			}
-
-			return SimpleJoin(rg);
-		}
-
-		public const string ANSI_RESET = "\u001b[0m";
-
-		
 	}
 }

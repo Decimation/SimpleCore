@@ -1,6 +1,5 @@
 #nullable enable
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -19,32 +18,33 @@ using static SimpleCore.Internal.Common;
 
 namespace SimpleCore.Utilities
 {
+	[Flags]
+	public enum HexOptions
+	{
+		None = 0,
+
+		Prefix = 1,
+
+		Lowercase = 1 << 1,
+
+		Default = Prefix
+	}
+
 	/// <summary>
 	///     Utilities for strings (<see cref="string" />).
 	/// </summary>
 	public static class Strings
 	{
-		public const string Alphanumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-		/// <summary>
-		/// Constant <see cref="string.Empty"/>
-		/// </summary>
-		public const string Empty = "";
-
-
 		public static string SelectOnlyDigits(this string s) => s.SelectOnly(Char.IsDigit);
 
 		public static string SelectOnly(this string s, Func<char, bool> fn)
 		{
-
 			return s.Where(fn).Aggregate(String.Empty, (current, t) => current + t);
 		}
 
-		
 
 		public static string CleanString(this string s)
 		{
-
 			return s.Replace("\"", String.Empty);
 		}
 
@@ -83,18 +83,18 @@ namespace SimpleCore.Utilities
 
 		public static string CreateRandom(int length)
 		{
-			return new(Enumerable.Repeat(Alphanumeric, length)
+			return new(Enumerable.Repeat(StringConstants.Alphanumeric, length)
 			                     .Select(s => s[RandomInstance.Next(s.Length)])
 			                     .ToArray());
 		}
 
-		public static IEnumerable<int> AllIndexesOf(this string str, string searchstring)
+		public static IEnumerable<int> AllIndexesOf(this string str, string search)
 		{
-			int minIndex = str.IndexOf(searchstring);
+			int minIndex = str.IndexOf(search);
 
 			while (minIndex != -1) {
 				yield return minIndex;
-				minIndex = str.IndexOf(searchstring, minIndex + searchstring.Length);
+				minIndex = str.IndexOf(search, minIndex + search.Length, StringComparison.Ordinal);
 			}
 		}
 
@@ -200,13 +200,13 @@ namespace SimpleCore.Utilities
 		}
 
 
-		public static string Separator { get; set; } = new string('-', 20);
+		public static string Separator { get; set; } = new('-', 20);
 
-		public static string Indent { get; set; } = new string(' ', 5);
+		public static string Indentation { get; set; } = new(' ', 5);
 
-		public static string IndentFields(string s) => IndentFields(s, Indent );
+		public static string Indent(string s) => Indent(s, Indentation);
 
-		public static string IndentFields(string s, string indent)
+		public static string Indent(string s, string indent)
 		{
 			//return s.Replace("\n", "\n" + Indent);
 
@@ -216,85 +216,84 @@ namespace SimpleCore.Utilities
 
 			return indent + j;
 		}
-	}
 
-	public class ExtendedStringBuilder
-	{
-		public StringBuilder Builder { get; init; }
+		#region Hex
 
-		//public Color? Primary   { get; init; }
-		//public Color? Secondary { get; init; }
+		public const string HEX_FORMAT_SPECIFIER = "X";
 
-		public ExtendedStringBuilder() : this(new StringBuilder()) { }
+		private const string HEX_PREFIX = "0x";
 
-		public ExtendedStringBuilder(StringBuilder builder)
+		public static string ToHexString<T>(T value, HexOptions options = HexOptions.Default)
 		{
-			Builder = builder;
-		}
+			var sb = new StringBuilder();
 
-		public static implicit operator ExtendedStringBuilder(StringBuilder sb)
-		{
-			return new ExtendedStringBuilder(sb);
-		}
-
-
-		public ExtendedStringBuilder Append(string value)
-		{
-			Builder.Append(value);
-			return this;
-		}
-
-		public ExtendedStringBuilder AppendLine(string value)
-		{
-			Builder.AppendLine(value);
-			return this;
-		}
-
-		public override string ToString() => Builder.ToString();
-
-		public string IndentFields(string s) => Strings.IndentFields(s);
-
-
-		public ExtendedStringBuilder Append(string name, object? val, string? valStr = null, bool newLine = true)
-		{
-
-
-			if (val != null) {
-
-				// Patterns are so epic
-
-				switch (val) {
-					case IList {Count: 0}:
-					case string s when String.IsNullOrWhiteSpace(s):
-						return this;
-
-					default:
-					{
-						valStr ??= val.ToString();
-
-
-						//if (Primary.HasValue) {
-						//	name = name.AddColor(Primary.Value);
-						//}
-
-						//if (Secondary.HasValue) {
-						//	valStr = valStr.AddColor(Secondary.Value);
-						//}
-
-						string? fs = $"{name}: {valStr}".Truncate();
-
-						if (newLine) {
-							fs += "\n";
-						}
-
-						Builder.Append(fs);
-						break;
-					}
-				}
-
+			if (options.HasFlagFast(HexOptions.Prefix)) {
+				sb.Append(HEX_PREFIX);
 			}
 
-			return this;
+			string? hexStr;
+
+			if (value is IFormattable fmt) {
+				hexStr = fmt.ToString(HEX_FORMAT_SPECIFIER, null);
+			}
+			else {
+				throw new NotImplementedException();
+			}
+
+			if (options.HasFlagFast(HexOptions.Lowercase)) {
+				hexStr = hexStr.ToLower();
+			}
+
+			sb.Append(hexStr);
+
+			return sb.ToString();
+		}
+
+		public static unsafe string ToHexString(void* value, HexOptions options = HexOptions.Default) =>
+			ToHexString((long) value, options);
+
+		public static string ToHexString(IntPtr value, HexOptions options = HexOptions.Default) =>
+			ToHexString((long) value, options);
+
+		#endregion
+
+		#region Join
+
+		public static string FormatJoin<T>(this IEnumerable<T> values,
+		                                   string format, IFormatProvider? provider = null,
+		                                   string delim = StringConstants.JOIN_COMMA) where T : IFormattable =>
+			String.Join(delim, values.Select(v => v.ToString(format, provider)));
+
+		/// <summary>
+		///     Concatenates the strings returned by <paramref name="toString" />
+		///     using the specified separator between each element or member.
+		/// </summary>
+		/// <param name="values">Collection of values</param>
+		/// <param name="toString">
+		///     Function which returns a <see cref="string" /> given a member of <paramref name="values" />
+		/// </param>
+		/// <param name="delim">Delimiter</param>
+		/// <typeparam name="T">Element type</typeparam>
+		public static string FuncJoin<T>(this IEnumerable<T> values,
+		                                 Func<T, string> toString, string delim = StringConstants.JOIN_COMMA) =>
+			String.Join(delim, values.Select(toString));
+
+		public static string QuickJoin<T>(this IEnumerable<T> enumerable, string delim = StringConstants.JOIN_COMMA) =>
+			String.Join(delim, enumerable);
+
+		public static string SimpleJoin<T>(this IEnumerable<T> values, string delim = StringConstants.JOIN_COMMA) =>
+			String.Join(delim, values);
+
+		#endregion
+
+		public static string ToString<T>(T[] rg)
+		{
+			if (typeof(T) == typeof(byte)) {
+				byte[]? byteArray = rg as byte[];
+				return byteArray!.FormatJoin<byte>(Strings.HEX_FORMAT_SPECIFIER);
+			}
+
+			return rg.SimpleJoin<T>();
 		}
 	}
 }

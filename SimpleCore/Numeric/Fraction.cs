@@ -97,13 +97,13 @@ namespace SimpleCore.Numeric
 
 		public Fraction(double dDecimalValue)
 		{
-			Fraction temp = ToFraction(dDecimalValue);
+			var temp = ToFraction(dDecimalValue);
 			Initialize(temp.Numerator, temp.Denominator);
 		}
 
 		public Fraction(string strValue)
 		{
-			Fraction temp = ToFraction(strValue);
+			var temp = ToFraction(strValue);
 			Initialize(temp.Numerator, temp.Denominator);
 		}
 
@@ -123,7 +123,7 @@ namespace SimpleCore.Numeric
 		}
 
 		/// <summary>
-		/// Properites
+		/// Properties
 		/// </summary>
 		public long Denominator
 		{
@@ -157,7 +157,7 @@ namespace SimpleCore.Numeric
 		/// </summary>
 		public double ToDouble()
 		{
-			return ((double) this.Numerator / this.Denominator);
+			return (double) Numerator / Denominator;
 		}
 
 		/// <summary>
@@ -167,10 +167,10 @@ namespace SimpleCore.Numeric
 		{
 			string str;
 
-			if (this.Denominator == 1)
-				str = this.Numerator.ToString();
+			if (Denominator == 1)
+				str = Numerator.ToString();
 			else
-				str = this.Numerator + "/" + this.Denominator;
+				str = Numerator + "/" + Denominator;
 			return str;
 		}
 
@@ -189,7 +189,7 @@ namespace SimpleCore.Numeric
 
 			if (i == strValue.Length) // if string is not in the form of a fraction
 				// then it is double or integer
-				return (Convert.ToDouble(strValue));
+				return Convert.ToDouble(strValue);
 			//return ( ToFraction( Convert.ToDouble(strValue) ) );
 
 			// else string is in the form of Numerator/Denominator
@@ -256,7 +256,7 @@ namespace SimpleCore.Numeric
 		/// </summary>
 		public Fraction Duplicate()
 		{
-			Fraction frac = new Fraction();
+			var frac = new Fraction();
 			frac.Numerator   = Numerator;
 			frac.Denominator = Denominator;
 			return frac;
@@ -272,118 +272,118 @@ namespace SimpleCore.Numeric
 
 			long iNumerator   = frac1.Denominator;
 			long iDenominator = frac1.Numerator;
-			return (new Fraction(iNumerator, iDenominator));
+			return new Fraction(iNumerator, iDenominator);
 		}
 
 
 		/// <summary>
 		/// Operators for the Fraction object
-		/// includes -(unary), and binary opertors such as +,-,*,/
-		/// also includes relational and logical operators such as ==,!=,<,>,<=,>=
+		/// includes -(unary), and binary operators such as +,-,*,/
+		/// also includes relational and logical operators such as ==,!=,&lt;,&gt;,&lt;=,&gt;=
 		/// </summary>
 		public static Fraction operator -(Fraction frac1)
 		{
-			return (Negate(frac1));
+			return Negate(frac1);
 		}
 
 		public static Fraction operator +(Fraction frac1, Fraction frac2)
 		{
-			return (Add(frac1, frac2));
+			return Add(frac1, frac2);
 		}
 
 		public static Fraction operator +(int iNo, Fraction frac1)
 		{
-			return (Add(frac1, new Fraction(iNo)));
+			return Add(frac1, new Fraction(iNo));
 		}
 
 		public static Fraction operator +(Fraction frac1, int iNo)
 		{
-			return (Add(frac1, new Fraction(iNo)));
+			return Add(frac1, new Fraction(iNo));
 		}
 
 		public static Fraction operator +(double dbl, Fraction frac1)
 		{
-			return (Add(frac1, Fraction.ToFraction(dbl)));
+			return Add(frac1, ToFraction(dbl));
 		}
 
 		public static Fraction operator +(Fraction frac1, double dbl)
 		{
-			return (Add(frac1, Fraction.ToFraction(dbl)));
+			return Add(frac1, ToFraction(dbl));
 		}
 
 		public static Fraction operator -(Fraction frac1, Fraction frac2)
 		{
-			return (Add(frac1, -frac2));
+			return Add(frac1, -frac2);
 		}
 
 		public static Fraction operator -(int iNo, Fraction frac1)
 		{
-			return (Add(-frac1, new Fraction(iNo)));
+			return Add(-frac1, new Fraction(iNo));
 		}
 
 		public static Fraction operator -(Fraction frac1, int iNo)
 		{
-			return (Add(frac1, -(new Fraction(iNo))));
+			return Add(frac1, -new Fraction(iNo));
 		}
 
 		public static Fraction operator -(double dbl, Fraction frac1)
 		{
-			return (Add(-frac1, Fraction.ToFraction(dbl)));
+			return Add(-frac1, ToFraction(dbl));
 		}
 
 		public static Fraction operator -(Fraction frac1, double dbl)
 		{
-			return (Add(frac1, -Fraction.ToFraction(dbl)));
+			return Add(frac1, -ToFraction(dbl));
 		}
 
 		public static Fraction operator *(Fraction frac1, Fraction frac2)
 		{
-			return (Multiply(frac1, frac2));
+			return Multiply(frac1, frac2);
 		}
 
 		public static Fraction operator *(int iNo, Fraction frac1)
 		{
-			return (Multiply(frac1, new Fraction(iNo)));
+			return Multiply(frac1, new Fraction(iNo));
 		}
 
 		public static Fraction operator *(Fraction frac1, int iNo)
 		{
-			return (Multiply(frac1, new Fraction(iNo)));
+			return Multiply(frac1, new Fraction(iNo));
 		}
 
 		public static Fraction operator *(double dbl, Fraction frac1)
 		{
-			return (Multiply(frac1, Fraction.ToFraction(dbl)));
+			return Multiply(frac1, ToFraction(dbl));
 		}
 
 		public static Fraction operator *(Fraction frac1, double dbl)
 		{
-			return (Multiply(frac1, Fraction.ToFraction(dbl)));
+			return Multiply(frac1, ToFraction(dbl));
 		}
 
 		public static Fraction operator /(Fraction frac1, Fraction frac2)
 		{
-			return (Multiply(frac1, Inverse(frac2)));
+			return Multiply(frac1, Inverse(frac2));
 		}
 
 		public static Fraction operator /(int iNo, Fraction frac1)
 		{
-			return (Multiply(Inverse(frac1), new Fraction(iNo)));
+			return Multiply(Inverse(frac1), new Fraction(iNo));
 		}
 
 		public static Fraction operator /(Fraction frac1, int iNo)
 		{
-			return (Multiply(frac1, Inverse(new Fraction(iNo))));
+			return Multiply(frac1, Inverse(new Fraction(iNo)));
 		}
 
 		public static Fraction operator /(double dbl, Fraction frac1)
 		{
-			return (Multiply(Inverse(frac1), Fraction.ToFraction(dbl)));
+			return Multiply(Inverse(frac1), ToFraction(dbl));
 		}
 
 		public static Fraction operator /(Fraction frac1, double dbl)
 		{
-			return (Multiply(frac1, Fraction.Inverse(Fraction.ToFraction(dbl))));
+			return Multiply(frac1, Inverse(ToFraction(dbl)));
 		}
 
 		public static bool operator ==(Fraction frac1, Fraction frac2)
@@ -393,7 +393,7 @@ namespace SimpleCore.Numeric
 
 		public static bool operator !=(Fraction frac1, Fraction frac2)
 		{
-			return (!frac1.Equals(frac2));
+			return !frac1.Equals(frac2);
 		}
 
 		public static bool operator ==(Fraction frac1, int iNo)
@@ -403,7 +403,7 @@ namespace SimpleCore.Numeric
 
 		public static bool operator !=(Fraction frac1, int iNo)
 		{
-			return (!frac1.Equals(new Fraction(iNo)));
+			return !frac1.Equals(new Fraction(iNo));
 		}
 
 		public static bool operator ==(Fraction frac1, double dbl)
@@ -413,7 +413,7 @@ namespace SimpleCore.Numeric
 
 		public static bool operator !=(Fraction frac1, double dbl)
 		{
-			return (!frac1.Equals(new Fraction(dbl)));
+			return !frac1.Equals(new Fraction(dbl));
 		}
 
 		public static bool operator <(Fraction frac1, Fraction frac2)
@@ -438,25 +438,25 @@ namespace SimpleCore.Numeric
 
 
 		/// <summary>
-		/// overloaed user defined conversions: from numeric data types to Fractions
+		/// Overloaded user defined conversions: from numeric data types to Fractions
 		/// </summary>
 		public static implicit operator Fraction(long lNo)
 		{
-			return new Fraction(lNo);
+			return new(lNo);
 		}
 
 		public static implicit operator Fraction(double dNo)
 		{
-			return new Fraction(dNo);
+			return new(dNo);
 		}
 
 		public static implicit operator Fraction(string strNo)
 		{
-			return new Fraction(strNo);
+			return new(strNo);
 		}
 
 		/// <summary>
-		/// overloaed user defined conversions: from fractions to double and string
+		/// Overloaded user defined conversions: from fractions to double and string
 		/// </summary>
 		public static explicit operator double(Fraction frac)
 		{
@@ -473,8 +473,8 @@ namespace SimpleCore.Numeric
 		/// </summary>
 		public override bool Equals(object obj)
 		{
-			Fraction frac = (Fraction) obj;
-			return (Numerator == frac.Numerator && Denominator == frac.Denominator);
+			var frac = (Fraction) obj;
+			return Numerator == frac.Numerator && Denominator == frac.Denominator;
 		}
 
 		/// <summary>
@@ -482,7 +482,7 @@ namespace SimpleCore.Numeric
 		/// </summary>
 		public override int GetHashCode()
 		{
-			return (Convert.ToInt32((Numerator ^ Denominator) & 0xFFFFFFFF));
+			return Convert.ToInt32((Numerator ^ Denominator) & 0xFFFFFFFF);
 		}
 
 		/// <summary>
@@ -492,7 +492,7 @@ namespace SimpleCore.Numeric
 		{
 			long iNumerator   = -frac1.Numerator;
 			long iDenominator = frac1.Denominator;
-			return (new Fraction(iNumerator, iDenominator));
+			return new Fraction(iNumerator, iDenominator);
 
 		}
 
@@ -505,7 +505,7 @@ namespace SimpleCore.Numeric
 				checked {
 					long iNumerator   = frac1.Numerator * frac2.Denominator + frac2.Numerator * frac1.Denominator;
 					long iDenominator = frac1.Denominator * frac2.Denominator;
-					return (new Fraction(iNumerator, iDenominator));
+					return new Fraction(iNumerator, iDenominator);
 				}
 			}
 			catch (OverflowException) {
@@ -522,7 +522,7 @@ namespace SimpleCore.Numeric
 				checked {
 					long iNumerator   = frac1.Numerator   * frac2.Numerator;
 					long iDenominator = frac1.Denominator * frac2.Denominator;
-					return (new Fraction(iNumerator, iDenominator));
+					return new Fraction(iNumerator, iDenominator);
 				}
 			}
 			catch (OverflowException) {
@@ -582,7 +582,7 @@ namespace SimpleCore.Numeric
 				throw new FractionException("Cannot reduce Fraction: " + exp.Message);
 			}
 		}
-	} //end class Fraction
+	}
 
 
 	/// <summary>
@@ -592,8 +592,8 @@ namespace SimpleCore.Numeric
 	{
 		public FractionException() : base() { }
 
-		public FractionException(string Message) : base(Message) { }
+		public FractionException(string message) : base(message) { }
 
-		public FractionException(string Message, Exception InnerException) : base(Message, InnerException) { }
-	} //end class FractionException
-}     //end namespace Mehroz
+		public FractionException(string message, Exception innerException) : base(message, innerException) { }
+	}
+}
