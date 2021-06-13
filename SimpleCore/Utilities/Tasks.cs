@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 // ReSharper disable UnusedMember.Global
 
 namespace SimpleCore.Utilities
 {
-	public static class ThreadingUtilities
+	public static class Tasks
 	{
 		public static Task ForEachAsync<T>(this IEnumerable<T> sequence, Func<T, Task> action)
 		{

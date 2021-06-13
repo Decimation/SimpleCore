@@ -104,6 +104,8 @@ namespace SimpleCore.Utilities
 			}
 		}
 
+		#region Substring
+
 		/// <summary>
 		///     Simulates Java substring function
 		/// </summary>
@@ -166,13 +168,14 @@ namespace SimpleCore.Utilities
 			return adjustedPosA >= posB ? String.Empty : value.Substring(adjustedPosA, posB - adjustedPosA);
 		}
 
+		#endregion
+
 		public static string RemoveLastOccurrence(this string s, string s2) =>
 			s.Remove(s.LastIndexOf(s2, StringComparison.Ordinal));
 
 		/// <summary>
 		///     Compute the Levenshtein distance (approximate string matching) between <paramref name="s"/> and <paramref name="t"/>
 		/// </summary>
-		/// 
 		public static int Compute(string s, string t)
 		{
 			int    n = s.Length;

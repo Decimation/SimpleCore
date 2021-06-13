@@ -1,4 +1,5 @@
 ﻿using System;
+// ReSharper disable InconsistentNaming
 
 // ReSharper disable UnusedMember.Global
 
@@ -127,7 +128,7 @@ namespace SimpleCore.Numeric
 		/// </summary>
 		public long Denominator
 		{
-			get { return m_iDenominator; }
+			get => m_iDenominator;
 			set
 			{
 				if (value != 0)
@@ -139,8 +140,8 @@ namespace SimpleCore.Numeric
 
 		public long Numerator
 		{
-			get { return m_iNumerator; }
-			set { m_iNumerator = value; }
+			get => m_iNumerator;
+			set => m_iNumerator = value;
 		}
 
 		public long Value
@@ -218,7 +219,7 @@ namespace SimpleCore.Numeric
 						long   iMultiple = 1;
 						string strTemp   = dValue.ToString();
 
-						while (strTemp.IndexOf("E") > 0) // if in the form like 12E-9
+						while (strTemp.IndexOf("E", StringComparison.Ordinal) > 0) // if in the form like 12E-9
 						{
 							dTemp     *= 10;
 							iMultiple *= 10;
@@ -276,50 +277,28 @@ namespace SimpleCore.Numeric
 		}
 
 
+		#region Operators
+
 		/// <summary>
 		/// Operators for the Fraction object
 		/// includes -(unary), and binary operators such as +,-,*,/
 		/// also includes relational and logical operators such as ==,!=,&lt;,&gt;,&lt;=,&gt;=
 		/// </summary>
-		public static Fraction operator -(Fraction frac1)
-		{
-			return Negate(frac1);
-		}
+		public static Fraction operator -(Fraction frac1) => Negate(frac1);
 
-		public static Fraction operator +(Fraction frac1, Fraction frac2)
-		{
-			return Add(frac1, frac2);
-		}
+		public static Fraction operator +(Fraction frac1, Fraction frac2) => Add(frac1, frac2);
 
-		public static Fraction operator +(int iNo, Fraction frac1)
-		{
-			return Add(frac1, new Fraction(iNo));
-		}
+		public static Fraction operator +(int iNo, Fraction frac1) => Add(frac1, new Fraction(iNo));
 
-		public static Fraction operator +(Fraction frac1, int iNo)
-		{
-			return Add(frac1, new Fraction(iNo));
-		}
+		public static Fraction operator +(Fraction frac1, int iNo) => Add(frac1, new Fraction(iNo));
 
-		public static Fraction operator +(double dbl, Fraction frac1)
-		{
-			return Add(frac1, ToFraction(dbl));
-		}
+		public static Fraction operator +(double dbl, Fraction frac1) => Add(frac1, ToFraction(dbl));
 
-		public static Fraction operator +(Fraction frac1, double dbl)
-		{
-			return Add(frac1, ToFraction(dbl));
-		}
+		public static Fraction operator +(Fraction frac1, double dbl) => Add(frac1, ToFraction(dbl));
 
-		public static Fraction operator -(Fraction frac1, Fraction frac2)
-		{
-			return Add(frac1, -frac2);
-		}
+		public static Fraction operator -(Fraction frac1, Fraction frac2) => Add(frac1, -frac2);
 
-		public static Fraction operator -(int iNo, Fraction frac1)
-		{
-			return Add(-frac1, new Fraction(iNo));
-		}
+		public static Fraction operator -(int iNo, Fraction frac1) => Add(-frac1, new Fraction(iNo));
 
 		public static Fraction operator -(Fraction frac1, int iNo)
 		{
@@ -435,6 +414,8 @@ namespace SimpleCore.Numeric
 		{
 			return frac1.Numerator * frac2.Denominator >= frac2.Numerator * frac1.Denominator;
 		}
+
+		#endregion
 
 
 		/// <summary>

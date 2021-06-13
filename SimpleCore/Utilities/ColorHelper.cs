@@ -12,7 +12,7 @@ namespace SimpleCore.Utilities
 	/// <seealso cref="Color"/>
 	/// <seealso cref="KnownColor"/>
 	/// <seealso cref="ConsoleColor"/>
-	public static class ColorUtilities
+	public static class ColorHelper
 	{
 		public static readonly Color AbsoluteRed   = Color.FromArgb(byte.MaxValue, byte.MaxValue, 0, 0);
 		public static readonly Color AbsoluteGreen = Color.FromArgb(byte.MaxValue, 0, byte.MaxValue, 0);

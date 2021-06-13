@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 #pragma warning disable 8604
 #pragma warning disable 8625
 #pragma warning disable 8618
+#pragma warning disable IDE0059
 
 // ReSharper disable UnusedMember.Global
 #nullable enable

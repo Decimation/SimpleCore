@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 
@@ -17,6 +18,8 @@ namespace SimpleCore.Net
 {
 	public static class Network
 	{
+		
+
 		public static Uri GetHostUri(Uri u)
 		{
 			return new UriBuilder(u.Host).Uri;
@@ -57,13 +60,16 @@ namespace SimpleCore.Net
 			return result;
 		}
 
+		public static bool IsUriAlive(Uri u) => IsUriAlive(u, TimeSpan.FromSeconds(3));
 
-		public static bool IsUriAlive(Uri u)
+		public static bool IsUriAlive(Uri u, TimeSpan span)
 		{
 			try {
 				var request  = (HttpWebRequest) WebRequest.Create(u);
-				var response = (HttpWebResponse) request.GetResponse();
 
+				request.Timeout = (int) span.TotalMilliseconds;
+
+				var response = (HttpWebResponse) request.GetResponse();
 				return true;
 			}
 			catch (WebException) {
@@ -106,7 +112,7 @@ namespace SimpleCore.Net
 							if (newUrl == null)
 								return url;
 
-							if (newUrl.IndexOf("://", System.StringComparison.Ordinal) == -1) {
+							if (newUrl.Contains("://", System.StringComparison.Ordinal)) {
 								// Doesn't have a URL Schema, meaning it's a relative or absolute URL
 								Uri u = new(new Uri(url), newUrl);
 								newUrl = u.ToString();

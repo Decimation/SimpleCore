@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SimpleCore.Utilities
 {
-	public static class StreamUtilities
+	public static class Streams
 	{
 		public static string[] ReadAllLines(this StreamReader stream)
 		{

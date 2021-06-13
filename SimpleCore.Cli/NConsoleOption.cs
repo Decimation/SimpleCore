@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 
 // ReSharper disable InconsistentNaming
 
@@ -41,6 +42,11 @@ namespace SimpleCore.Cli
 		public virtual NConsoleFunction? CtrlFunction { get; set; }
 
 		/// <summary>
+		///     Function to execute when selected with modifiers (<see cref="NConsole.NC_SHIFT_FUNC_MODIFIER" />)
+		/// </summary>
+		public virtual NConsoleFunction? ShiftFunction { get; set; }
+
+		/// <summary>
 		///     Function to execute when selected with modifiers (<see cref="NConsole.NC_COMBO_FUNC_MODIFIER" />)
 		/// </summary>
 		public virtual NConsoleFunction? ComboFunction { get; set; }
@@ -49,6 +55,9 @@ namespace SimpleCore.Cli
 		///     Information about this <see cref="NConsoleOption" />
 		/// </summary>
 		public virtual string? Data { get; set; }
+
+
+		public virtual Color? Color { get; set; }
 
 		public static NConsoleOption[] FromArray<T>(T[] values) => FromArray(values, arg => arg!.ToString()!);
 

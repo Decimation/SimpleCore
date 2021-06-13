@@ -2,9 +2,11 @@
 using System;
 using System.Collections;
 using System.Text;
+using SimpleCore.Utilities;
+
 // ReSharper disable UnusedMember.Global
 
-namespace SimpleCore.Utilities
+namespace SimpleCore.Model
 {
 	public class ExtendedStringBuilder
 	{

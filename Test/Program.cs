@@ -24,6 +24,7 @@ using Console = System.Console;
 using MathHelper = SimpleCore.Numeric.MathHelper;
 using Timer = System.Timers.Timer;
 
+#pragma warning disable IDE0060
 
 namespace Test
 {
@@ -50,8 +51,44 @@ namespace Test
 	{
 		public static void Main(string[] args)
 		{
-			Console.WriteLine(Network.GetHostUri(new Uri("https://iqdb.org/?url=")));
+			var i = new int[] {1, 2, 3};
+			var o = NConsoleOption.FromArray(i);
+
+			o[0].ShiftFunction = () =>
+			{
+				Debug.WriteLine("shift");
+				return null;
+			};
+			o[0].ComboFunction = () =>
+			{
+				Debug.WriteLine("combo");
+				return null;
+			};
+			o[0].CtrlFunction = () =>
+			{
+				Debug.WriteLine("ctrl");
+				return null;
+			};
+			o[0].AltFunction = () =>
+			{
+				Debug.WriteLine("alt");
+				return null;
+			};
+			o[0].Function = () =>
+			{
+				Debug.WriteLine("main");
+				return null;
+			};
+			var d = new NConsoleDialog() {Options = o, SelectMultiple = true};
+			var x = NConsole.ReadOptions(d);
+
+			Console.WriteLine(x);
+
+			// var k = Console.ReadKey();
+			// Console.WriteLine($"{k.KeyChar} {(int)k.KeyChar} {k.Key} {(int)k.Key} {k.Modifiers}");
+			//
+			// k = Console.ReadKey();
+			// Console.WriteLine($"{k.KeyChar} {(int)k.KeyChar} {k.Key} {(int)k.Key} {k.Modifiers}");
 		}
-		
 	}
 }

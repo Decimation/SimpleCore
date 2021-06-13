@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.Text;
 using System.Threading;
 using JetBrains.Annotations;
@@ -48,7 +50,14 @@ namespace SimpleCore.Cli
 	/// </list>
 	public static class NConsole
 	{
-		#region Main
+		/*
+		 * https://github.com/Decimation/SimpleCore/blob/2d6009cfc498de07d5f507192c3cbe1983ff1a11/SimpleCore.Cli/NConsole.cs
+		 */
+
+		public static void Init()
+		{
+			//Console.OutputEncoding = Encoding.Unicode;
+		}
 
 		/// <summary>
 		///     Attempts to resize the console window
@@ -68,6 +77,11 @@ namespace SimpleCore.Cli
 
 		public static int BufferLimit { get; set; } = Console.BufferWidth - 10;
 
+		private static readonly Color ColorHeader  = Color.Red;
+		private static readonly Color ColorOptions = Color.Aquamarine;
+
+		#region Write
+
 		/// <summary>
 		///     Root write method.
 		/// </summary>
@@ -83,6 +97,90 @@ namespace SimpleCore.Cli
 				Console.Write(fmt);
 			}
 		}
+
+		[StringFormatMethod(STRING_FORMAT_ARG)]
+		public static void Write(string msg, params object[] args) => Write(true, msg, args);
+
+		[StringFormatMethod(STRING_FORMAT_ARG)]
+		public static void WriteOnCurrentLine(string msg, params object[] args)
+		{
+			msg = String.Format(msg, args);
+
+			string clear = new('\b', msg.Length);
+			Console.Write(clear);
+			Write(msg);
+		}
+
+		#endregion
+
+		#region IO
+
+		#region Keys
+
+		/// <summary>
+		///     Exits <see cref="ReadOptions" />
+		/// </summary>
+		public const ConsoleKey NC_GLOBAL_EXIT_KEY = ConsoleKey.Escape;
+
+
+		/// <summary>
+		///     <see cref="Refresh" />
+		/// </summary>
+		public const ConsoleKey NC_GLOBAL_REFRESH_KEY = ConsoleKey.F5;
+
+		/// <summary>
+		///     Return
+		/// </summary>
+		public const ConsoleKey NC_GLOBAL_RETURN_KEY = ConsoleKey.F1;
+
+		/// <summary>
+		///     <see cref="NConsoleOption.AltFunction" />
+		/// </summary>
+		public const ConsoleModifiers NC_ALT_FUNC_MODIFIER = ConsoleModifiers.Alt;
+
+		/// <summary>
+		///     <see cref="NConsoleOption.CtrlFunction" />
+		/// </summary>
+		public const ConsoleModifiers NC_CTRL_FUNC_MODIFIER = ConsoleModifiers.Control;
+
+		/// <summary>
+		///     <see cref="NConsoleOption.ShiftFunction" />
+		/// </summary>
+		public const ConsoleModifiers NC_SHIFT_FUNC_MODIFIER = ConsoleModifiers.Shift;
+
+		/// <summary>
+		///     <see cref="NConsoleOption.ComboFunction" />
+		/// </summary>
+		public const ConsoleModifiers NC_COMBO_FUNC_MODIFIER = NC_ALT_FUNC_MODIFIER | NC_CTRL_FUNC_MODIFIER;
+
+		#endregion Keys
+
+		/*static void listen(Action x, Action<ConsoleKeyInfo> ck)
+		{
+			ConsoleKeyInfo cki;
+
+			do {
+				//io
+				Console.Clear();
+				x();
+
+				// Block until input is entered.
+				while (!Console.KeyAvailable) {
+					// HACK: hacky
+				}
+
+				// Key was read
+
+				cki = Console.ReadKey(true);
+
+				// Handle special keys
+
+				ck(cki);
+			} while (cki.Key != ConsoleKey.Escape);
+		}*/
+
+
+		#region Display/formatting
 
 		/// <summary>
 		///     Root formatting function.
@@ -122,6 +220,11 @@ namespace SimpleCore.Cli
 			char c  = GetDisplayOptionFromIndex(i);
 
 			string? name = option.Name;
+
+			if (option.Color.HasValue) {
+				name = name.AddColor(option.Color.Value);
+			}
+
 			sb.Append($"[{c}]: ");
 
 			if (name != null) {
@@ -129,6 +232,11 @@ namespace SimpleCore.Cli
 			}
 
 			if (option.Data != null) {
+				// if (!sb.ToString().EndsWith("\n") || !option.Data.StartsWith("\n")) {
+				// 	sb.Append("\n");
+				// }
+
+				sb.AppendLine();
 				sb.Append($"{option.Data}");
 			}
 
@@ -164,127 +272,6 @@ namespace SimpleCore.Cli
 			return INVALID;
 		}
 
-		public static void Init()
-		{
-			//Console.OutputEncoding = Encoding.Unicode;
-		}
-
-		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void Write(string msg, params object[] args) => Write(true, msg, args);
-
-		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void WriteOnCurrentLine(string msg, params object[] args)
-		{
-			msg = String.Format(msg, args);
-
-			string clear = new('\b', msg.Length);
-			Console.Write(clear);
-			Write(msg);
-		}
-
-		public static void Write(params object[] args)
-		{
-			string s = args.QuickJoin();
-			Write($"{s}");
-		}
-
-		#endregion Main
-
-		#region IO
-
-		#region Keys
-
-		/// <summary>
-		///     Exits <see cref="ReadOptions" />
-		/// </summary>
-		public const ConsoleKey NC_GLOBAL_EXIT_KEY = ConsoleKey.Escape;
-
-
-		/// <summary>
-		///     <see cref="Refresh" />
-		/// </summary>
-		public const ConsoleKey NC_GLOBAL_REFRESH_KEY = ConsoleKey.F5;
-
-		/// <summary>
-		///     Return
-		/// </summary>
-		public const ConsoleKey NC_GLOBAL_RETURN_KEY = ConsoleKey.F1;
-
-		/// <summary>
-		///     <see cref="NConsoleOption.AltFunction" />
-		/// </summary>
-		public const ConsoleModifiers NC_ALT_FUNC_MODIFIER = ConsoleModifiers.Alt;
-
-		/// <summary>
-		///     <see cref="NConsoleOption.CtrlFunction" />
-		/// </summary>
-		public const ConsoleModifiers NC_CTRL_FUNC_MODIFIER = ConsoleModifiers.Control;
-
-		/// <summary>
-		///     <see cref="NConsoleOption.ComboFunction" />
-		/// </summary>
-		public const ConsoleModifiers NC_COMBO_FUNC_MODIFIER = NC_ALT_FUNC_MODIFIER | NC_CTRL_FUNC_MODIFIER;
-
-		#endregion Keys
-
-		/// <summary>
-		///     Signals to continue displaying current interface
-		/// </summary>
-		private const int STATUS_OK = 0;
-
-		/// <summary>
-		///     Signals to reload interface
-		/// </summary>
-		private const int STATUS_REFRESH = 1;
-
-		/// <summary>
-		///     Interface status
-		/// </summary>
-		private static int Status;
-
-		/*static void listen(Action x, Action<ConsoleKeyInfo> ck)
-		{
-			ConsoleKeyInfo cki;
-
-			do {
-				//io
-				Console.Clear();
-				x();
-
-				// Block until input is entered.
-				while (!Console.KeyAvailable) {
-					// HACK: hacky
-				}
-
-				// Key was read
-
-				cki = Console.ReadKey(true);
-
-				// Handle special keys
-
-				ck(cki);
-			} while (cki.Key != ConsoleKey.Escape);
-		}*/
-
-		/*public static ConsoleKeyInfo Block()
-		{
-			ConsoleKeyInfo cki;
-
-			do {
-				// Block until input is entered.
-				while (!Console.KeyAvailable) {
-					// HACK: hacky
-				}
-
-				// Key was read
-
-				cki = Console.ReadKey(true);
-			} while (cki.Key != ConsoleKey.Escape);
-
-			return cki;
-		}*/
-
-
 		/// <summary>
 		///     Display dialog
 		/// </summary>
@@ -293,7 +280,7 @@ namespace SimpleCore.Cli
 			Console.Clear();
 
 			if (dialog.Header is { }) {
-				Write(false, dialog.Header);
+				Write(false, dialog.Header.AddColor(ColorHeader));
 			}
 
 			var clamp = Math.Clamp(dialog.Options.Count, 0, MAX_DISPLAY_OPTIONS);
@@ -314,16 +301,18 @@ namespace SimpleCore.Cli
 
 			// Show options
 			if (dialog.SelectMultiple) {
-				string optionsStr = selectedOptions.QuickJoin();
+				string optionsStr = $">> {selectedOptions.QuickJoin()}".AddColor(ColorOptions);
 
 				Write(true, optionsStr);
 			}
 
 			if (dialog.SelectMultiple) {
 				Console.WriteLine();
-				Write($"Press {NC_GLOBAL_EXIT_KEY} to save selected values.");
+				Write($"Press {NC_GLOBAL_EXIT_KEY.ToString().AddUnderline()} to save selected values.");
 			}
 		}
+
+		#endregion
 
 		/// <summary>
 		///     Handles user input and options
@@ -344,9 +333,9 @@ namespace SimpleCore.Cli
 
 				// Block until input is entered.
 				while (!Console.KeyAvailable) {
-					// HACK: hacky
 
-					if (Interlocked.Exchange(ref Status, STATUS_OK) == STATUS_REFRESH) {
+					// Handle signals from other threads
+					if (Atomic.Exchange(ref Status, ConsoleStatus.Ok) == ConsoleStatus.Refresh) {
 						DisplayDialog(dialog, selectedOptions);
 					}
 				}
@@ -367,8 +356,9 @@ namespace SimpleCore.Cli
 						return new HashSet<object> {true};
 				}
 
+				// KeyChar can't be used as modifiers are not applicable
 				char keyChar = (char) (int) cki.Key;
-				//char keyChar = (char)(int)cki.KeyChar;
+
 
 				if (!Char.IsLetterOrDigit(keyChar)) {
 					continue;
@@ -376,8 +366,9 @@ namespace SimpleCore.Cli
 
 				var modifiers = cki.Modifiers;
 
-				bool altModifier  = modifiers.HasFlag(NC_ALT_FUNC_MODIFIER);
-				bool ctrlModifier = modifiers.HasFlag(NC_CTRL_FUNC_MODIFIER);
+				bool altModifier   = modifiers.HasFlag(NC_ALT_FUNC_MODIFIER);
+				bool ctrlModifier  = modifiers.HasFlag(NC_CTRL_FUNC_MODIFIER);
+				bool shiftModifier = modifiers.HasFlag(NC_SHIFT_FUNC_MODIFIER);
 
 				// Handle option
 
@@ -386,8 +377,9 @@ namespace SimpleCore.Cli
 				if (idx < dialog.Options.Count && idx >= 0) {
 					var option = dialog.Options[idx];
 
-					bool useAltFunc  = altModifier  && option.AltFunction  != null;
-					bool useCtrlFunc = ctrlModifier && option.CtrlFunction != null;
+					bool useAltFunc   = altModifier   && option.AltFunction   != null;
+					bool useCtrlFunc  = ctrlModifier  && option.CtrlFunction  != null;
+					bool useShiftFunc = shiftModifier && option.ShiftFunction != null;
 
 					bool useComboFunc = altModifier && ctrlModifier && option.ComboFunction != null;
 
@@ -403,6 +395,11 @@ namespace SimpleCore.Cli
 					}
 					else if (useAltFunc) {
 						object? altFunc = option.AltFunction();
+
+						//
+					}
+					else if (useShiftFunc) {
+						object? shiftFunc = option.ShiftFunction();
 
 						//
 					}
@@ -459,6 +456,7 @@ namespace SimpleCore.Cli
 			return input;
 		}
 
+
 		[StringFormatMethod(STRING_FORMAT_ARG)]
 		public static bool ReadConfirmation(string msg, params object[] args)
 		{
@@ -476,7 +474,7 @@ namespace SimpleCore.Cli
 			};
 		}
 
-		public static void Refresh() => Interlocked.Exchange(ref Status, STATUS_REFRESH);
+		public static void Refresh() => Atomic.Exchange(ref Status, ConsoleStatus.Refresh);
 
 		public static void WaitForInput()
 		{
@@ -488,6 +486,28 @@ namespace SimpleCore.Cli
 		public static void WaitForTimeSpan(TimeSpan span) => Thread.Sleep(span);
 
 		public static void WaitForSecond() => WaitForTimeSpan(TimeSpan.FromSeconds(1));
+
+		#region Status
+
+		/// <summary>
+		///     Interface status
+		/// </summary>
+		private static ConsoleStatus Status;
+
+		private enum ConsoleStatus
+		{
+			/// <summary>
+			///     Signals to reload interface
+			/// </summary>
+			Refresh,
+
+			/// <summary>
+			///     Signals to continue displaying current interface
+			/// </summary>
+			Ok
+		}
+
+		#endregion
 
 		#region Options
 

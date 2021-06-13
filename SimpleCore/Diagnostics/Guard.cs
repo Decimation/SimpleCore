@@ -1,4 +1,5 @@
 ﻿// ReSharper disable IdentifierTypo
+
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -11,7 +12,6 @@ using NotNull = JetBrains.Annotations.NotNullAttribute;
 // ReSharper disable UnusedMember.Global
 #pragma warning disable IDE0051
 #nullable enable
-
 using AC = JetBrains.Annotations.AssertionConditionAttribute;
 using ACT = JetBrains.Annotations.AssertionConditionType;
 using DNRI = System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute;
@@ -33,6 +33,8 @@ namespace SimpleCore.Diagnostics
 		 */
 
 
+		#region Contract annotations
+
 		private const string VALUE_NULL_HALT = "value:null => halt";
 
 		private const string VALUE_NOTNULL_HALT = "value:notnull => halt";
@@ -41,13 +43,14 @@ namespace SimpleCore.Diagnostics
 
 		private const string UNCONDITIONAL_HALT = "=> halt";
 
+		#endregion
+
 		[DebuggerHidden]
 		[DoesNotReturn]
 		[AssertionMethod]
 		[ContractAnnotation(UNCONDITIONAL_HALT)]
 		[StringFormatMethod(STRING_FORMAT_ARG)]
-		public static void Fail(string? msg = null, params object[] args)
-			=> Fail<Exception>(msg, args);
+		public static void Fail(string? msg = null, params object[] args) => Fail<Exception>(msg, args);
 
 
 		/// <summary>
@@ -130,8 +133,6 @@ namespace SimpleCore.Diagnostics
 		[AssertionMethod]
 		public static void AssertEqual(object a, object b)
 		{
-			// todo
-
 			Assert<Exception>(a.Equals(b));
 		}
 
@@ -140,8 +141,6 @@ namespace SimpleCore.Diagnostics
 		[AssertionMethod]
 		public static void AssertEqual<T>(T a, T b) where T : IEquatable<T>
 		{
-			// todo
-
 			Assert<Exception>(a.Equals(b));
 		}
 
@@ -164,12 +163,6 @@ namespace SimpleCore.Diagnostics
 			}
 		}
 
-
-		// [DebuggerHidden]
-		// [AssertionMethod]
-		// public static void AssertEqual<T>(T a, T b) where T : IEquatable<T> => Assert<Exception>(a.Equals(b));
-
-
 		[DebuggerHidden]
 		[AssertionMethod]
 		public static void AssertAll([DNRI(false)] [AC(ACT.IS_TRUE)] params bool[] conditions)
@@ -178,5 +171,11 @@ namespace SimpleCore.Diagnostics
 				Assert(condition);
 			}
 		}
+	}
+
+	public sealed class GuardException : Exception
+	{
+		public GuardException() { }
+		public GuardException([CanBeNull] string? message) : base(message) { }
 	}
 }

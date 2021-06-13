@@ -9,9 +9,10 @@ using SimpleCore.Diagnostics;
 using SimpleCore.Model;
 using SimpleCore.Net;
 using SimpleCore.Utilities;
+// ReSharper disable UnusedMember.Local
 
 // ReSharper disable InconsistentNaming
-#pragma warning disable 649
+#pragma warning disable 649, IDE0059
 
 namespace UnitTest
 {
@@ -95,7 +96,31 @@ namespace UnitTest
 				Guard.Assert(false);
 				
 			});
-			
+
+			Assert.Throws<NullReferenceException>(() =>
+			{
+				Guard.AssertNotNull(null);
+
+			});
+
+			Assert.Throws<ArgumentNullException>(() =>
+			{
+				Guard.AssertArgumentNotNull(null);
+
+			});
+
+
+			Assert.Throws<Exception>(() =>
+			{
+				Guard.AssertEqual("a","b");
+
+			});
+
+			Assert.DoesNotThrow(() =>
+			{
+				Guard.AssertEqual("a","a");
+
+			});
 		}
 
 		[Test]

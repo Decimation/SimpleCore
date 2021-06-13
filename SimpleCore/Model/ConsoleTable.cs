@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
 using System.Text.RegularExpressions;
 
 // ReSharper disable UnusedMember.Global
 
-namespace SimpleCore.Utilities
+namespace SimpleCore.Model
 {
 	// https://github.com/khalidabuhakmeh/ConsoleTables
 
