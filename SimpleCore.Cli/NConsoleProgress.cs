@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 // ReSharper disable UnusedMember.Global
-#pragma warning disable CA1416
+#pragma warning disable CA1416, CA2211
 namespace SimpleCore.Cli
 {
 	public static class NConsoleProgress
@@ -493,7 +494,15 @@ namespace SimpleCore.Cli
 
 		public static TimeSpan Duration { get; set; } = TimeSpan.FromMilliseconds(80);
 
-		
+		public static void ForTask(Task t)
+		{
+			var cts = new CancellationTokenSource();
+			Queue(cts);
+			// ReSharper disable once MethodSupportsCancellation
+			t.Wait();
+			cts.Cancel();
+			cts.Dispose();
+		}
 
 		public static void Queue(CancellationTokenSource cts)
 		{

@@ -6,7 +6,10 @@ using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
+using AngleSharp.Html.Parser;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Mathematics;
 using BenchmarkDotNet.Running;
@@ -17,6 +20,7 @@ using SimpleCore.Model;
 using SimpleCore.Net;
 using SimpleCore.Numeric;
 using SimpleCore.Utilities;
+using Console = System.Console;
 using MathHelper = SimpleCore.Numeric.MathHelper;
 using Timer = System.Timers.Timer;
 
@@ -46,28 +50,8 @@ namespace Test
 	{
 		public static void Main(string[] args)
 		{
-
-
-
-			var cts = new CancellationTokenSource();
-
-			NConsoleProgress.Queue(cts);
-
-			var x = Console.ReadKey();
-			cts.Cancel();
-
+			Console.WriteLine(Network.GetHostUri(new Uri("https://iqdb.org/?url=")));
 		}
-
 		
-		static void Run()
-		{
-			//var dt = DateTime.Now;
-
-			//while (DateTime.Now.Millisecond >= dt.Millisecond+1) {
-				
-			//
-
-			Thread.Sleep(TimeSpan.FromMilliseconds(1000));
-		}
 	}
 }

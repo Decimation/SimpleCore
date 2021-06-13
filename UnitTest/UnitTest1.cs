@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using SimpleCore.Diagnostics;
 using SimpleCore.Model;
 using SimpleCore.Net;
@@ -83,7 +84,7 @@ namespace UnitTest
 				TestContext.WriteLine(a.ToString());
 			}
 
-			TestContext.WriteLine(EnumerationTestType.GetNextId<EnumerationTestType>());
+			TestContext.WriteLine(Enumeration.GetNextId<EnumerationTestType>());
 		}
 
 		[Test]
@@ -92,9 +93,17 @@ namespace UnitTest
 			Assert.Throws<Exception>(() =>
 			{
 				Guard.Assert(false);
-
+				
 			});
 			
+		}
+
+		[Test]
+		public void StringTest()
+		{
+			Assert.Null(Strings.NullIfNullOrWhiteSpace("    "));
+			Assert.Null(Strings.NullIfNullOrWhiteSpace(""));
+			Assert.Null(Strings.NullIfNullOrWhiteSpace(null));
 		}
 
 		[Test]

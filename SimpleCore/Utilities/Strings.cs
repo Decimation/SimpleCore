@@ -63,6 +63,12 @@ namespace SimpleCore.Utilities
 			return value.Length <= maxLength ? value : value[..maxLength];
 		}
 
+		public static string? NullIfNullOrWhiteSpace(string? str)
+		{
+			return string.IsNullOrWhiteSpace(str) ? null : str;
+
+		}
+
 		public static bool StringWraps(string s)
 		{
 			/*
@@ -221,7 +227,7 @@ namespace SimpleCore.Utilities
 
 		public const string HEX_FORMAT_SPECIFIER = "X";
 
-		private const string HEX_PREFIX = "0x";
+		public const string HEX_PREFIX = "0x";
 
 		public static string ToHexString<T>(T value, HexOptions options = HexOptions.Default)
 		{

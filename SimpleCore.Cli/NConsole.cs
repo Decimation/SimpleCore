@@ -308,11 +308,20 @@ namespace SimpleCore.Cli
 
 			Console.WriteLine();
 
+			if (dialog.Status != null) {
+				Write(dialog.Status);
+			}
+
 			// Show options
 			if (dialog.SelectMultiple) {
 				string optionsStr = selectedOptions.QuickJoin();
 
 				Write(true, optionsStr);
+			}
+
+			if (dialog.SelectMultiple) {
+				Console.WriteLine();
+				Write($"Press {NC_GLOBAL_EXIT_KEY} to save selected values.");
 			}
 		}
 

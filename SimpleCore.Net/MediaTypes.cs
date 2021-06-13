@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
+// ReSharper disable IdentifierTypo
+
 #pragma warning disable 8602
 #pragma warning disable 8604
 #pragma warning disable 8625
@@ -17,7 +19,6 @@ using System.Runtime.InteropServices;
 
 namespace SimpleCore.Net
 {
-
 	/// <summary>
 	/// Media types, MIME types, etc.
 	/// </summary>
@@ -31,58 +32,42 @@ namespace SimpleCore.Net
 		//todo
 
 
-
-
 		/// <summary>
 		/// Identifies the MIME type of <paramref name="url"/>
 		/// </summary>
 		public static string? Identify(string url)
 		{
-			var req = new RestRequest(url, Method.HEAD);
+			var req    = new RestRequest(url, Method.HEAD);
 			var client = new RestClient();
 
 			//client.FollowRedirects = true;
 
 			var res = client.Execute(req);
 
-			if (res.StatusCode == HttpStatusCode.NotFound)
-			{
+			if (res.StatusCode == HttpStatusCode.NotFound) {
 				return null;
 			}
 
 			return res.ContentType;
-
-			//var r = (HttpWebRequest)WebRequest.Create(url);
-
-			//r.Method = "HEAD";
-			//r.Proxy = null;
-
-			//try {
-			//	var x = r.GetResponse();
-			//	return x.ContentType;
-			//}
-			//catch (Exception e) {
-			//	return null;
-			//}
-
 		}
 
 		/// <summary>
 		/// Whether the MIME <paramref name="mime"/> is of type <paramref name="type"/>
 		/// </summary>
-		public static bool IsType(string mime, MimeType type) => GetTypeComponent(mime) == Enum.GetName(type)!.ToLower();
+		public static bool IsType(string mime, MimeType type) =>
+			GetTypeComponent(mime) == Enum.GetName(type)!.ToLower();
 
 		public static bool IsDirect(string url, MimeType m)
 		{
 			//var isUri = Network.IsUri(value, out _);
 
-			var mediaType = Identify(url);
+			string? mediaType = Identify(url);
 
 			if (mediaType == null) {
 				return false;
 			}
 
-			var b = IsType(mediaType, m);
+			bool b = IsType(mediaType, m);
 
 			return b;
 		}
@@ -107,13 +92,15 @@ namespace SimpleCore.Net
 
 		public static string ResolveFromData(Stream s)
 		{
-			var       ms = s as MemoryStream;
-			const int i  = 256;
-			var       rg = new byte[i];
+			var ms = s as MemoryStream;
 
-			var c = ms.Read(rg, 0, i);
+			const int BLOCK_SIZE = 256;
 
-			var m = ResolveFromData(rg);
+			byte[] rg = new byte[BLOCK_SIZE];
+
+			int c = ms.Read(rg, 0, BLOCK_SIZE);
+
+			string m = ResolveFromData(rg);
 
 			return m;
 		}
@@ -129,7 +116,7 @@ namespace SimpleCore.Net
 
 			string mimeRet = String.Empty;
 
-			if (!string.IsNullOrEmpty(mimeProposed)) {
+			if (!String.IsNullOrEmpty(mimeProposed)) {
 				//suggestPtr = Marshal.StringToCoTaskMemUni(mimeProposed); // for your experiments ;-)
 				mimeRet = mimeProposed;
 			}
@@ -138,7 +125,7 @@ namespace SimpleCore.Net
 			                           mimeProposed, 0, out var outPtr, 0);
 
 			if (ret == 0 && outPtr != IntPtr.Zero) {
-				var str = Marshal.PtrToStringUni(outPtr)!;
+				string str = Marshal.PtrToStringUni(outPtr)!;
 
 				Marshal.FreeHGlobal(outPtr);
 
@@ -182,7 +169,7 @@ namespace SimpleCore.Net
 		{
 			using var client = new WebClient();
 
-			var json = client.DownloadString(new Uri(DB_JSON_URL));
+			string json = client.DownloadString(new Uri(DB_JSON_URL));
 
 			var mimeTypes = JsonConvert.DeserializeObject<Dictionary<string, MimeTypeInfo>>(json)!;
 

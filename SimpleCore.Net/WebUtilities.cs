@@ -56,9 +56,9 @@ namespace SimpleCore.Net
 		{
 			using var wc = new WebClient();
 
-			byte[] imageData = wc.DownloadData(url);
+			byte[] buffer = wc.DownloadData(url);
 
-			return new MemoryStream(imageData);
+			return new MemoryStream(buffer);
 		}
 
 		public static string GetString(string url)

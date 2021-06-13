@@ -49,7 +49,6 @@ namespace SimpleCore.Utilities
 
 		public static readonly string NativeNewLine = '\n'.ToString();
 
-		public const string ANSI_RESET   = "\u001b[0m";
 		public const string Alphanumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 		/// <summary>

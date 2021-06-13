@@ -248,12 +248,15 @@ namespace SimpleCore.Utilities
 			return HexColorFormatFunctions[_enabled][ColorPlane.Background](input, hexColor);
 		}
 
+
 		public static string AddUnderline(this string s)
 		{
 			//\x1b[36mTEST\x1b[0m
 
-			s = $"\x1b[4m{s}\x1b[0m";
+			s = $"\x1b[4m{s}{ANSI_RESET}";
 			return s;
 		}
+
+		private const string ANSI_RESET = "\u001b[0m";
 	}
 }

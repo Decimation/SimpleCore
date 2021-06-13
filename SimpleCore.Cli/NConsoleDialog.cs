@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace SimpleCore.Cli
 {
@@ -8,6 +9,9 @@ namespace SimpleCore.Cli
 
 		public bool SelectMultiple { get; init; }
 
-		public string Header { get; init; }
+		public string Header { get; set; }
+
+		[CanBeNull]
+		public string Status { get; set; }
 	}
 }
