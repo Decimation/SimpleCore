@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
+using SimpleCore.Model;
 using static SimpleCore.Internal.Common;
 
 // ReSharper disable UnusedMember.Local
@@ -65,7 +66,7 @@ namespace SimpleCore.Utilities
 
 		public static string? NullIfNullOrWhiteSpace(string? str)
 		{
-			return string.IsNullOrWhiteSpace(str) ? null : str;
+			return String.IsNullOrWhiteSpace(str) ? null : str;
 
 		}
 
@@ -149,7 +150,7 @@ namespace SimpleCore.Utilities
 		public static string SubstringBefore(this string value, string a)
 		{
 			int posA = value.IndexOf(a, StringComparison.Ordinal);
-			return posA == INVALID ? String.Empty : value.Substring(0, posA);
+			return posA == INVALID ? String.Empty : value[..posA];
 		}
 
 		/// <summary>
@@ -219,12 +220,36 @@ namespace SimpleCore.Utilities
 		{
 			//return s.Replace("\n", "\n" + Indent);
 
-			var split = s.Split('\n');
+			string[] split = s.Split('\n');
 
-			var j = string.Join($"\n{indent}", split);
+			string j = String.Join($"\n{indent}", split);
 
 			return indent + j;
 		}
+
+
+		public static string ViewString(IViewable view)
+		{
+			var esb = new ExtendedStringBuilder();
+
+
+			foreach (var (key, value) in view.View) {
+				switch (value) {
+					case null:
+						continue;
+					case IViewable view2:
+						esb.Append(ViewString(view2));
+						break;
+					default:
+						esb.Append(key, value);
+						break;
+				}
+
+			}
+
+			return esb.ToString();
+		}
+
 
 		#region Hex
 
@@ -302,7 +327,7 @@ namespace SimpleCore.Utilities
 				return byteArray!.FormatJoin<byte>(Strings.HEX_FORMAT_SPECIFIER);
 			}
 
-			return rg.SimpleJoin<T>();
+			return rg.SimpleJoin();
 		}
 	}
 }

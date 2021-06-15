@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCore.Cli", "SimpleCor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCore.Selenium", "SimpleCore.Selenium\SimpleCore.Selenium.csproj", "{D9ADB010-34EF-4ED4-806C-C57F6707AA93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{34DF15B6-1334-4B08-B24E-E4BD83EF08BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest", "UnitTest\UnitTest.csproj", "{34DF15B6-1334-4B08-B24E-E4BD83EF08BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBenchmark", "TestBenchmark\TestBenchmark.csproj", "{2042E2F0-6FA3-47E5-B491-2CAD8A414269}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{34DF15B6-1334-4B08-B24E-E4BD83EF08BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34DF15B6-1334-4B08-B24E-E4BD83EF08BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34DF15B6-1334-4B08-B24E-E4BD83EF08BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2042E2F0-6FA3-47E5-B491-2CAD8A414269}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2042E2F0-6FA3-47E5-B491-2CAD8A414269}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2042E2F0-6FA3-47E5-B491-2CAD8A414269}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2042E2F0-6FA3-47E5-B491-2CAD8A414269}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -232,19 +232,23 @@ namespace SimpleCore.Cli
 			}
 
 			if (option.Data != null) {
-				// if (!sb.ToString().EndsWith("\n") || !option.Data.StartsWith("\n")) {
-				// 	sb.Append("\n");
-				// }
 
 				sb.AppendLine();
-				sb.Append($"{option.Data}");
+				
+				sb.Append($"{Strings.Indent(Strings.ViewString(option.Data))}");
 			}
 
 			if (!sb.ToString().EndsWith(StringConstants.NativeNewLine)) {
 				sb.AppendLine();
 			}
 
-			return FormatString(StringConstants.ASTERISK.ToString(), sb.ToString());
+			var f= FormatString(StringConstants.ASTERISK.ToString(), sb.ToString());
+
+			//if (f.EndsWith('\n')) {
+			//	f += '\n';
+			//}
+
+			return f;
 		}
 
 		private static char GetDisplayOptionFromIndex(int i)
@@ -283,7 +287,7 @@ namespace SimpleCore.Cli
 				Write(false, dialog.Header.AddColor(ColorHeader));
 			}
 
-			var clamp = Math.Clamp(dialog.Options.Count, 0, MAX_DISPLAY_OPTIONS);
+			int clamp = Math.Clamp(dialog.Options.Count, 0, MAX_DISPLAY_OPTIONS);
 
 			for (int i = 0; i < clamp; i++) {
 				var option = dialog.Options[i];

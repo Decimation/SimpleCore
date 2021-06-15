@@ -26,5 +26,16 @@ namespace SimpleCore.Utilities
 
 			return list.ToArray();
 		}
+
+
+		public static byte[] ToByteArray(this Stream stream)
+		{
+			stream.Position = 0;
+			using var ms = new MemoryStream();
+			stream.CopyTo(ms);
+			var rg = ms.ToArray();
+
+			return rg;
+		}
 	}
 }

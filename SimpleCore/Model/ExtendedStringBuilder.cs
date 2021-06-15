@@ -12,8 +12,6 @@ namespace SimpleCore.Model
 	{
 		public StringBuilder Builder { get; init; }
 
-		//public Color? Primary   { get; init; }
-		//public Color? Secondary { get; init; }
 
 		public ExtendedStringBuilder() : this(new StringBuilder()) { }
 
@@ -24,9 +22,8 @@ namespace SimpleCore.Model
 
 		public static implicit operator ExtendedStringBuilder(StringBuilder sb)
 		{
-			return new ExtendedStringBuilder(sb);
+			return new(sb);
 		}
-
 
 		public ExtendedStringBuilder Append(string value)
 		{
@@ -42,13 +39,9 @@ namespace SimpleCore.Model
 
 		public override string ToString() => Builder.ToString();
 
-		public string IndentFields(string s) => Strings.Indent(s);
-
 
 		public ExtendedStringBuilder Append(string name, object? val, string? valStr = null, bool newLine = true)
 		{
-
-
 			if (val != null) {
 
 				// Patterns are so epic
@@ -63,15 +56,7 @@ namespace SimpleCore.Model
 						valStr ??= val.ToString();
 
 
-						//if (Primary.HasValue) {
-						//	name = name.AddColor(Primary.Value);
-						//}
-
-						//if (Secondary.HasValue) {
-						//	valStr = valStr.AddColor(Secondary.Value);
-						//}
-
-						string? fs = $"{name}: {valStr}".Truncate();
+						string fs = $"{name}: {valStr}".Truncate();
 
 						if (newLine) {
 							fs += "\n";

@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using SimpleCore.Model;
 
 // ReSharper disable InconsistentNaming
 
@@ -54,10 +55,12 @@ namespace SimpleCore.Cli
 		/// <summary>
 		///     Information about this <see cref="NConsoleOption" />
 		/// </summary>
-		public virtual string? Data { get; set; }
+		public virtual IViewable? Data { get; set; }
 
 
 		public virtual Color? Color { get; set; }
+		
+
 
 		public static NConsoleOption[] FromArray<T>(T[] values) => FromArray(values, arg => arg!.ToString()!);
 

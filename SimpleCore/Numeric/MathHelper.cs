@@ -51,8 +51,6 @@ namespace SimpleCore.Numeric
 			return v;
 		}
 
-		private static readonly string[] Sizes = {"B", "KB", "MB", "GB", "TB"};
-
 		public static string ConvertToUnit(double len)
 		{
 			//https://stackoverflow.com/questions/281640/how-do-i-get-a-human-readable-file-size-in-bytes-abbreviation-using-net
@@ -67,25 +65,54 @@ namespace SimpleCore.Numeric
 
 			// Adjust the format string to your preferences. For example "{0:0.#}{1}" would
 			// show a single decimal place, and no space.
-			string result = String.Format("{0:0.##} {1}", len, Sizes[order]);
+			string result = $"{len:0.##} {Sizes[order]}";
 
 
 			return result;
 		}
 
+		private static readonly string[] Sizes = {"B", "KB", "MB", "GB", "TB"};
+
+
 		public static bool IsPrime(int number)
 		{
-			if (number     <= 1) return false;
-			if (number     == 2) return true;
-			if (number % 2 == 0) return false;
+			switch (number) {
+				case <= 1:
+					return false;
+				case 2:
+					return true;
+			}
 
-			var boundary = (int) Math.Floor(Math.Sqrt(number));
+			if (number % 2 == 0)
+				return false;
+
+			int boundary = (int) Math.Floor(Math.Sqrt(number));
 
 			for (int i = 3; i <= boundary; i += 2)
 				if (number % i == 0)
 					return false;
 
 			return true;
+
+			/*
+			 *	| Method   |     Mean |     Error |    StdDev |
+				|---------:|---------:|----------:|----------:|
+				| IsPrime  | 2.098 ns | 0.0211 ns | 0.0187 ns |
+				| IsPrime2 | 2.568 ns | 0.0074 ns | 0.0061 ns |
+			 */
+
+			/*
+			 *	if (number == 1) return false;
+				if (number == 2) return true;
+
+				double limit = Math.Ceiling(Math.Sqrt(number)); //hoisting the loop limit
+
+				for (int i = 2; i <= limit; ++i)
+					if (number % i == 0)
+						return false;
+				return true;
+			 */
+
 		}
 	}
 }
