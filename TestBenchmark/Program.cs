@@ -5,20 +5,38 @@ using SimpleCore.Numeric;
 
 namespace TestBenchmark
 {
-	public class MyClass
+	public class MyClass2
 	{
 		[Benchmark]
-		public bool a()
+		public int Mul()
 		{
-			return MathHelper.IsPrime(500);
+			return MathHelper.Multiply(2, 2);
 		}
-		
-	}
-	class Program
-	{
-		static void Main(string[] args)
+
+		[Benchmark]
+		public int Div()
 		{
-			BenchmarkRunner.Run<MyClass>();
+			return MathHelper.Divide(10, 5);
+		}
+
+		[Benchmark]
+		public int Add()
+		{
+			return MathHelper.Add(1, 1);
+		}
+
+		[Benchmark]
+		public int Sub()
+		{
+			return MathHelper.Subtract(1, 1);
+		}
+	}
+
+	public static class Program
+	{
+		private static void Main(string[] args)
+		{
+			BenchmarkRunner.Run<MyClass2>();
 		}
 	}
 }

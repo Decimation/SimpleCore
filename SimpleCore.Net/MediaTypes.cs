@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
+// ReSharper disable InconsistentNaming
+
 // ReSharper disable IdentifierTypo
 
 #pragma warning disable 8602

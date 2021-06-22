@@ -8,6 +8,7 @@ using NUnit.Framework.Interfaces;
 using SimpleCore.Diagnostics;
 using SimpleCore.Model;
 using SimpleCore.Net;
+using SimpleCore.Numeric;
 using SimpleCore.Utilities;
 // ReSharper disable UnusedMember.Local
 
@@ -21,6 +22,15 @@ namespace UnitTest
 		[SetUp]
 		public void Setup() { }
 
+		[Test]
+		public void MathTest()
+		{
+			Assert.AreEqual(MathHelper.Add(1,1), 2);
+			Assert.AreEqual(MathHelper.Subtract(1,1), 0);
+
+			Assert.AreEqual(MathHelper.Multiply(2,2), 4);
+			Assert.AreEqual(MathHelper.Divide(10,5), 2);
+		}
 
 		[Test]
 		[TestCase(@"https://i.imgur.com/QtCausw.png")]
@@ -120,6 +130,12 @@ namespace UnitTest
 			{
 				Guard.AssertEqual("a","a");
 
+			});
+
+
+			Assert.Throws<Exception>(() =>
+			{
+				Guard.Fail();
 			});
 		}
 

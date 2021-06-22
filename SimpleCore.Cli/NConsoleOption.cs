@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using SimpleCore.Model;
@@ -60,7 +61,6 @@ namespace SimpleCore.Cli
 
 		public virtual Color? Color { get; set; }
 		
-
 
 		public static NConsoleOption[] FromArray<T>(T[] values) => FromArray(values, arg => arg!.ToString()!);
 

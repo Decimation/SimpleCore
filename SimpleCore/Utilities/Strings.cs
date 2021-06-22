@@ -46,7 +46,9 @@ namespace SimpleCore.Utilities
 
 		public static string CleanString(this string s)
 		{
-			return s.Replace("\"", String.Empty);
+			//return s.Replace("\"", String.Empty);
+
+			return s.Trim('\"');
 		}
 
 		public static string Truncate(this string value)
@@ -322,9 +324,8 @@ namespace SimpleCore.Utilities
 
 		public static string ToString<T>(T[] rg)
 		{
-			if (typeof(T) == typeof(byte)) {
-				byte[]? byteArray = rg as byte[];
-				return byteArray!.FormatJoin<byte>(Strings.HEX_FORMAT_SPECIFIER);
+			if (rg is byte[] byteArray) {
+				return byteArray.FormatJoin(HEX_FORMAT_SPECIFIER);
 			}
 
 			return rg.SimpleJoin();

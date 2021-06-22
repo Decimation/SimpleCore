@@ -44,7 +44,10 @@ namespace SimpleCore.Net
 				if (OperatingSystem.IsWindows()) {
 					url = url.Replace("&", "^&");
 
-					Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") {CreateNoWindow = true});
+					Process.Start(new ProcessStartInfo("cmd", $"/c start {url}")
+					{
+						CreateNoWindow = true
+					});
 				}
 				else {
 					throw;
@@ -54,9 +57,8 @@ namespace SimpleCore.Net
 
 		public static Stream GetStream(string url)
 		{
-			using var wc = new WebClient();
-
-			byte[] buffer = wc.DownloadData(url);
+			using var wc     = new WebClient();
+			byte[]    buffer = wc.DownloadData(url);
 
 			return new MemoryStream(buffer);
 		}

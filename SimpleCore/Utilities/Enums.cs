@@ -42,7 +42,7 @@ namespace SimpleCore.Utilities
 				return default;
 			}
 
-			Enum.TryParse(typeof(TEnum), s, out var e);
+			Enum.TryParse(typeof(TEnum), s, out object e);
 			return (TEnum) e;
 		}
 
@@ -52,7 +52,7 @@ namespace SimpleCore.Utilities
 
 			if (t.GetCustomAttribute<FlagsAttribute>() != null) {
 				string sz = set.QuickJoin();
-				Enum.TryParse(typeof(TEnum), (string) sz, out var e);
+				Enum.TryParse(typeof(TEnum), sz, out object e);
 
 				if (e == null) {
 					return default;

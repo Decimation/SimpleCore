@@ -15,7 +15,7 @@ using NotNull = JetBrains.Annotations.NotNullAttribute;
 using AC = JetBrains.Annotations.AssertionConditionAttribute;
 using ACT = JetBrains.Annotations.AssertionConditionType;
 using DNRI = System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute;
-
+using AM = JetBrains.Annotations.AssertionMethodAttribute;
 
 namespace SimpleCore.Diagnostics
 {
@@ -82,8 +82,7 @@ namespace SimpleCore.Diagnostics
 		[AssertionMethod]
 		[ContractAnnotation(COND_FALSE_HALT)]
 		public static void Assert([AC(ACT.IS_TRUE)] [DNRI(false)] bool condition,
-		                          string? msg = null,
-		                          params object[] args)
+		                          string? msg = null, params object[] args)
 		{
 			Assert<Exception>(condition, msg, args);
 		}
@@ -176,6 +175,7 @@ namespace SimpleCore.Diagnostics
 	public sealed class GuardException : Exception
 	{
 		public GuardException() { }
+
 		public GuardException([CanBeNull] string? message) : base(message) { }
 	}
 }

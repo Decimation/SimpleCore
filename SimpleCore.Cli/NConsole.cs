@@ -52,6 +52,8 @@ namespace SimpleCore.Cli
 	{
 		/*
 		 * https://github.com/Decimation/SimpleCore/blob/2d6009cfc498de07d5f507192c3cbe1983ff1a11/SimpleCore.Cli/NConsole.cs
+		 * https://gist.github.com/ZacharyPatten/798ed612d692a560bdd529367b6a7dbd
+		 * https://github.com/ZacharyPatten/Towel
 		 */
 
 		public static void Init()
@@ -79,6 +81,8 @@ namespace SimpleCore.Cli
 
 		private static readonly Color ColorHeader  = Color.Red;
 		private static readonly Color ColorOptions = Color.Aquamarine;
+		private static readonly Color ColorError   = Color.Red;
+
 
 		#region Write
 
@@ -109,6 +113,21 @@ namespace SimpleCore.Cli
 			string clear = new('\b', msg.Length);
 			Console.Write(clear);
 			Write(msg);
+		}
+
+		public static void ClearCurrentConsoleLine()
+		{
+			int currentLineCursor = Console.CursorTop;
+			Console.SetCursorPosition(0, Console.CursorTop);
+			Console.Write(new string(' ', Console.WindowWidth));
+			Console.SetCursorPosition(0, currentLineCursor);
+		}
+
+		public static void ClearLastLine()
+		{
+			Console.SetCursorPosition(0, Console.CursorTop - 1);
+			Console.Write(new string(' ', Console.BufferWidth));
+			Console.SetCursorPosition(0, Console.CursorTop - 1);
 		}
 
 		#endregion
@@ -234,7 +253,7 @@ namespace SimpleCore.Cli
 			if (option.Data != null) {
 
 				sb.AppendLine();
-				
+
 				sb.Append($"{Strings.Indent(Strings.ViewString(option.Data))}");
 			}
 
@@ -242,7 +261,7 @@ namespace SimpleCore.Cli
 				sb.AppendLine();
 			}
 
-			var f= FormatString(StringConstants.ASTERISK.ToString(), sb.ToString());
+			var f = FormatString(StringConstants.ASTERISK.ToString(), sb.ToString());
 
 			//if (f.EndsWith('\n')) {
 			//	f += '\n';
@@ -362,7 +381,8 @@ namespace SimpleCore.Cli
 
 				// KeyChar can't be used as modifiers are not applicable
 				char keyChar = (char) (int) cki.Key;
-
+				
+				Debug.WriteLine($"{cki.Key} ({keyChar}) | {cki.KeyChar}");
 
 				if (!Char.IsLetterOrDigit(keyChar)) {
 					continue;
@@ -427,7 +447,8 @@ namespace SimpleCore.Cli
 		}
 
 
-		public static string ReadInput(string? prompt = null, Func<string, bool>? invalid = null)
+		public static string ReadInput(string? prompt = null, Predicate<string>? invalid = null,
+		                               string? errPrompt = null)
 		{
 			invalid ??= String.IsNullOrWhiteSpace;
 
@@ -441,7 +462,7 @@ namespace SimpleCore.Cli
 				Console.Write("\r" + new string(' ', Console.WindowWidth - 1) + "\r");
 
 				if (prompt != null) {
-					string str = $"{prompt}: ";
+					string str = $">> {prompt}: ".AddColor(ColorOptions);
 
 					Console.Write(str);
 				}
@@ -450,7 +471,12 @@ namespace SimpleCore.Cli
 				isInvalid = invalid(input);
 
 				if (isInvalid) {
-					Console.CursorTop--;
+					errPrompt ??= "Invalid input";
+					Console.WriteLine(errPrompt.AddColor(ColorError));
+					Thread.Sleep(TimeSpan.FromSeconds(1));
+					//Console.Write(new string('\r',7));
+					ClearLastLine();
+					//Console.CursorTop--;
 
 				}
 

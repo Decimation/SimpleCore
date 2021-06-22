@@ -14,9 +14,9 @@ namespace SimpleCore.Utilities
 	/// <seealso cref="ConsoleColor"/>
 	public static class ColorHelper
 	{
-		public static readonly Color AbsoluteRed   = Color.FromArgb(byte.MaxValue, byte.MaxValue, 0, 0);
-		public static readonly Color AbsoluteGreen = Color.FromArgb(byte.MaxValue, 0, byte.MaxValue, 0);
-		public static readonly Color AbsoluteBlue  = Color.FromArgb(byte.MaxValue, 0, 0, byte.MaxValue);
+		public static readonly Color AbsoluteRed   = Color.FromArgb(Byte.MaxValue, Byte.MaxValue, 0, 0);
+		public static readonly Color AbsoluteGreen = Color.FromArgb(Byte.MaxValue, 0, Byte.MaxValue, 0);
+		public static readonly Color AbsoluteBlue  = Color.FromArgb(Byte.MaxValue, 0, 0, Byte.MaxValue);
 
 
 		/// <summary>
@@ -28,7 +28,7 @@ namespace SimpleCore.Utilities
 		/// <returns>
 		/// Corrected <see cref="Color"/> structure.
 		/// </returns>
-		public static Color ChangeColorBrightness(Color color, float correctionFactor)
+		public static Color ChangeBrightness(this Color color, float correctionFactor)
 		{
 			// Adapted from https://gist.github.com/zihotki/09fc41d52981fb6f93a81ebf20b35cd5
 
@@ -51,7 +51,7 @@ namespace SimpleCore.Utilities
 			return Color.FromArgb(color.A, (int) red, (int) green, (int) blue);
 		}
 
-		public static Color FromConsoleColor(ConsoleColor c)
+		public static Color ToColor(this ConsoleColor c)
 		{
 			int cInt = (int) c;
 

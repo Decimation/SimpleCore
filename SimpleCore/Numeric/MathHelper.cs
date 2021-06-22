@@ -1,5 +1,9 @@
 ﻿using System;
-using System.Linq;
+using System.Linq.Expressions;
+using BE = System.Linq.Expressions.BinaryExpression;
+using PE = System.Linq.Expressions.ParameterExpression;
+
+// ReSharper disable FieldCanBeMadeReadOnly.Local
 
 // ReSharper disable UnusedMember.Global
 
@@ -73,6 +77,78 @@ namespace SimpleCore.Numeric
 
 		private static readonly string[] Sizes = {"B", "KB", "MB", "GB", "TB"};
 
+		public static T Add<T>(T a, T b) => MathImplementation<T>.AddFunction(a, b);
+
+		public static T Subtract<T>(T a, T b) => MathImplementation<T>.SubtractFunction(a, b);
+
+		public static T Multiply<T>(T a, T b) => MathImplementation<T>.MultiplyFunction(a, b);
+
+		public static T Divide<T>(T a, T b) => MathImplementation<T>.DivideFunction(a, b);
+
+		private static class MathImplementation<T>
+		{
+			private static Func<T, T, T> add;
+			private static Func<T, T, T> sub;
+			private static Func<T, T, T> mul;
+			private static Func<T, T, T> div;
+
+			static MathImplementation()
+			{
+				add = Create(Expression.Add);
+				sub = Create(Expression.Subtract);
+				mul = Create(Expression.Multiply);
+				div = Create(Expression.Divide);
+			}
+			private static Func<T, T, T> Create(Func<PE, PE, BE> fx)
+			{
+				var paramA = Expression.Parameter(typeof(T));
+				var paramB = Expression.Parameter(typeof(T));
+				var body   = fx(paramA, paramB);
+				return Expression.Lambda<Func<T, T, T>>(body, paramA, paramB).Compile();
+
+			}
+
+			internal static Func<T, T, T> AddFunction = (a, b) =>
+			{
+				//var paramA = Expression.Parameter(typeof(T));
+				//var paramB = Expression.Parameter(typeof(T));
+				//var body   = Expression.Add(paramA, paramB);
+				//AddFunction = Expression.Lambda<Func<T, T, T>>(body, paramA, paramB).Compile();
+				//return AddFunction(a, b);
+
+				return add(a, b);
+			};
+
+			internal static Func<T, T, T> SubtractFunction = (a, b) =>
+			{
+				//var paramA = Expression.Parameter(typeof(T));
+				//var paramB = Expression.Parameter(typeof(T));
+				//var body   = Expression.Subtract(paramA, paramB);
+				//SubtractFunction = Expression.Lambda<Func<T, T, T>>(body, paramA, paramB).Compile();
+				//return SubtractFunction(a, b);
+				return sub(a, b);
+			};
+
+			internal static Func<T, T, T> MultiplyFunction = (a, b) =>
+			{
+				//var paramA = Expression.Parameter(typeof(T));
+				//var paramB = Expression.Parameter(typeof(T));
+				//var body   = Expression.Multiply(paramA, paramB);
+				//MultiplyFunction = Expression.Lambda<Func<T, T, T>>(body, paramA, paramB).Compile();
+				//return MultiplyFunction(a, b);
+				return mul(a, b);
+			};
+
+			internal static Func<T, T, T> DivideFunction = (a, b) =>
+			{
+				//var paramA = Expression.Parameter(typeof(T));
+				//var paramB = Expression.Parameter(typeof(T));
+				//var body   = Expression.Divide(paramA, paramB);
+				//DivideFunction = Expression.Lambda<Func<T, T, T>>(body, paramA, paramB).Compile();
+				//return DivideFunction(a, b);
+				return div(a, b);
+			};
+		}
 
 		public static bool IsPrime(int number)
 		{
