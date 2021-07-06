@@ -40,18 +40,9 @@ namespace SimpleCore.Net
 		/// </summary>
 		public static string? Identify(string url)
 		{
-			var req    = new RestRequest(url, Method.HEAD);
-			var client = new RestClient();
+			var res = Network.GetQueryResponse(url);
 
-			//client.FollowRedirects = true;
-
-			var res = client.Execute(req);
-
-			if (res.StatusCode == HttpStatusCode.NotFound) {
-				return null;
-			}
-
-			return res.ContentType;
+			return res?.ContentType;
 		}
 
 		/// <summary>

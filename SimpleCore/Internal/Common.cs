@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+// ReSharper disable UnusedMember.Global
 
 [assembly: InternalsVisibleTo("Novus")]
 [assembly: InternalsVisibleTo("SimpleCore.Net")]
@@ -21,5 +23,8 @@ namespace SimpleCore.Internal
 		/// Common integer value representing an invalid value, error, etc.
 		/// </summary>
 		internal const int INVALID = -1;
+
+		
+
 	}
 }

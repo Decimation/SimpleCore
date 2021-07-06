@@ -77,29 +77,30 @@ namespace SimpleCore.Numeric
 
 		private static readonly string[] Sizes = {"B", "KB", "MB", "GB", "TB"};
 
-		public static T Add<T>(T a, T b) => MathImplementation<T>.AddFunction(a, b);
+		public static T Add<T>(T a, T b) => MathImplementation<T>.Add(a, b);
 
-		public static T Subtract<T>(T a, T b) => MathImplementation<T>.SubtractFunction(a, b);
+		public static T Subtract<T>(T a, T b) => MathImplementation<T>.Sub(a, b);
 
-		public static T Multiply<T>(T a, T b) => MathImplementation<T>.MultiplyFunction(a, b);
+		public static T Multiply<T>(T a, T b) => MathImplementation<T>.Mul(a, b);
 
-		public static T Divide<T>(T a, T b) => MathImplementation<T>.DivideFunction(a, b);
+		public static T Divide<T>(T a, T b) => MathImplementation<T>.Div(a, b);
 
 		private static class MathImplementation<T>
 		{
-			private static Func<T, T, T> add;
-			private static Func<T, T, T> sub;
-			private static Func<T, T, T> mul;
-			private static Func<T, T, T> div;
+			internal static readonly Func<T, T, T> Add;
+			internal static readonly Func<T, T, T> Sub;
+			internal static readonly Func<T, T, T> Mul;
+			internal static readonly Func<T, T, T> Div;
 
 			static MathImplementation()
 			{
-				add = Create(Expression.Add);
-				sub = Create(Expression.Subtract);
-				mul = Create(Expression.Multiply);
-				div = Create(Expression.Divide);
+				Add = Create(Expression.Add);
+				Sub = Create(Expression.Subtract);
+				Mul = Create(Expression.Multiply);
+				Div = Create(Expression.Divide);
 			}
-			private static Func<T, T, T> Create(Func<PE, PE, BE> fx)
+
+			private static Func<T, T, T> Create(Func<ParameterExpression, ParameterExpression, BinaryExpression> fx)
 			{
 				var paramA = Expression.Parameter(typeof(T));
 				var paramB = Expression.Parameter(typeof(T));
@@ -107,47 +108,6 @@ namespace SimpleCore.Numeric
 				return Expression.Lambda<Func<T, T, T>>(body, paramA, paramB).Compile();
 
 			}
-
-			internal static Func<T, T, T> AddFunction = (a, b) =>
-			{
-				//var paramA = Expression.Parameter(typeof(T));
-				//var paramB = Expression.Parameter(typeof(T));
-				//var body   = Expression.Add(paramA, paramB);
-				//AddFunction = Expression.Lambda<Func<T, T, T>>(body, paramA, paramB).Compile();
-				//return AddFunction(a, b);
-
-				return add(a, b);
-			};
-
-			internal static Func<T, T, T> SubtractFunction = (a, b) =>
-			{
-				//var paramA = Expression.Parameter(typeof(T));
-				//var paramB = Expression.Parameter(typeof(T));
-				//var body   = Expression.Subtract(paramA, paramB);
-				//SubtractFunction = Expression.Lambda<Func<T, T, T>>(body, paramA, paramB).Compile();
-				//return SubtractFunction(a, b);
-				return sub(a, b);
-			};
-
-			internal static Func<T, T, T> MultiplyFunction = (a, b) =>
-			{
-				//var paramA = Expression.Parameter(typeof(T));
-				//var paramB = Expression.Parameter(typeof(T));
-				//var body   = Expression.Multiply(paramA, paramB);
-				//MultiplyFunction = Expression.Lambda<Func<T, T, T>>(body, paramA, paramB).Compile();
-				//return MultiplyFunction(a, b);
-				return mul(a, b);
-			};
-
-			internal static Func<T, T, T> DivideFunction = (a, b) =>
-			{
-				//var paramA = Expression.Parameter(typeof(T));
-				//var paramB = Expression.Parameter(typeof(T));
-				//var body   = Expression.Divide(paramA, paramB);
-				//DivideFunction = Expression.Lambda<Func<T, T, T>>(body, paramA, paramB).Compile();
-				//return DivideFunction(a, b);
-				return div(a, b);
-			};
 		}
 
 		public static bool IsPrime(int number)
@@ -189,6 +149,20 @@ namespace SimpleCore.Numeric
 				return true;
 			 */
 
+		}
+
+		public static float Distance(byte[] first, byte[] second)
+		{
+			int sum = 0;
+
+			// We'll use which ever array is shorter.
+			int length = first.Length > second.Length ? second.Length : first.Length;
+
+			for (int x = 0; x < length; x++) {
+				sum += (int) Math.Pow((first[x] - second[x]), 2);
+			}
+
+			return sum / (float) length;
 		}
 	}
 }

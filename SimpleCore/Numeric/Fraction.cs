@@ -194,8 +194,8 @@ namespace SimpleCore.Numeric
 			//return ( ToFraction( Convert.ToDouble(strValue) ) );
 
 			// else string is in the form of Numerator/Denominator
-			long iNumerator   = Convert.ToInt64(strValue.Substring(0, i));
-			long iDenominator = Convert.ToInt64(strValue.Substring(i + 1));
+			long iNumerator   = Convert.ToInt64(strValue[..i]);
+			long iDenominator = Convert.ToInt64(strValue[(i + 1)..]);
 			return new Fraction(iNumerator, iDenominator);
 		}
 
@@ -490,10 +490,10 @@ namespace SimpleCore.Numeric
 				}
 			}
 			catch (OverflowException) {
-				throw new FractionException("Overflow occurred while performing arithemetic operation");
+				throw new FractionException("Overflow occurred while performing arithmetic operation");
 			}
 			catch (Exception) {
-				throw new FractionException("An error occurred while performing arithemetic operation");
+				throw new FractionException("An error occurred while performing arithmetic operation");
 			}
 		}
 
@@ -507,10 +507,10 @@ namespace SimpleCore.Numeric
 				}
 			}
 			catch (OverflowException) {
-				throw new FractionException("Overflow occurred while performing arithemetic operation");
+				throw new FractionException("Overflow occurred while performing arithmetic operation");
 			}
 			catch (Exception) {
-				throw new FractionException("An error occurred while performing arithemetic operation");
+				throw new FractionException("An error occurred while performing arithmetic operation");
 			}
 		}
 

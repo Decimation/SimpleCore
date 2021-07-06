@@ -35,7 +35,7 @@ namespace SimpleCore.Model
 			set => m_value[i] = value;
 		}
 
-		public QString this[int startIndex, int length] => Value.Substring(startIndex, length);
+		//public QString this[int startIndex, int length] => Value.Substring(startIndex, length);
 
 		public char this[Index i]
 		{
@@ -68,6 +68,11 @@ namespace SimpleCore.Model
 		{
 			m_value.Remove(startIndex, length);
 		}
+
+		/*public void Remove(Range r)
+		{
+			Remove(r.Start.Value, (r.End.Value - r.Start.Value));
+		}*/
 
 		public void Append(string value)
 		{

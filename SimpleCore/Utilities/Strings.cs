@@ -320,6 +320,9 @@ namespace SimpleCore.Utilities
 		public static string SimpleJoin<T>(this IEnumerable<T> values, string delim = StringConstants.JOIN_COMMA) =>
 			String.Join(delim, values);
 
+		public static string QuickJoin(this IEnumerable<object> enumerable, string delim = StringConstants.JOIN_COMMA) =>
+			String.Join(delim, enumerable);
+
 		#endregion
 
 		public static string ToString<T>(T[] rg)

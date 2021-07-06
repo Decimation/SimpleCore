@@ -23,6 +23,12 @@ namespace SimpleCore.Net
 			return node.ChildNodes.OfType<IText>().Select(m => m.Text).FirstOrDefault();
 		}
 
+		public static IEnumerable<string> QuerySelectorAttributes(this IHtmlDocument document, string s, string a)
+		{
+			return document.QuerySelectorAll(s).Select(s => s.GetAttribute(a));
+
+		}
+
 		public static string TryGetAttribute(this INode n, string s)
 		{
 			return ((IHtmlElement) n).GetAttribute(s);

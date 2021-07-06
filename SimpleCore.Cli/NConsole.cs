@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using JetBrains.Annotations;
@@ -85,6 +87,36 @@ namespace SimpleCore.Cli
 
 
 		#region Write
+
+		public delegate void WriteFunction(object o);
+
+		public static void QWrite(object obj) => QWrite(obj, Console.WriteLine);
+
+		public static void QWrite(object obj, WriteFunction c)
+		{
+			string? s = obj switch
+			{
+				object[] rg => rg.QuickJoin(),
+				Array r     => r.CastOpaque().QuickJoin(),
+
+				int i    => Strings.ToHexString(i),
+				long l   => Strings.ToHexString(l),
+				IntPtr p => Strings.ToHexString(p),
+
+				_ => obj.ToString()
+			};
+
+
+			if (Collections.TryCastDictionary(obj, out var kv)) {
+				s = kv.Select(x => $"{x.Key} = {x.Value}")
+				      .QuickJoin("\n");
+			}
+
+
+			c(s);
+
+		}
+
 
 		/// <summary>
 		///     Root write method.
@@ -322,8 +354,16 @@ namespace SimpleCore.Cli
 				Write(dialog.Status);
 			}
 
+			if (dialog.Description != null) {
+				Console.WriteLine();
+
+				Write(dialog.Description);
+			}
+
 			// Show options
 			if (dialog.SelectMultiple) {
+				Console.WriteLine();
+
 				string optionsStr = $">> {selectedOptions.QuickJoin()}".AddColor(ColorOptions);
 
 				Write(true, optionsStr);
@@ -381,7 +421,7 @@ namespace SimpleCore.Cli
 
 				// KeyChar can't be used as modifiers are not applicable
 				char keyChar = (char) (int) cki.Key;
-				
+
 				Debug.WriteLine($"{cki.Key} ({keyChar}) | {cki.KeyChar}");
 
 				if (!Char.IsLetterOrDigit(keyChar)) {

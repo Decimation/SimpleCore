@@ -1,9 +1,14 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using SimpleCore.Diagnostics;
 using static SimpleCore.Internal.Common;
+using Map= System.Collections.Generic.Dictionary<object, object>;
+
+// ReSharper disable PossibleMultipleEnumeration
 
 // ReSharper disable UnusedMember.Global
 
@@ -47,11 +52,46 @@ namespace SimpleCore.Utilities
 			return list[i];
 		}
 
-		private const string DICT_DELIM = "=";
-
-		public static T[] ReplaceAllSequences<T>(this T[] rg, IList<T> sequence, IList<T> replace)
+		public static bool TryCastDictionary(object obj, out Map buf)
 		{
-			return rg.ToList().ReplaceAllSequences(sequence, replace).ToArray();
+			bool condition = obj.GetType().GetInterface(nameof(IDictionary)) != null;
+
+			if (!condition) {
+				buf = null;
+				return false;
+			}
+
+			var ex = ((IDictionary) obj).GetEnumerator();
+
+			buf = new Map();
+
+			while (ex.MoveNext()) {
+				buf.Add(ex.Key, ex.Value);
+
+			}
+
+			return true;
+		}
+
+		public static object[] CastOpaque(this Array r)
+		{
+			var rg = new object[r.Length];
+
+			for (int i = 0; i < r.Length; i++) {
+				rg[i] = r.GetValue(i);
+			}
+
+			return rg;
+		}
+
+		public static IEnumerable<int> AllIndexesOf<T>(this List<T> list, T search)
+		{
+			int minIndex = list.IndexOf(search);
+
+			while (minIndex != -1) {
+				yield return minIndex;
+				minIndex = list.IndexOf(search, minIndex + 1);
+			}
 		}
 
 		/// <summary>
@@ -67,7 +107,6 @@ namespace SimpleCore.Utilities
 			do {
 				//i = rg.IndexOf(sequence[0], i);
 
-
 				var b = rg.GetRange(i, sequence.Count).SequenceEqual(sequence);
 
 				if (b) {
@@ -77,7 +116,7 @@ namespace SimpleCore.Utilities
 				}
 
 
-				Trace.WriteLine($"{nameof(ReplaceAllSequences)} {i}");
+				//Trace.WriteLine($"{nameof(ReplaceAllSequences)} {i}");
 
 
 				// if (i + sequence.Count >= rg.Count) {
@@ -91,13 +130,30 @@ namespace SimpleCore.Utilities
 			return rg;
 		}
 
-		public static bool IndexOutOfBounds<T>(this IList<T> rg, int idx)
+		/*public static bool IndexOutOfBounds<T>(this IList<T> rg, int idx)
 		{
 			//idx < io.Length && idx >= 0
 			//(idx < rg.Count && idx >= 0)
 			//!(idx > rg.Count || idx < 0)
 
 			return idx < rg.Count && idx >= 0;
+		}*/
+
+		public static IEnumerable<T> Difference<T>(this IEnumerable<T> a, IEnumerable<T> b)
+		{
+			return b.Where(c => !a.Contains(c));
+		}
+
+
+		/// <summary>
+		/// Break a list of items into chunks of a specific size
+		/// </summary>
+		public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int size)
+		{
+			while (source.Any()) {
+				yield return source.Take(size);
+				source = source.Skip(size);
+			}
 		}
 
 		public static void Replace<T>(this List<T> list, Predicate<T> oldItemSelector, T newItem)
@@ -108,6 +164,8 @@ namespace SimpleCore.Utilities
 			int oldItemIndex = list.FindIndex(oldItemSelector);
 			list[oldItemIndex] = newItem;
 		}
+
+		#region Dictionary
 
 		/// <summary>
 		/// Writes a <see cref="Dictionary{TKey,TValue}"/> to file <paramref name="filename"/>.
@@ -131,20 +189,6 @@ namespace SimpleCore.Utilities
 			return dict;
 		}
 
-		public static float Distance(byte[] first, byte[] second)
-		{
-			int sum = 0;
-
-			// We'll use which ever array is shorter.
-			int length = first.Length > second.Length ? second.Length : first.Length;
-
-			for (int x = 0; x < length; x++) {
-				sum += (int) Math.Pow((first[x] - second[x]), 2);
-			}
-
-			return sum / (float) length;
-		}
-
 		public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dic,
 		                                                     TKey k, TValue d = default)
 		{
@@ -157,5 +201,9 @@ namespace SimpleCore.Utilities
 
 			return dic[k];
 		}
+
+		private const string DICT_DELIM = "=";
+
+		#endregion
 	}
 }

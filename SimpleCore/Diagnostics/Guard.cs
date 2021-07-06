@@ -1,21 +1,37 @@
 ﻿// ReSharper disable IdentifierTypo
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using static SimpleCore.Internal.Common;
-using NotNull = JetBrains.Annotations.NotNullAttribute;
 
 // ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedMember.Global
 #pragma warning disable IDE0051
+#pragma warning disable IDE0005
 #nullable enable
+
+#region Aliases
+
 using AC = JetBrains.Annotations.AssertionConditionAttribute;
 using ACT = JetBrains.Annotations.AssertionConditionType;
+using DNR = System.Diagnostics.CodeAnalysis.DoesNotReturnAttribute;
 using DNRI = System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute;
 using AM = JetBrains.Annotations.AssertionMethodAttribute;
+using NNV = JetBrains.Annotations.NonNegativeValueAttribute;
+using NN = JetBrains.Annotations.NotNullAttribute;
+using NN2 = System.Diagnostics.CodeAnalysis.NotNullAttribute;
+using CBN = JetBrains.Annotations.CanBeNullAttribute;
+using NotNull = JetBrains.Annotations.NotNullAttribute;
+using DH = System.Diagnostics.DebuggerHiddenAttribute;
+using CA = JetBrains.Annotations.ContractAnnotationAttribute;
+using SFM = JetBrains.Annotations.StringFormatMethodAttribute;
+
+#endregion
 
 namespace SimpleCore.Diagnostics
 {
@@ -45,22 +61,22 @@ namespace SimpleCore.Diagnostics
 
 		#endregion
 
-		[DebuggerHidden]
-		[DoesNotReturn]
-		[AssertionMethod]
-		[ContractAnnotation(UNCONDITIONAL_HALT)]
-		[StringFormatMethod(STRING_FORMAT_ARG)]
+		[DH]
+		[DNR]
+		[AM]
+		[CA(UNCONDITIONAL_HALT)]
+		[SFM(STRING_FORMAT_ARG)]
 		public static void Fail(string? msg = null, params object[] args) => Fail<Exception>(msg, args);
 
 
 		/// <summary>
 		/// Root fail function
 		/// </summary>
-		[DebuggerHidden]
-		[DoesNotReturn]
-		[AssertionMethod]
-		[ContractAnnotation(UNCONDITIONAL_HALT)]
-		[StringFormatMethod(STRING_FORMAT_ARG)]
+		[DH]
+		[DNR]
+		[AM]
+		[CA(UNCONDITIONAL_HALT)]
+		[SFM(STRING_FORMAT_ARG)]
 		public static void Fail<TException>(string? msg = null, params object[] args)
 			where TException : Exception, new()
 		{
@@ -78,22 +94,23 @@ namespace SimpleCore.Diagnostics
 			throw exception;
 		}
 
-		[DebuggerHidden]
-		[AssertionMethod]
-		[ContractAnnotation(COND_FALSE_HALT)]
+		[DH]
+		[AM]
+		[CA(COND_FALSE_HALT)]
 		public static void Assert([AC(ACT.IS_TRUE)] [DNRI(false)] bool condition,
 		                          string? msg = null, params object[] args)
 		{
 			Assert<Exception>(condition, msg, args);
 		}
 
+
 		/// <summary>
 		/// Root assertion function
 		/// </summary>
-		[DebuggerHidden]
-		[AssertionMethod]
-		[ContractAnnotation(COND_FALSE_HALT)]
-		[StringFormatMethod(STRING_FORMAT_ARG)]
+		[DH]
+		[AM]
+		[CA(COND_FALSE_HALT)]
+		[SFM(STRING_FORMAT_ARG)]
 		public static void Assert<TException>([AC(ACT.IS_TRUE)] [DNRI(false)] bool condition,
 		                                      string? msg = null, params object[] args)
 			where TException : Exception, new()
@@ -103,49 +120,65 @@ namespace SimpleCore.Diagnostics
 			}
 		}
 
-		[DebuggerHidden]
-		[AssertionMethod]
-		[ContractAnnotation(VALUE_NULL_HALT)]
-		public static void AssertArgumentNotNull([NotNull] [AC(ACT.IS_NOT_NULL)] object? value,
+		[DH]
+		[AM]
+		[CA(COND_FALSE_HALT)]
+		public static void AssertArgument([AC(ACT.IS_TRUE)] [DNRI(false)] bool condition,
+		                                  string? name = null)
+		{
+			Assert<ArgumentException>(condition, name);
+		}
+
+		[DH]
+		[AM]
+		[CA(VALUE_NULL_HALT)]
+		public static void AssertArgumentNotNull([NN] [AC(ACT.IS_NOT_NULL)] object? value,
 		                                         string? name = null)
 		{
 			Assert<ArgumentNullException>(value != null, name);
 		}
 
 
-		[DebuggerHidden]
-		[AssertionMethod]
-		[ContractAnnotation(VALUE_NULL_HALT)]
-		public static void AssertNotNull([NotNull] [AC(ACT.IS_NOT_NULL)] object? value, string? name = null)
+		[DH]
+		[AM]
+		[CA(VALUE_NULL_HALT)]
+		public static void AssertNotNull([NN] [AC(ACT.IS_NOT_NULL)] object? value, string? name = null)
 		{
 			Assert<NullReferenceException>(value != null, name);
 		}
 
-		[DebuggerHidden]
-		[AssertionMethod]
-		public static void AssertPositive(long value, string? name = null)
-		{
-			Assert<ArgumentException>(value > 0, name);
-		}
-
-		[DebuggerHidden]
-		[AssertionMethod]
+		[DH]
+		[AM]
 		public static void AssertEqual(object a, object b)
 		{
 			Assert<Exception>(a.Equals(b));
 		}
 
 
-		[DebuggerHidden]
-		[AssertionMethod]
+		[DH]
+		[AM]
 		public static void AssertEqual<T>(T a, T b) where T : IEquatable<T>
 		{
 			Assert<Exception>(a.Equals(b));
 		}
 
 
-		[DebuggerHidden]
-		[AssertionMethod]
+		[DH]
+		[AM]
+		public static void AssertContains<T>(IEnumerable<T> enumerable, T name)
+		{
+			Assert(enumerable.Contains(name));
+		}
+
+		[DH]
+		[AM]
+		public static void AssertPositive([NNV] long value, string? name = null)
+		{
+			Assert<ArgumentException>(value > 0, name);
+		}
+
+		[DH]
+		[AM]
 		public static void AssertThrows<T>(Action f) where T : Exception
 		{
 			bool throws = false;
@@ -162,8 +195,8 @@ namespace SimpleCore.Diagnostics
 			}
 		}
 
-		[DebuggerHidden]
-		[AssertionMethod]
+		[DH]
+		[AM]
 		public static void AssertAll([DNRI(false)] [AC(ACT.IS_TRUE)] params bool[] conditions)
 		{
 			foreach (bool condition in conditions) {

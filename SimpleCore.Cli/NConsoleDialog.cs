@@ -13,5 +13,8 @@ namespace SimpleCore.Cli
 
 		[CanBeNull]
 		public string Status { get; set; }
+
+		[CanBeNull]
+		public string Description { get; set; }
 	}
 }

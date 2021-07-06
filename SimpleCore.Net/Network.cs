@@ -1,6 +1,7 @@
 ﻿using RestSharp;
 using SimpleCore.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Net;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
+using SimpleCore.Model;
 
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 
@@ -150,7 +152,24 @@ namespace SimpleCore.Net
 			return restRes;
 		}
 
-		/*public static void DumpResponse(IRestResponse response)
+		public static IRestResponse? GetQueryResponse(string s)
+		{
+			var req    = new RestRequest(s, Method.HEAD);
+			var client = new RestClient();
+
+			//client.FollowRedirects = true;
+
+			var res = client.Execute(req);
+
+			if (res.StatusCode == HttpStatusCode.NotFound)
+			{
+				return null;
+			}
+
+			return res;
+		}
+
+		public static void DumpResponse(IRestResponse response)
 		{
 			var ct = new ConsoleTable("-", "Value");
 
@@ -162,6 +181,6 @@ namespace SimpleCore.Net
 			var str = ct.ToString();
 
 			Trace.WriteLine(str);
-		}*/
+		}
 	}
 }
