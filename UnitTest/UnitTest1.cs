@@ -165,6 +165,8 @@ namespace UnitTest
 			Assert.True(rg2.SequenceEqual(rg2x));
 		}
 
+		
+
 		[Test]
 		public void CollectionsTest()
 		{

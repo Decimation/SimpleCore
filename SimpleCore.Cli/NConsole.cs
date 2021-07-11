@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using JetBrains.Annotations;
+using SimpleCore.Numeric;
 using SimpleCore.Utilities;
 using static SimpleCore.Internal.Common;
 
@@ -88,6 +90,8 @@ namespace SimpleCore.Cli
 
 		#region Write
 
+		#region QWrite
+
 		public delegate void WriteFunction(object o);
 
 		public static void QWrite(object obj) => QWrite(obj, Console.WriteLine);
@@ -97,17 +101,17 @@ namespace SimpleCore.Cli
 			string? s = obj switch
 			{
 				object[] rg => rg.QuickJoin(),
-				Array r     => r.CastOpaque().QuickJoin(),
-
-				int i    => Strings.ToHexString(i),
-				long l   => Strings.ToHexString(l),
-				IntPtr p => Strings.ToHexString(p),
-
+				Array r     => r.CastObjectArray().QuickJoin(),
+				
 				_ => obj.ToString()
 			};
 
-
-			if (Collections.TryCastDictionary(obj, out var kv)) {
+			if (obj.GetType().IsPointer || obj is IntPtr) {
+				s = Strings.ToHexString(obj);
+			}
+			
+			
+			else if (Collections.TryCastDictionary(obj, out var kv)) {
 				s = kv.Select(x => $"{x.Key} = {x.Value}")
 				      .QuickJoin("\n");
 			}
@@ -116,6 +120,8 @@ namespace SimpleCore.Cli
 			c(s);
 
 		}
+
+		#endregion
 
 
 		/// <summary>

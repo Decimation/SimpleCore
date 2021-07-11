@@ -8,7 +8,7 @@ namespace TestBenchmark
 		private static void Main(string[] args)
 		{
 			//dotnet build -c Release & dotnet run -c Release
-			BenchmarkRunner.Run<Benchmarks2>();
+			BenchmarkRunner.Run<Benchmarks3>();
 		}
 	}
 }

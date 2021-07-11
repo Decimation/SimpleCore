@@ -48,12 +48,38 @@ namespace SimpleCore.Numeric
 			// var pow = rg.ToList().IndexOf(type) +1;
 
 
-			int pow = (int) type;
-			var v   = bytes / Math.Pow(MAGNITUDE, pow);
+			int    pow = (int) type;
+			double v   = bytes / Math.Pow(MAGNITUDE, pow);
 
 
 			return v;
 		}
+
+		/*public static bool IsPointerSub(this Type t)
+		{
+			return t == typeof(void*) || t.IsPointer || t == typeof(IntPtr);
+		}
+
+		public static bool IsNumeric(this Type t)
+		{
+			return t.IsInteger() || t.IsReal();
+		}
+
+		public static bool IsReal(this Type t)
+		{
+			var  nx       = Type.GetTypeCode(t);
+			bool realCode = nx is >= TypeCode.Single and <= TypeCode.Decimal;
+			bool half     = t == typeof(Half);
+
+			return realCode || half;
+		}
+
+		public static bool IsInteger(this Type t)
+		{
+			var nx = Type.GetTypeCode(t);
+			return nx is <= TypeCode.UInt64 and >= TypeCode.SByte;
+
+		}*/
 
 		public static string ConvertToUnit(double len)
 		{

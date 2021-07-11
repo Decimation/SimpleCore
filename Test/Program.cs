@@ -55,110 +55,50 @@ namespace Test
 	{
 		public static void Main(string[] args)
 		{
-			//var i = new int[] { 1, 2, 3 };
-			//var o = NConsoleOption.FromArray(i);
-
-			//o[0].ShiftFunction = () =>
-			//{
-			//	Debug.WriteLine("shift");
-			//	return null;
-			//};
-			//o[0].ComboFunction = () =>
-			//{
-			//	Debug.WriteLine("combo");
-			//	return null;
-			//};
-			//o[0].CtrlFunction = () =>
-			//{
-			//	Debug.WriteLine("ctrl");
-			//	return null;
-			//};
-			//o[0].AltFunction = () =>
-			//{
-			//	Debug.WriteLine("alt");
-			//	return null;
-			//};
-			//o[0].Function = () =>
-			//{
-			//	Debug.WriteLine("main");
-			//	return 1;
-			//};
-			//var d = new NConsoleDialog() { Options = o, SelectMultiple = true, Status = "status", Description = "desc"};
-			//var x = NConsole.ReadOptions(d);
-
-			//Console.WriteLine(x);
-			//NConsole.ReadInput("hi", (a) => a != "g");
-
-
-			//Task t = Task.Run(() => { Console.WriteLine("hello world"); Thread.Sleep(5000); });
-			//NConsoleProgress.ForTask(t);
-
-			// var k = Console.ReadKey();
-			// Console.WriteLine($"{k.KeyChar} {(int)k.KeyChar} {k.Key} {(int)k.Key} {k.Modifiers}");
-			//
-			// k = Console.ReadKey();
-			// Console.WriteLine($"{k.KeyChar} {(int)k.KeyChar} {k.Key} {(int)k.Key} {k.Modifiers}");
-
-
-			//var p = new HtmlParser();
-			//var s = WebUtilities.GetString("https://www.zerochan.net/2750747");
-			//Console.WriteLine(s.Length);
-			//var d = p.ParseDocument(s);
-			//var q = d.QuerySelectorAll("img");
-			//Console.WriteLine(q.Length);
-
-			//foreach (var g in q) {
-			//	Console.WriteLine(
-			//		$"{g.GetAttribute("src")} | {MediaTypes.IsDirect(g.GetAttribute("src"), MimeType.Image)}");
-			//}
-
-			//var q2 = d.QuerySelectorAll("a");
-
-			//Console.WriteLine(q2.Length);
-
-			//foreach (var g in q2) {
-			//	Console.WriteLine(
-			//		$"{g.GetAttribute("href")} | {MediaTypes.IsDirect(g.GetAttribute("href"), MimeType.Image)}");
-			//}
-
-			/*IList<int> l = new List<int>();
-			QString    s = "foo";
 			
-			var s2 = "foo";
+			MyClass m = new MyClass();
+			ConfigComponents.UpdateFields(m);
 
-			Console.WriteLine(s);
-			Console.WriteLine(s[1..3]);
-			Console.WriteLine(s2[1..3]);
-			
-			Console.WriteLine(AppInfo.ExeLocation);
+		}
 
-			foreach (var c in AppInfo.GetDependencies()) {
-				Console.WriteLine(c);
-			}*/
+		class MyClass:IConfig
+		{
+			/// <summary>
+			///     Engines to use for searching
+			/// </summary>
+			[field: ConfigComponent("search_engines", "--search-engines", 1, true)]
+			public int SearchEngines { get; set; }
 
-			var a = new[]{1,2};
-			var b = new[] {1, 2,3};
-			var x = new[] {1, 2, 1, 2, 1};
-			Console.WriteLine(a.Difference(b).QuickJoin());
-			Console.WriteLine(x.ToList().AllIndexesOf(1).QuickJoin());
+			/// <summary>
+			///     Engines whose results should be opened in the browser
+			/// </summary>
+			[field: ConfigComponent("priority_engines", "--priority-engines", 2, true)]
+			public int PriorityEngines { get; set; }
 
-			var s = new[] {"butt", "g", "butt"};
-			Console.WriteLine(s.ToList().AllIndexesOf("butt").QuickJoin());
+			/// <summary>
+			///     <see cref="ImgurClient" /> API key
+			/// </summary>
+			[field: ConfigComponent("imgur_client_id", "--saucenao-auth")]
+			public string ImgurAuth { get; set; }
 
-			var instance = Array.CreateInstance(typeof(int),1);
+			/// <summary>
+			///     <see cref="SauceNaoEngine" /> API key
+			/// </summary>
+			[field: ConfigComponent("saucenao_key", "--imgur-auth")]
+			public string SauceNaoAuth { get; set; }
 
-			instance.SetValue(1,0);
-			NConsole.QWrite(instance);
+			/// <summary>
+			///     Does not open results from priority engines if the result similarity (if available) is below a certain threshold,
+			/// or there are no relevant results.
+			/// <see cref="BasicSearchResult.Filter"/> is <c>true</c> if <see cref="ISearchEngine.FilterThreshold"/> is less than <see cref="BasicSearchResult.Similarity"/>
+			/// </summary>
+			[field: ConfigComponent("filter_results", "--filter-results", true, true)]
+			public bool FilterResults { get; set; }
 
-			NConsole.QWrite(new[]{1,3});
-			NConsole.QWrite(255);
-
-			var dictionary = (new Dictionary<string, int>()
+			public string FileLocation
 			{
-				{"a", 1},
-			});
-			
-			NConsole.QWrite((object) dictionary);
+				get => @"C:\Users\Deci\Desktop\cf.cfg";
+			}
 		}
 	}
 }

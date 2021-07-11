@@ -7,6 +7,7 @@ using System.Linq;
 using SimpleCore.Diagnostics;
 using static SimpleCore.Internal.Common;
 using Map= System.Collections.Generic.Dictionary<object, object>;
+// ReSharper disable AssignNullToNotNullAttribute
 
 // ReSharper disable PossibleMultipleEnumeration
 
@@ -52,28 +53,7 @@ namespace SimpleCore.Utilities
 			return list[i];
 		}
 
-		public static bool TryCastDictionary(object obj, out Map buf)
-		{
-			bool condition = obj.GetType().GetInterface(nameof(IDictionary)) != null;
-
-			if (!condition) {
-				buf = null;
-				return false;
-			}
-
-			var ex = ((IDictionary) obj).GetEnumerator();
-
-			buf = new Map();
-
-			while (ex.MoveNext()) {
-				buf.Add(ex.Key, ex.Value);
-
-			}
-
-			return true;
-		}
-
-		public static object[] CastOpaque(this Array r)
+		public static object[] CastObjectArray(this Array r)
 		{
 			var rg = new object[r.Length];
 
@@ -114,15 +94,7 @@ namespace SimpleCore.Utilities
 					rg.InsertRange(i, replace);
 					i += sequence.Count;
 				}
-
-
-				//Trace.WriteLine($"{nameof(ReplaceAllSequences)} {i}");
-
-
-				// if (i + sequence.Count >= rg.Count) {
-				//
-				// 	break;
-				// }
+				
 
 
 			} while (!(++i >= rg.Count));
@@ -167,6 +139,8 @@ namespace SimpleCore.Utilities
 
 		#region Dictionary
 
+		#region Serialize
+
 		/// <summary>
 		/// Writes a <see cref="Dictionary{TKey,TValue}"/> to file <paramref name="filename"/>.
 		/// </summary>
@@ -189,6 +163,10 @@ namespace SimpleCore.Utilities
 			return dict;
 		}
 
+		private const string DICT_DELIM = "=";
+
+		#endregion
+
 		public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dic,
 		                                                     TKey k, TValue d = default)
 		{
@@ -202,7 +180,26 @@ namespace SimpleCore.Utilities
 			return dic[k];
 		}
 
-		private const string DICT_DELIM = "=";
+		public static bool TryCastDictionary(object obj, out Map buf)
+		{
+			bool condition = obj.GetType().GetInterface(nameof(IDictionary)) != null;
+
+			if (!condition) {
+				buf = null;
+				return false;
+			}
+
+			var ex = ((IDictionary) obj).GetEnumerator();
+
+			buf = new Map();
+
+			while (ex.MoveNext()) {
+				buf.Add(ex.Key, ex.Value);
+
+			}
+
+			return true;
+		}
 
 		#endregion
 	}
