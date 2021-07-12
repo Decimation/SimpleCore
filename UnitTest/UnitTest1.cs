@@ -37,7 +37,7 @@ namespace UnitTest
 		[TestCase(@"https://i.imgur.com/QtCausw.png")]
 		public void UriAliveTest(string s)
 		{
-			Assert.True(Network.IsUriAlive(new Uri(s)));
+			Assert.True(Network.IsAlive((s)));
 		}
 
 		[Test]

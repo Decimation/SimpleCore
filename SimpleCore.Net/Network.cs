@@ -1,15 +1,14 @@
-﻿using RestSharp;
-using SimpleCore.Utilities;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using AngleSharp.Dom;
-using AngleSharp.Html.Dom;
+using System.Net.NetworkInformation;
+using RestSharp;
 using SimpleCore.Model;
+
+// ReSharper disable CognitiveComplexity
+
+// ReSharper disable InconsistentNaming
+#pragma warning disable 8618
 
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 
@@ -18,9 +17,17 @@ using SimpleCore.Model;
 
 namespace SimpleCore.Net
 {
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <seealso cref="WebUtilities"/>
+	/// <seealso cref="Dns"/>
+	/// <seealso cref="IPAddress"/>
 	public static class Network
 	{
-		
+		private const long TimeoutMS = 3000;
+
+		private static readonly TimeSpan Timeout = TimeSpan.FromMilliseconds(TimeoutMS);
 
 		public static Uri GetHostUri(Uri u)
 		{
@@ -34,11 +41,7 @@ namespace SimpleCore.Net
 
 		public static string StripScheme(Uri uri)
 		{
-
-			string uriWithoutScheme = uri.Host + uri.PathAndQuery + uri.Fragment;
-
-			return uriWithoutScheme;
-
+			return uri.Host + uri.PathAndQuery + uri.Fragment;
 		}
 
 		public static bool IsUri(string uriName, out Uri? uriResult)
@@ -62,24 +65,79 @@ namespace SimpleCore.Net
 			return result;
 		}
 
-		public static bool IsUriAlive(Uri u) => IsUriAlive(u, TimeSpan.FromSeconds(3));
+		public static IPGeoLocation Identify(IPAddress ip) => Identify(ip.ToString());
 
-		public static bool IsUriAlive(Uri u, TimeSpan span)
+		public static IPGeoLocation Identify(string hostOrIP)
+		{
+			var rc = new RestClient("https://freegeoip.app/{format}/{host}");
+			var r  = new RestRequest();
+			r.AddUrlSegment("format", "json");
+			r.AddUrlSegment("host", hostOrIP);
+			var res = rc.Execute<IPGeoLocation>(r);
+			return res.Data;
+		}
+
+		public static IPAddress GetHostAddress(string hostOrIP) => Dns.GetHostAddresses(hostOrIP)[0];
+
+		//public static IPAddress GetHostAddress(Uri u) => GetHostAddress(GetHostComponent(u));
+
+		public static bool IsAlive(Uri u) => IsAlive(u, TimeoutMS);
+
+		//public static bool IsAlive(string u) => IsAlive(u, Timeout);
+
+		public static bool IsAlive(Uri u, long ms) => Ping(u, ms).Status == IPStatus.Success;
+
+
+		public static bool IsAlive(string hostOrIP, long ms)
+		{
+			/*
+			 * This approach is about .7 sec faster than using a web request
+			 */
+
+
+			PingReply r = Ping(hostOrIP, ms);
+
+			return r.Status == IPStatus.Success;
+		}
+
+
+		public static PingReply Ping(Uri u, long ms = TimeoutMS) =>
+			Ping(GetHostAddress(GetHostComponent(u)).ToString(), ms);
+
+
+		public static PingReply Ping(string hostOrIP, long ms = TimeoutMS)
+		{
+			var ping = new Ping();
+
+			//var   t2 = p2.SendPingAsync(address, (int)TimeSpan.FromSeconds(3).TotalMilliseconds);
+			//await t2;
+
+			var task = ping.SendPingAsync(hostOrIP, (int) ms);
+			task.Wait();
+
+			PingReply r = task.Result;
+
+			return r;
+		}
+
+		/*public static bool IsAlive2(Uri u) => IsAlive2(u, Timeout);
+
+		public static bool IsAlive2(Uri u, TimeSpan span)
 		{
 			try {
-				var request  = (HttpWebRequest) WebRequest.Create(u);
+				var request = (HttpWebRequest) WebRequest.Create(u);
 
 				request.Timeout           = (int) span.TotalMilliseconds;
 				request.AllowAutoRedirect = false; // find out if this site is up and don't follow a redirector
 				request.Method            = "HEAD";
 
-				var response = (HttpWebResponse) request.GetResponse();
+				using var response = (HttpWebResponse) request.GetResponse();
 				return true;
 			}
 			catch (WebException) {
 				return false;
 			}
-		}
+		}*/
 
 		public static string? GetFinalRedirect(string url)
 		{
@@ -116,7 +174,7 @@ namespace SimpleCore.Net
 							if (newUrl == null)
 								return url;
 
-							if (newUrl.Contains("://", System.StringComparison.Ordinal)) {
+							if (newUrl.Contains("://", StringComparison.Ordinal)) {
 								// Doesn't have a URL Schema, meaning it's a relative or absolute URL
 								Uri u = new(new Uri(url), newUrl);
 								newUrl = u.ToString();
@@ -163,8 +221,7 @@ namespace SimpleCore.Net
 
 			var res = client.Execute(req);
 
-			if (res.StatusCode == HttpStatusCode.NotFound)
-			{
+			if (res.StatusCode == HttpStatusCode.NotFound) {
 				return null;
 			}
 
@@ -183,6 +240,43 @@ namespace SimpleCore.Net
 			var str = ct.ToString();
 
 			Trace.WriteLine(str);
+		}
+	}
+
+	public sealed class IPGeoLocation
+	{
+		// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
+
+		public string IP { get; set; }
+
+		public string CountryCode { get; set; }
+
+		public string CountryName { get; set; }
+
+		public string RegionCode { get; set; }
+
+		public string RegionName { get; set; }
+
+		public string City { get; set; }
+
+		public string ZipCode { get; set; }
+
+		public string TimeZone { get; set; }
+
+		public double Latitude { get; set; }
+
+		public double Longitude { get; set; }
+
+		public int MetroCode { get; set; }
+
+		public override string ToString()
+		{
+			return $"{nameof(IP)}: {IP}, {nameof(CountryCode)}: {CountryCode}, "                 +
+			       $"{nameof(CountryName)}: {CountryName}, {nameof(RegionCode)}: {RegionCode}, " +
+			       $"{nameof(RegionName)}: {RegionName}, {nameof(City)}: {City}, "               +
+			       $"{nameof(ZipCode)}: {ZipCode}, {nameof(TimeZone)}: {TimeZone}, "             +
+			       $"{nameof(Latitude)}: {Latitude}, {nameof(Longitude)}: {Longitude}, "         +
+			       $"{nameof(MetroCode)}: {MetroCode}";
 		}
 	}
 }

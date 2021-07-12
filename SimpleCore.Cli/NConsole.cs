@@ -12,6 +12,7 @@ using JetBrains.Annotations;
 using SimpleCore.Numeric;
 using SimpleCore.Utilities;
 using static SimpleCore.Internal.Common;
+
 // ReSharper disable CognitiveComplexity
 
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
@@ -65,7 +66,7 @@ namespace SimpleCore.Cli
 		public static void Init()
 		{
 			//Console.OutputEncoding = Encoding.Unicode;
-			ListenThread.Start();
+			//ListenThread.Start();
 
 			//ThreadPool.QueueUserWorkItem(KeyWatch);
 		}
@@ -388,27 +389,6 @@ namespace SimpleCore.Cli
 
 		#endregion
 
-		private static ManualResetEvent ResetEvent { get; } = new(false);
-
-		private static Thread ListenThread { get; } = new(KeyWatch)
-		{
-			Priority = ThreadPriority.AboveNormal
-		};
-
-		
-
-		private static void KeyWatch(object? o)
-		{
-			// Block until input is entered.
-			while (!Console.KeyAvailable) {
-
-				// Handle signals from other threads
-
-			}
-
-			ResetEvent.Set();
-
-		}
 
 		/// <summary>
 		///     Handles user input and options
@@ -429,17 +409,15 @@ namespace SimpleCore.Cli
 
 
 				// Block until input is entered.
-				//while (!Console.KeyAvailable) {
 
-				//	// Handle signals from other threads
-				//	if (Atomic.Exchange(ref Status, ConsoleStatus.Ok) == ConsoleStatus.Refresh) {
-				//		DisplayDialog(dialog, selectedOptions);
-				//	}
-				//}
+				while (!Console.KeyAvailable) {
 
+					// Handle signals from other threads
+					if (Atomic.Exchange(ref Status, ConsoleStatus.Ok) == ConsoleStatus.Refresh) {
+						DisplayDialog(dialog, selectedOptions);
+					}
+				}
 
-				ResetEvent.WaitOne();
-				//reset.Reset();
 
 				// Key was read
 
