@@ -29,7 +29,7 @@
 
 	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DefineConstants>DEBUG;TRACE</DefineConstants>
+		<DefineConstants>DEBUG;TRACE;JETBRAINS_ANNOTATIONS</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>

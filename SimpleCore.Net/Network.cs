@@ -69,7 +69,9 @@ namespace SimpleCore.Net
 			try {
 				var request  = (HttpWebRequest) WebRequest.Create(u);
 
-				request.Timeout = (int) span.TotalMilliseconds;
+				request.Timeout           = (int) span.TotalMilliseconds;
+				request.AllowAutoRedirect = false; // find out if this site is up and don't follow a redirector
+				request.Method            = "HEAD";
 
 				var response = (HttpWebResponse) request.GetResponse();
 				return true;

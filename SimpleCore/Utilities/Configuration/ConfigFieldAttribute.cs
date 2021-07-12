@@ -1,14 +1,11 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace SimpleCore.Model
+namespace SimpleCore.Utilities.Configuration
 {
-	/// <summary>
-	/// <seealso cref="SearchConfig"/>
-	/// <seealso cref="ConfigComponents"/>
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-	public sealed class ConfigComponentAttribute : Attribute
+	[AttributeUsage(AttributeTargets.Field)]
+	[MeansImplicitUse(ImplicitUseTargetFlags.Default)]
+	public sealed class ConfigFieldAttribute : Attribute
 	{
 		public object DefaultValue { get; set; }
 
@@ -28,7 +25,7 @@ namespace SimpleCore.Model
 		public string ParameterName { get; set; }
 
 
-		public ConfigComponentAttribute(string id, string parameterName, object defaultValue,
+		public ConfigFieldAttribute(string id, string parameterName, object defaultValue,
 		                                bool setDefaultIfNull)
 		{
 			Id               = id;
@@ -37,11 +34,11 @@ namespace SimpleCore.Model
 			ParameterName    = parameterName;
 		}
 
-		public ConfigComponentAttribute(string id, [CanBeNull] string parameterName, object defaultValue) : this(
+		public ConfigFieldAttribute(string id, [CanBeNull] string parameterName, object defaultValue) : this(
 			id,
 			parameterName, defaultValue, false) { }
 
 
-		public ConfigComponentAttribute(string id, object defaultValue) : this(id, null, defaultValue) { }
+		public ConfigFieldAttribute(string id, object defaultValue) : this(id, null, defaultValue) { }
 	}
 }

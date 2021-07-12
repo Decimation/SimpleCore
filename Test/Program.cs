@@ -24,6 +24,7 @@ using SimpleCore.Model;
 using SimpleCore.Net;
 using SimpleCore.Numeric;
 using SimpleCore.Utilities;
+using SimpleCore.Utilities.Configuration;
 using Console = System.Console;
 using MathHelper = SimpleCore.Numeric.MathHelper;
 using Timer = System.Timers.Timer;
@@ -53,52 +54,43 @@ namespace Test
 
 	public static class Program
 	{
-		public static void Main(string[] args)
+		public static async Task Main(string[] args)
 		{
-			
-			MyClass m = new MyClass();
-			ConfigComponents.UpdateFields(m);
+			var i = new int[] { 1, 2, 3 };
+			var o = NConsoleOption.FromArray(i);
 
-		}
-
-		class MyClass:IConfig
-		{
-			/// <summary>
-			///     Engines to use for searching
-			/// </summary>
-			[field: ConfigComponent("search_engines", "--search-engines", 1, true)]
-			public int SearchEngines { get; set; }
-
-			/// <summary>
-			///     Engines whose results should be opened in the browser
-			/// </summary>
-			[field: ConfigComponent("priority_engines", "--priority-engines", 2, true)]
-			public int PriorityEngines { get; set; }
-
-			/// <summary>
-			///     <see cref="ImgurClient" /> API key
-			/// </summary>
-			[field: ConfigComponent("imgur_client_id", "--saucenao-auth")]
-			public string ImgurAuth { get; set; }
-
-			/// <summary>
-			///     <see cref="SauceNaoEngine" /> API key
-			/// </summary>
-			[field: ConfigComponent("saucenao_key", "--imgur-auth")]
-			public string SauceNaoAuth { get; set; }
-
-			/// <summary>
-			///     Does not open results from priority engines if the result similarity (if available) is below a certain threshold,
-			/// or there are no relevant results.
-			/// <see cref="BasicSearchResult.Filter"/> is <c>true</c> if <see cref="ISearchEngine.FilterThreshold"/> is less than <see cref="BasicSearchResult.Similarity"/>
-			/// </summary>
-			[field: ConfigComponent("filter_results", "--filter-results", true, true)]
-			public bool FilterResults { get; set; }
-
-			public string FileLocation
+			o[0].ShiftFunction = () =>
 			{
-				get => @"C:\Users\Deci\Desktop\cf.cfg";
-			}
+				Debug.WriteLine("shift");
+				return null;
+			};
+			o[0].ComboFunction = () =>
+			{
+				Debug.WriteLine("combo");
+				return null;
+			};
+			o[0].CtrlFunction = () =>
+			{
+				Debug.WriteLine("ctrl");
+				return null;
+			};
+			o[0].AltFunction = () =>
+			{
+				Debug.WriteLine("alt");
+				return null;
+			};
+			// o[0].Function = () =>
+			// {
+			// 	Debug.WriteLine("main");
+			// 	return null;
+			// };
+			var d = new NConsoleDialog() { Options = o, SelectMultiple = true };
+			NConsole.Init();
+			var x =  NConsole.ReadOptions(d);
+
+			Console.WriteLine(x);
+
+
 		}
 	}
 }

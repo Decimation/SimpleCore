@@ -7,10 +7,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using SimpleCore.Numeric;
 using SimpleCore.Utilities;
 using static SimpleCore.Internal.Common;
+// ReSharper disable CognitiveComplexity
 
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 
@@ -63,6 +65,9 @@ namespace SimpleCore.Cli
 		public static void Init()
 		{
 			//Console.OutputEncoding = Encoding.Unicode;
+			ListenThread.Start();
+
+			//ThreadPool.QueueUserWorkItem(KeyWatch);
 		}
 
 		/// <summary>
@@ -102,15 +107,15 @@ namespace SimpleCore.Cli
 			{
 				object[] rg => rg.QuickJoin(),
 				Array r     => r.CastObjectArray().QuickJoin(),
-				
+
 				_ => obj.ToString()
 			};
 
 			if (obj.GetType().IsPointer || obj is IntPtr) {
 				s = Strings.ToHexString(obj);
 			}
-			
-			
+
+
 			else if (Collections.TryCastDictionary(obj, out var kv)) {
 				s = kv.Select(x => $"{x.Key} = {x.Value}")
 				      .QuickJoin("\n");
@@ -383,6 +388,28 @@ namespace SimpleCore.Cli
 
 		#endregion
 
+		private static ManualResetEvent ResetEvent { get; } = new(false);
+
+		private static Thread ListenThread { get; } = new(KeyWatch)
+		{
+			Priority = ThreadPriority.AboveNormal
+		};
+
+		
+
+		private static void KeyWatch(object? o)
+		{
+			// Block until input is entered.
+			while (!Console.KeyAvailable) {
+
+				// Handle signals from other threads
+
+			}
+
+			ResetEvent.Set();
+
+		}
+
 		/// <summary>
 		///     Handles user input and options
 		/// </summary>
@@ -400,14 +427,19 @@ namespace SimpleCore.Cli
 			do {
 				DisplayDialog(dialog, selectedOptions);
 
-				// Block until input is entered.
-				while (!Console.KeyAvailable) {
 
-					// Handle signals from other threads
-					if (Atomic.Exchange(ref Status, ConsoleStatus.Ok) == ConsoleStatus.Refresh) {
-						DisplayDialog(dialog, selectedOptions);
-					}
-				}
+				// Block until input is entered.
+				//while (!Console.KeyAvailable) {
+
+				//	// Handle signals from other threads
+				//	if (Atomic.Exchange(ref Status, ConsoleStatus.Ok) == ConsoleStatus.Refresh) {
+				//		DisplayDialog(dialog, selectedOptions);
+				//	}
+				//}
+
+
+				ResetEvent.WaitOne();
+				//reset.Reset();
 
 				// Key was read
 
@@ -424,6 +456,7 @@ namespace SimpleCore.Cli
 						//todo
 						return new HashSet<object> {true};
 				}
+
 
 				// KeyChar can't be used as modifiers are not applicable
 				char keyChar = (char) (int) cki.Key;
