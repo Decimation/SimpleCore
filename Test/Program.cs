@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -132,12 +133,12 @@ namespace Test
 			var pingReply = Network.Ping(new Uri("https://i.imgur.com/QtCausw.png"));
 			Console.WriteLine(pingReply.RoundtripTime);
 
-			var sw2 = Stopwatch.StartNew();
-			var a2  = Network.IsAlive2(new Uri((s)));
-			sw2.Stop();
-			Console.WriteLine(sw2.Elapsed.TotalSeconds);
-			Console.WriteLine(a2);
+			var address = Network.GetAddress((s));
+			Console.WriteLine(address);
+			Console.WriteLine(Network.GetAddress((address)));
+			Console.WriteLine(Network.Identify(address));
 
+			
 		}
 	}
 }

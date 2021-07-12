@@ -5,6 +5,9 @@ using System.Net.NetworkInformation;
 using RestSharp;
 using SimpleCore.Model;
 
+#pragma warning disable 8600
+#pragma warning disable 8604
+
 // ReSharper disable CognitiveComplexity
 
 // ReSharper disable InconsistentNaming
@@ -26,8 +29,6 @@ namespace SimpleCore.Net
 	public static class Network
 	{
 		private const long TimeoutMS = 3000;
-
-		private static readonly TimeSpan Timeout = TimeSpan.FromMilliseconds(TimeoutMS);
 
 		public static Uri GetHostUri(Uri u)
 		{
@@ -65,21 +66,36 @@ namespace SimpleCore.Net
 			return result;
 		}
 
-		public static IPGeoLocation Identify(IPAddress ip) => Identify(ip.ToString());
+		public static IPGeolocation Identify(IPAddress ip) => Identify(ip.ToString());
 
-		public static IPGeoLocation Identify(string hostOrIP)
+		public static IPGeolocation Identify(string hostOrIP)
 		{
 			var rc = new RestClient("https://freegeoip.app/{format}/{host}");
 			var r  = new RestRequest();
 			r.AddUrlSegment("format", "json");
 			r.AddUrlSegment("host", hostOrIP);
-			var res = rc.Execute<IPGeoLocation>(r);
+			var res = rc.Execute<IPGeolocation>(r);
 			return res.Data;
 		}
 
 		public static IPAddress GetHostAddress(string hostOrIP) => Dns.GetHostAddresses(hostOrIP)[0];
 
 		//public static IPAddress GetHostAddress(Uri u) => GetHostAddress(GetHostComponent(u));
+
+		public static string GetAddress(string u)
+		{
+			string s = null;
+
+			if (IPAddress.TryParse(u, out var ip)) {
+				s = ip.ToString();
+			}
+
+			if (IsUri(u, out var ux)) {
+				s = GetHostComponent(ux);
+			}
+
+			return GetHostAddress(s).ToString();
+		}
 
 		public static bool IsAlive(Uri u) => IsAlive(u, TimeoutMS);
 
@@ -100,9 +116,8 @@ namespace SimpleCore.Net
 			return r.Status == IPStatus.Success;
 		}
 
-
 		public static PingReply Ping(Uri u, long ms = TimeoutMS) =>
-			Ping(GetHostAddress(GetHostComponent(u)).ToString(), ms);
+			Ping(GetAddress(u.ToString()), ms);
 
 
 		public static PingReply Ping(string hostOrIP, long ms = TimeoutMS)
@@ -243,39 +258,42 @@ namespace SimpleCore.Net
 		}
 	}
 
-	public sealed class IPGeoLocation
+	public sealed class IPGeolocation
 	{
-		// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
+		public string IP { get; internal set; }
 
-		public string IP { get; set; }
+		public string CountryCode { get; internal set; }
 
-		public string CountryCode { get; set; }
+		public string CountryName { get; internal set; }
 
-		public string CountryName { get; set; }
+		public string RegionCode { get; internal set; }
 
-		public string RegionCode { get; set; }
+		public string RegionName { get; internal set; }
 
-		public string RegionName { get; set; }
+		public string City { get; internal set; }
 
-		public string City { get; set; }
+		public string ZipCode { get; internal set; }
 
-		public string ZipCode { get; set; }
+		public string TimeZone { get; internal set; }
 
-		public string TimeZone { get; set; }
+		public double Latitude { get; internal set; }
 
-		public double Latitude { get; set; }
+		public double Longitude { get; internal set; }
 
-		public double Longitude { get; set; }
-
-		public int MetroCode { get; set; }
+		public int MetroCode { get; internal set; }
 
 		public override string ToString()
 		{
-			return $"{nameof(IP)}: {IP}, {nameof(CountryCode)}: {CountryCode}, "                 +
-			       $"{nameof(CountryName)}: {CountryName}, {nameof(RegionCode)}: {RegionCode}, " +
-			       $"{nameof(RegionName)}: {RegionName}, {nameof(City)}: {City}, "               +
-			       $"{nameof(ZipCode)}: {ZipCode}, {nameof(TimeZone)}: {TimeZone}, "             +
-			       $"{nameof(Latitude)}: {Latitude}, {nameof(Longitude)}: {Longitude}, "         +
+			return $"{nameof(IP)}: {IP}\n"                   +
+			       $"{nameof(CountryCode)}: {CountryCode}\n" +
+			       $"{nameof(CountryName)}: {CountryName}\n" +
+			       $"{nameof(RegionCode)}: {RegionCode}\n"   +
+			       $"{nameof(RegionName)}: {RegionName}\n"   +
+			       $"{nameof(City)}: {City}\n"               +
+			       $"{nameof(ZipCode)}: {ZipCode}\n"         +
+			       $"{nameof(TimeZone)}: {TimeZone}\n"       +
+			       $"{nameof(Latitude)}: {Latitude}\n"       +
+			       $"{nameof(Longitude)}: {Longitude}\n"     +
 			       $"{nameof(MetroCode)}: {MetroCode}";
 		}
 	}
