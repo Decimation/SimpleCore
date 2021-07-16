@@ -72,15 +72,16 @@ namespace SimpleCore.Net
 		{
 			var rc = new RestClient("https://freegeoip.app/{format}/{host}");
 			var r  = new RestRequest();
+
 			r.AddUrlSegment("format", "json");
 			r.AddUrlSegment("host", hostOrIP);
-			var res = rc.Execute<IPGeolocation>(r);
+
+			var res = rc.Execute<IPGeolocation>(r, Method.GET);
+
 			return res.Data;
 		}
 
 		public static IPAddress GetHostAddress(string hostOrIP) => Dns.GetHostAddresses(hostOrIP)[0];
-
-		//public static IPAddress GetHostAddress(Uri u) => GetHostAddress(GetHostComponent(u));
 
 		public static string GetAddress(string u)
 		{
@@ -97,22 +98,20 @@ namespace SimpleCore.Net
 			return GetHostAddress(s).ToString();
 		}
 
-		public static bool IsAlive(Uri u) => IsAlive(u, TimeoutMS);
 
-		//public static bool IsAlive(string u) => IsAlive(u, Timeout);
+		public static bool IsAlive(Uri u, long ms = TimeoutMS) =>
+			IsAlive(GetAddress(u.ToString()), ms);
 
-		public static bool IsAlive(Uri u, long ms) => Ping(u, ms).Status == IPStatus.Success;
-
-
-		public static bool IsAlive(string hostOrIP, long ms)
+		public static bool IsAlive(string hostOrIP, long ms = TimeoutMS)
 		{
 			/*
 			 * This approach is about .7 sec faster than using a web request
 			 */
 
-
 			PingReply r = Ping(hostOrIP, ms);
 
+			//return !(r.Status != IPStatus.Success || r.Status == IPStatus.TimedOut);
+			
 			return r.Status == IPStatus.Success;
 		}
 
@@ -123,10 +122,7 @@ namespace SimpleCore.Net
 		public static PingReply Ping(string hostOrIP, long ms = TimeoutMS)
 		{
 			var ping = new Ping();
-
-			//var   t2 = p2.SendPingAsync(address, (int)TimeSpan.FromSeconds(3).TotalMilliseconds);
-			//await t2;
-
+			
 			var task = ping.SendPingAsync(hostOrIP, (int) ms);
 			task.Wait();
 

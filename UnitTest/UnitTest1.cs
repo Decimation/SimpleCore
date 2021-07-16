@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Text.Unicode;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using SimpleCore.Diagnostics;
@@ -34,17 +36,20 @@ namespace UnitTest
 		}
 
 		[Test]
-		[TestCase(@"https://i.imgur.com/QtCausw.png")]
-		public void UriAliveTest(string s)
+		[TestCase(@"https://i.imgur.com/QtCausw.png", true)]
+		[TestCase(@"http://tidder.xyz/?imagelink=https://i.imgur.com/QtCausw.png", false)]
+		[TestCase(@"http://tidder.xyz/", false)]
+		[TestCase(@"https://i.imgur.com/QtCausw.png", true)]
+		public void UriAliveTest(string s, bool b)
 		{
-			Assert.True(Network.IsAlive((s)));
+			Assert.AreEqual(b,Network.IsAlive(new Uri((s))));
 		}
 
 		[Test]
 		public void MediaTypesTest()
 		{
 			const string jpg = "https://i.ytimg.com/vi/r45a-l9Gqdk/hqdefault.jpg";
-
+			
 			var i = MediaTypes.Identify(jpg);
 			Assert.True(Network.IsUri(jpg, out var u));
 			Assert.True(MediaTypes.GetExtensions(i).Contains("jpe"));
@@ -143,6 +148,20 @@ namespace UnitTest
 				Guard.Fail();
 			});
 		}
+
+		[Test]
+		public void CharTest()
+		{
+			Assert.True(Strings.IsCharInRange(0x0400, UnicodeRanges.Cyrillic));
+			Assert.True(Strings.IsCharInRange(0x04FF, UnicodeRanges.Cyrillic));
+
+			Assert.False(Strings.IsCharInRange(0x04FF+1, UnicodeRanges.Cyrillic));
+			Assert.False(Strings.IsCharInRange(0x0, UnicodeRanges.Cyrillic));
+			Assert.True(Strings.IsCharInRange('A', UnicodeRanges.BasicLatin));
+			Assert.True(Strings.IsCharInRange(StringConstants.CHECK_MARK, UnicodeRanges.Dingbats));
+
+		}
+
 
 		[Test]
 		public void StringTest()

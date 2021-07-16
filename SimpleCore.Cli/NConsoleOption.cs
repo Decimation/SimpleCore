@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.Linq;
 using SimpleCore.Model;
 
 // ReSharper disable InconsistentNaming
@@ -60,13 +61,46 @@ namespace SimpleCore.Cli
 
 
 		public virtual Color? Color { get; set; }
-		
+
+		public static List<NConsoleOption> FromList<T>(IList<T> values) =>
+			FromArray(values, arg => arg!.ToString()!).ToList();
+
+		protected bool Equals(NConsoleOption other)
+		{
+			return Name == other.Name && Function.Equals(other.Function) && Equals(AltFunction, other.AltFunction) &&
+			       Equals(CtrlFunction, other.CtrlFunction) && Equals(ShiftFunction, other.ShiftFunction) &&
+			       Equals(ComboFunction, other.ComboFunction) && Equals(Data, other.Data) &&
+			       Nullable.Equals(Color, other.Color);
+		}
+
+		public override bool Equals(object? obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (obj.GetType() != this.GetType()) return false;
+			return Equals((NConsoleOption) obj);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked {
+				int hashCode = Name.GetHashCode();
+				hashCode = (hashCode * 397) ^ Function.GetHashCode();
+				hashCode = (hashCode * 397) ^ (AltFunction   != null ? AltFunction.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (CtrlFunction  != null ? CtrlFunction.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (ShiftFunction != null ? ShiftFunction.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (ComboFunction != null ? ComboFunction.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (Data          != null ? Data.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ Color.GetHashCode();
+				return hashCode;
+			}
+		}
 
 		public static NConsoleOption[] FromArray<T>(T[] values) => FromArray(values, arg => arg!.ToString()!);
 
-		public static NConsoleOption[] FromArray<T>(T[] values, Func<T, string> getName)
+		public static NConsoleOption[] FromArray<T>(IList<T> values, Func<T, string> getName)
 		{
-			var rg = new NConsoleOption[values.Length];
+			var rg = new NConsoleOption[values.Count];
 
 			for (int i = 0; i < rg.Length; i++) {
 				var option = values[i];

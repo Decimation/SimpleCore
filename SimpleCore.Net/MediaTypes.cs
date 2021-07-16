@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
+
 // ReSharper disable InconsistentNaming
 
 // ReSharper disable IdentifierTypo
@@ -157,6 +158,7 @@ namespace SimpleCore.Net
 			return mime.Split(DELIM)[SUBTYPE_I];
 		}
 
+
 		private const string DB_JSON_URL = "https://cdn.jsdelivr.net/gh/jshttp/mime-db@master/db.json";
 
 		private static Dictionary<string, MimeTypeInfo> GetDatabase()
@@ -174,15 +176,13 @@ namespace SimpleCore.Net
 		{
 			mime = mime.ToLower();
 
-			return Database.Where(kp => kp.Key == mime).SelectMany(kp => kp.Value.Extensions);
+			return Database.Value.Where(kp => kp.Key == mime).SelectMany(kp => kp.Value.Extensions);
 		}
 
-		private static readonly Dictionary<string, MimeTypeInfo> Database;
+		private static Lazy<Dictionary<string, MimeTypeInfo>> Database { get; } = new(GetDatabase);
 
-		static MediaTypes()
-		{
-			Database = GetDatabase();
-		}
+
+		static MediaTypes() { }
 	}
 
 	public enum MimeType

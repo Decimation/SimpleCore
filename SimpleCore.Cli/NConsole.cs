@@ -404,15 +404,34 @@ namespace SimpleCore.Cli
 
 			ConsoleKeyInfo cki;
 
+			// int prevHash  = 0;
+			// int prevCount = 0;
+
 			do {
 				DisplayDialog(dialog, selectedOptions);
 
+				//Debug.WriteLine($"{hashCode}|{dialog.Options.GetHashCode()}");
 
 				// Block until input is entered.
 
 				while (!Console.KeyAvailable) {
 
 					// Handle signals from other threads
+
+					/*int hashCode    = dialog.GetHashCode();
+					int selectCount = selectedOptions.Count;
+
+					var b1 = prevHash != hashCode || prevCount != selectCount;
+
+					var b2 = Atomic.Exchange(ref Status, ConsoleStatus.Ok) == ConsoleStatus.Refresh;
+
+					if (b1 || b2) {
+						Debug.WriteLine($"Refreshing {hashCode}");
+						DisplayDialog(dialog, selectedOptions);
+						prevHash  = hashCode;
+						prevCount = selectCount;
+					}*/
+
 					if (Atomic.Exchange(ref Status, ConsoleStatus.Ok) == ConsoleStatus.Refresh) {
 						DisplayDialog(dialog, selectedOptions);
 					}
@@ -422,6 +441,7 @@ namespace SimpleCore.Cli
 				// Key was read
 
 				cki = Console.ReadKey(true);
+
 
 				// Handle special keys
 

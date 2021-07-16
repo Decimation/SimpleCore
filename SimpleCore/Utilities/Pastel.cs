@@ -154,6 +154,7 @@ namespace SimpleCore.Utilities
 			}
 		}
 
+
 		[DllImport(K32)]
 		private static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
 
